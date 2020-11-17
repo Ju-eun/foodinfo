@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Sign.SignActivity"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="회원가입"
+        android:textSize="35dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="이름 : "
+            android:textSize="15dp"
+            android:gravity="left|center"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/et_name"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="아이디 : "
+            android:textSize="15dp"
+            android:gravity="left|center"
+            />
+        <EditText
+            android:layout_width="210sp"
+            android:layout_height="30dp"
+            android:id="@+id/id"/>
+
+        <Button
+            android:id="@+id/btn_idcheck"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="중복확인"
+            android:textSize="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="비밀번호 : "
+            android:textSize="15dp"
+            android:gravity="left|center"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/et_pw"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="비밀번호 확인 : "
+            android:textSize="12dp"
+            android:gravity="left|center"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/et_pwcheck"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="이메일 : "
+            android:textSize="15dp"
+            android:gravity="left|center"
+            />
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:id="@+id/et_email"/>
+
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="사업자 : "
+            android:textSize="15dp"
+            android:gravity="left|center"
+            />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cb_oper"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:id="@+id/layout_oper"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:text="사업자 모드  "
+            android:textSize="15dp"
+            android:gravity="left|center"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="가게이름 :"
+            android:gravity="center"
+            />
+        <EditText
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/shopname"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="사업자 \n등록증"
+            android:id="@+id/btn_oper_picture"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="회원 가입"
+        android:id="@+id/btn_signUp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="뒤로 가기"
+            android:id="@+id/btn_Rerurn"/>
+
+    </LinearLayout>
+</LinearLayout>
