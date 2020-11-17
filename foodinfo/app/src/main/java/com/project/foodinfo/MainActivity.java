@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();  //제목줄 객체 얻어오기
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
-        actionBar.setHomeAsUpIndicator(R.drawable.chi_food);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
@@ -45,15 +46,15 @@ public class MainActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
                 String title = menuItem.getTitle().toString();
 
-                if(id == R.id.account){
+                if(id == R.id.login){
                     Toast.makeText(context, title + ": 계정 정보를 확인합니다.", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
-                else if(id == R.id.setting){
+                else if(id == R.id.connection){
                     Toast.makeText(context, title + ": 설정 정보를 확인합니다.", Toast.LENGTH_SHORT).show();
                 }
-                else if(id == R.id.logout){
-                    Toast.makeText(context, title + ": 로그아웃 시도중", Toast.LENGTH_SHORT).show();
-                }
+
 
                 return true;
             }
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 Toast.makeText(context,"hihi", Toast.LENGTH_SHORT).show();
                 return true;
+
             }
         }
         return super.onOptionsItemSelected(item);
