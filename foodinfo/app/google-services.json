@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "770571056227",
+    "firebase_url": "https://moble-foodtruck.firebaseio.com",
+    "project_id": "moble-foodtruck",
+    "storage_bucket": "moble-foodtruck.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770571056227:android:0716c242e4df085b787456",
+        "android_client_info": {
+          "package_name": "com.project.foodinfo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770571056227-1f8k7dafdstgsfjeqmnanp3sghp525nd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXsC9-vmkCrHqJ-_PK8f1oB_vLPevYXLY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770571056227-1f8k7dafdstgsfjeqmnanp3sghp525nd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
