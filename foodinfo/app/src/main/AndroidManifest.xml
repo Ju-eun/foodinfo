@@ -23,7 +23,6 @@
         <activity android:name=".IdPwActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
 
-
     </application>
 
 </manifest>
