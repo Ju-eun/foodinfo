@@ -9,7 +9,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#D8A610">
 
         <View
             android:id="@+id/view_toolbar"
@@ -29,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="푸드트럭앱 이에유"
+                android:fontFamily="@font/typo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
 
