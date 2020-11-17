@@ -1,6 +1,7 @@
 package com.project.foodinfo.Sign;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,13 +32,13 @@ public class SignActivity extends AppCompatActivity {
     Button btn_idcheck;
     Button btn_signup;
 
-
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        Button btn_oper_picture = (Button) findViewById(R.id.btn_oper_picture);
+//        Button btn_oper_picture = (Button) findViewById(R.id.btn_oper_picture);
         et_id = (EditText) findViewById(R.id.id);
         et_name = (EditText) findViewById(R.id.et_name);
         et_email = (EditText) findViewById(R.id.et_email);
@@ -57,7 +58,7 @@ public class SignActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, names
         );
 
-        btn_oper_picture.setOnClickListener(new View.OnClickListener() {
+        /*btn_oper_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignActivity.this, oper.class);
