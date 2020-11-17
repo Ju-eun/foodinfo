@@ -9,16 +9,21 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-;import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
+    Toolbar toolbar;
+    NavigationView navigationView;
     private DrawerLayout mDrawerLayout;
+    private BottomNavigationView bottomNavigationView;
     private Context context=this;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -27,35 +32,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        //툴바 설정
+        toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();  //제목줄 객체 얻어오기
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
-        actionBar.setHomeAsUpIndicator(R.drawable.chi_food);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양
+        bottomNavigationView=findViewById(R.id.bottomNavi);
 
-        mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView=(NavigationView)findViewById(R.id.nav_view);
+        mDrawerLayout=findViewById(R.id.drawer_layout);
+
+        //네이게이션 화면 설정
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                menuItem.setChecked(true);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
                 mDrawerLayout.closeDrawers();
-                int id = menuItem.getItemId();
-                String title = menuItem.getTitle().toString();
+                int id = item.getItemId();
+                String title = item.getTitle().toString();
 
-                if(id == R.id.account){
-                    Toast.makeText(context, title + ": 계정 정보를 확인합니다.", Toast.LENGTH_SHORT).show();
+                if(id == R.id.login){
+                    Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
                 }
-                else if(id == R.id.setting){
+                else if(id == R.id.connection){
                     Toast.makeText(context, title + ": 설정 정보를 확인합니다.", Toast.LENGTH_SHORT).show();
                 }
-                else if(id == R.id.logout){
-                    Toast.makeText(context, title + ": 로그아웃 시도중", Toast.LENGTH_SHORT).show();
-                }
-
                 return true;
+            }
+        });
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                int id=item.getItemId();
+
+                if(id==R.id.mappin){
+
+                }
+                else if(id==R.id.review){
+                    Intent intent=new Intent(MainActivity.this, storeinfo.class);
+                    startActivity(intent);
+                }
+                return false;
             }
         });
 
@@ -67,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         switch(id){
             case android.R.id.home:{
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                Toast.makeText(context,"hihi", Toast.LENGTH_SHORT).show();
                 return true;
             }
         }
