@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
-
                 int id = menuItem.getItemId();
                 String title = menuItem.getTitle().toString();
 
