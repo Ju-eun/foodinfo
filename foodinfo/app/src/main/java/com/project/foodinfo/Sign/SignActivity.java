@@ -2,6 +2,7 @@ package com.project.foodinfo.Sign;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,7 +22,7 @@ import com.project.foodinfo.R;
 
 public class SignActivity extends AppCompatActivity {
 
-    String[] names={"@naver.com","@kakao.com", "@hanmail.net", "@gmail.com"};
+    String[] names = {"@naver.com", "@kakao.com", "@hanmail.net", "@gmail.com"};
 
     EditText et_name;
     EditText et_id;
@@ -31,8 +33,7 @@ public class SignActivity extends AppCompatActivity {
 
     Button btn_idcheck;
     Button btn_signup;
-
-*/
+    View.OnClickListener mlistener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +45,11 @@ public class SignActivity extends AppCompatActivity {
         et_email = (EditText) findViewById(R.id.et_email);
         et_pw = (EditText) findViewById(R.id.et_pw);
         et_pwcheck = (EditText) findViewById(R.id.et_pwcheck);
-        cb_oper = (CheckBox) findViewById(R.id.cb_oper);
+        cb_oper = (CheckBox) findViewById(R.id.sign_frag_cb_oper);
 
         btn_idcheck = (Button) findViewById(R.id.btn_idcheck);
         btn_signup = (Button) findViewById(R.id.btn_signUp);
+
 
         btn_signup.setOnClickListener(mlistener);
         btn_idcheck.setOnClickListener(mlistener);
@@ -57,6 +59,27 @@ public class SignActivity extends AppCompatActivity {
                 this,
                 android.R.layout.simple_spinner_item, names
         );
+
+        cb_oper.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SignFragment signFragment = new SignFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+
+                if(isChecked){
+                    transaction.replace(R.id.frame, signFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                else {
+                    transaction.remove(signFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+
+            }
+        });
 
         /*btn_oper_picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,3 +182,6 @@ public class SignActivity extends AppCompatActivity {
     }
 }
 
+*/
+    }
+}

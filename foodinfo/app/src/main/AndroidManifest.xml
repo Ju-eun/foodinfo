@@ -12,8 +12,7 @@
 
         <activity android:name=".storeinfo"/>
         <activity android:name=".MypageActivity"/>
-        <activity android:name=".Sign.SignActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".Sign.SignActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,8 +20,6 @@
         </activity>
 
         <activity android:name=".IdPwActivity"></activity>
-        <activity android:name=".Sign.SignActivity"></activity>
-        <activity android:name=".MypageActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
     </application>
 
