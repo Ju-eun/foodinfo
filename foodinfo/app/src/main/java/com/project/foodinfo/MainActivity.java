@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.project.foodinfo.Sign.SignActivity;
 import com.project.foodinfo.Sign.SignFragment;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     NavigationView navigationView;
     private DrawerLayout mDrawerLayout;
-    private BottomNavigationView bottomNavigationView;
     private Context context=this;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -48,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양
-        bottomNavigationView=findViewById(R.id.bottomNavi);
         mDrawerLayout=findViewById(R.id.drawer_layout);
 
         //네이게이션 화면 설정
@@ -74,23 +71,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                item.setChecked(true);
-                int id=item.getItemId();
-
-                if(id==R.id.mappin){
-
-                }
-                else if(id==R.id.review){
-
-                    Intent intent=new Intent(MainActivity.this, storeinfo.class);
-                    startActivity(intent);
-                }
-                return true;
-            }
-        });
 
 
     }
