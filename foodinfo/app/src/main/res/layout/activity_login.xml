@@ -74,27 +74,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btn_find"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="191dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="150dp"
-        android:layout_marginBottom="300dp"
-        android:background="#FFFFFF"
-        android:text="아이디/비밀번호 찾기"
-        android:textAllCaps="false"
-        android:textColor="#040404"
-        android:onClick="findOnClick"
-        app:backgroundTint="#00FFFFFF"
-        app:iconTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password"
-        app:layout_constraintVertical_bias="0.111" />
-
-    <Button
         android:id="@+id/btn_signup"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="90dp"
@@ -102,15 +81,36 @@
         android:layout_marginTop="110dp"
         android:layout_marginBottom="50dp"
         android:background="#00FFFFFF"
-        android:text="회원가입"
         android:onClick="signOnClick"
+        android:text="회원가입"
         android:textColor="#000000"
         app:backgroundTint="#00000000"
         app:layout_constraintBottom_toTopOf="@+id/btn_find"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/btn_find"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="191dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="300dp"
+        android:background="#FFFFFF"
+        android:onClick="findOnClick"
+        android:text="아이디/비밀번호 찾기"
+        android:textAllCaps="false"
+        android:textColor="#040404"
+        app:backgroundTint="#00FFFFFF"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_password"
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group"
