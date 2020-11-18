@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.ListFragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
@@ -145,19 +146,12 @@ public class storeinfo extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
-
-    ListView lv_menu;
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.storeinfo);
 //        adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1,items);
 //        adapter_menu = new ArrayAdapter(this, R.layout.row_menu,R.id.tv_name,items);
-
-
-
-
 
         tabLayout = (TabLayout)findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
