@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodInfo">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD0fsBcXuJN0_Fq8vQXgFw234UlxWDgIqs" />
+
+
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,13 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StoreinfoActivity" ></activity>
+        <activity android:name=".StoreinfoActivity" />
         <activity android:name=".MypageActivity" />
-        <activity android:name=".Sign.SignActivity"></activity>
+        <activity android:name=".Sign.SignActivity" />
         <activity android:name=".IdPwActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
-
     </application>
 
 </manifest>
