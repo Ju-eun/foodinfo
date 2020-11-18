@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.project.foodinfo.Sign.SignActivity;
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(id==R.id.review){
 
-                    Intent intent=new Intent(MainActivity.this, storeinfo.class);
+                    Intent intent=new Intent(MainActivity.this, StoreinfoActivity.class);
                     startActivity(intent);
                 }
                 return true;

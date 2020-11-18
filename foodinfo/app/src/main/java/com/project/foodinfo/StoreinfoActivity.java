@@ -135,7 +135,7 @@ class MyItem{
    }
 }
 
-public class storeinfo extends AppCompatActivity  {
+public class StoreinfoActivity extends AppCompatActivity  {
 
     TabLayout tabLayout;
     ViewPager viewPager;
