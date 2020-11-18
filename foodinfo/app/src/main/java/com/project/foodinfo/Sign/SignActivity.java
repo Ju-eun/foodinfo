@@ -2,6 +2,7 @@ package com.project.foodinfo.Sign;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -59,22 +61,44 @@ public class SignActivity extends AppCompatActivity {
                 this,
                 android.R.layout.simple_spinner_item, names
         );
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getApplicationContext(),"선택된 아이템 :" +names[position], Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        final ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView123);
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(scrollView.FOCUS_DOWN);
+            }
+        });
 
         cb_oper.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SignFragment signFragment = new SignFragment();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
 
 
                 if(isChecked){
-                    transaction.replace(R.id.frame, signFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                   transaction.add(R.id.frame, signFragment);
+                   transaction.addToBackStack("signFragment");
+                   transaction.commit();
                 }
                 else {
+                    Toast.makeText(SignActivity.this, "풱ㄹ뎃쇗", Toast.LENGTH_SHORT).show();
+                    fm.popBackStack("signFragment", fm.POP_BACK_STACK_INCLUSIVE);
                     transaction.remove(signFragment);
-                    transaction.addToBackStack(null);
                     transaction.commit();
                 }
 
@@ -89,18 +113,7 @@ public class SignActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),"선택된 아이템 :" +names[position], Toast.LENGTH_SHORT).show();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     View.OnClickListener mlistener = new View.OnClickListener() {
