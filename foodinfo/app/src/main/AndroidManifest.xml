@@ -13,17 +13,16 @@
 
         </activity>
         <activity android:name=".StoreinfoActivity" ></activity>
-        <activity android:name=".MypageActivity" />
-        <activity android:name=".Sign.SignActivity">
+        <activity android:name=".MypageActivity" ></activity>
+        <activity android:name=".Sign.SignActivity"></activity>
+        <activity android:name=".IdPwActivity" ></activity>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".IdPwActivity" />
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".LoginActivity" />
-
+        <activity android:name=".LoginActivity" ></activity>
     </application>
 
 </manifest>

@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.navigation.NavigationView;
-import com.project.foodinfo.Sign.SignActivity;
+
 import com.project.foodinfo.Sign.SignFragment;
 
 
