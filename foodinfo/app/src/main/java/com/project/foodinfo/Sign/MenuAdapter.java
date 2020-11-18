@@ -5,6 +5,5 @@ import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 
-public class MenuAdapter  {
-
+public class MenuAdapter {
 }

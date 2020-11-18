@@ -66,11 +66,6 @@
                     android:id="@+id/imgbtn_gochi"
                     android:src="@drawable/gochi"/>
 
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/lv_main"/>
-
             </LinearLayout>
 
         </HorizontalScrollView>
