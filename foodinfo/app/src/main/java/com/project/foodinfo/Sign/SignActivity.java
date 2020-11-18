@@ -1,6 +1,9 @@
 package com.project.foodinfo.Sign;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,7 +24,7 @@ import com.project.foodinfo.R;
 
 public class SignActivity extends AppCompatActivity {
 
-    String[] names={"@naver.com","@kakao.com", "@hanmail.net", "@gmail.com"};
+    String[] names = {"@naver.com", "@kakao.com", "@hanmail.net", "@gmail.com"};
 
     EditText et_name;
     EditText et_id;
@@ -30,23 +35,23 @@ public class SignActivity extends AppCompatActivity {
 
     Button btn_idcheck;
     Button btn_signup;
-
-
+    View.OnClickListener mlistener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        Button btn_oper_picture = (Button) findViewById(R.id.btn_oper_picture);
+//        Button btn_oper_picture = (Button) findViewById(R.id.btn_oper_picture);
         et_id = (EditText) findViewById(R.id.id);
         et_name = (EditText) findViewById(R.id.et_name);
         et_email = (EditText) findViewById(R.id.et_email);
         et_pw = (EditText) findViewById(R.id.et_pw);
         et_pwcheck = (EditText) findViewById(R.id.et_pwcheck);
-        cb_oper = (CheckBox) findViewById(R.id.cb_oper);
+        cb_oper = (CheckBox) findViewById(R.id.sign_frag_cb_oper);
 
         btn_idcheck = (Button) findViewById(R.id.btn_idcheck);
         btn_signup = (Button) findViewById(R.id.btn_signUp);
+
 
         btn_signup.setOnClickListener(mlistener);
         btn_idcheck.setOnClickListener(mlistener);
@@ -56,15 +61,6 @@ public class SignActivity extends AppCompatActivity {
                 this,
                 android.R.layout.simple_spinner_item, names
         );
-
-        btn_oper_picture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignActivity.this, oper.class);
-
-                startActivity(intent);
-            }
-        });
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -77,6 +73,47 @@ public class SignActivity extends AppCompatActivity {
 
             }
         });
+
+        final ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView123);
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(scrollView.FOCUS_DOWN);
+            }
+        });
+
+        cb_oper.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SignFragment signFragment = new SignFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+
+
+                if(isChecked){
+                   transaction.add(R.id.frame, signFragment);
+                   transaction.addToBackStack("signFragment");
+                   transaction.commit();
+                }
+                else {
+                    Toast.makeText(SignActivity.this, "풱ㄹ뎃쇗", Toast.LENGTH_SHORT).show();
+                    fm.popBackStack("signFragment", fm.POP_BACK_STACK_INCLUSIVE);
+                    transaction.remove(signFragment);
+                    transaction.commit();
+                }
+
+            }
+        });
+
+        /*btn_oper_picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignActivity.this, oper.class);
+
+                startActivity(intent);
+            }
+        });
+
     }
 
     View.OnClickListener mlistener = new View.OnClickListener() {
@@ -158,3 +195,6 @@ public class SignActivity extends AppCompatActivity {
     }
 }
 
+*/
+    }
+}
