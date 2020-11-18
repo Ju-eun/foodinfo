@@ -1,6 +1,7 @@
 package com.project.foodinfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -11,6 +12,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +28,6 @@ public class MypageActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference myRef;
-
     EditText ed_id;
     EditText ed_password;
     EditText ed_email;
@@ -31,7 +35,6 @@ public class MypageActivity extends AppCompatActivity {
     EditText ed_name;
     RadioButton owner, user;
     MemInfo memInfo = new MemInfo();
-
     Button modifybtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,30 @@ public class MypageActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
 
-        myRef = database.getReference("moble-foodtruck").child("MemInfo").child("tmdfydTM");
+        myRef = database.getReference("moble-foodtruck").child("MemInfo").child("123");
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MemInfo m = snapshot.getValue(MemInfo.class);
+                ed_id.setText(m.getId());
+                ed_name.setText(m.getName());
+                ed_email.setText(m.getEmail());
+
+                if(m.getCheck_owner() == 0){
+                    user.setChecked(true);
+                }else{
+                    owner.setChecked(true);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         modifybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
