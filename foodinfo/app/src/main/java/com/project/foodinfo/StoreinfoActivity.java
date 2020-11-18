@@ -1,24 +1,18 @@
 package com.project.foodinfo;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.ListFragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -28,6 +22,7 @@ import android.widget.TextView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+
 
 class MyAdapter extends BaseAdapter{
     private ArrayList<MyItem> myItems = new ArrayList<>();
@@ -62,16 +57,14 @@ class MyAdapter extends BaseAdapter{
 
         MyItem myItem = getItem(position);
 
-        iv_menuImg.setImageDrawable(myItem.getIcon());
+        iv_menuImg.setImageResource(myItem.getIcon());
         tv_menuName.setText(myItem.getName());
         tv_price.setText(myItem.getPrice());
 
         return convertView;
     }
-
-    public void addItem(Drawable img,String name,String price){
+    public void addItem(int img,String name, String price){
         MyItem mItem = new MyItem();
-
         mItem.setIcon(img);
         mItem.setName(name);
         mItem.setPrice(price);
@@ -83,7 +76,6 @@ class MyAdapter extends BaseAdapter{
 class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private  int tabCount;
-
     public TabPagerAdapter(FragmentManager fm, int tabCount){
         super(fm);
         this.tabCount=tabCount;
@@ -119,14 +111,14 @@ class TabPagerAdapter extends FragmentStatePagerAdapter {
 
 class MyItem{
 
-   private Drawable icon;
+   private int icon;
    private String name;
    private String price;
 
-   public  Drawable getIcon(){
+   public int getIcon(){
        return icon;
    }
-   public void  setIcon(Drawable icon){
+   public void  setIcon(int icon){
        this.icon = icon;
    }
    public String getName(){
@@ -143,16 +135,20 @@ class MyItem{
    }
 }
 
-public class StoreinfoActivity extends AppCompatActivity {
+public class storeinfo extends AppCompatActivity  {
 
     TabLayout tabLayout;
     ViewPager viewPager;
+    ListView lv_menu;
+
+    MyAdapter myAdapter;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.storeinfo);
-//        adapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1,items);
-//        adapter_menu = new ArrayAdapter(this, R.layout.row_menu,R.id.tv_name,items);
+
+        myAdapter = new MyAdapter();
 
         tabLayout = (TabLayout)findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
@@ -162,10 +158,15 @@ public class StoreinfoActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager)findViewById(R.id.pager);
-
+        lv_menu = (ListView)findViewById(R.id.lv_menu);
 
         TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
+
+//
+//        lv_menu.setAdapter(myAdapter);
+        pagerAdapter.notifyDataSetChanged();
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -6,9 +6,37 @@
     tools:context=".Fragment_review">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/linear">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="최근 리뷰 28개"
+                android:id="@+id/tv_review"/>
+
+            <Button
+                android:id="@+id/btn_review"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="리뷰 쓰기"
+                />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear"/>
+    </RelativeLayout>
 
 </FrameLayout>

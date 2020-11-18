@@ -7,7 +7,6 @@
 
     android:id="@+id/drawer_layout"
     tools:context=".MainActivity">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +39,7 @@
         <include
             layout="@layout/content_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
     </RelativeLayout>
 
@@ -53,10 +52,10 @@
         android:orientation="horizontal">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottonmenu"
+            android:id="@+id/bottomNavi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/bottomnavigationview" />
+            app:menu="@menu/bottomnavi_menu" />
 
     </LinearLayout>
 
@@ -68,5 +67,7 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navi_header"
         app:menu="@menu/navi_menu" />
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
