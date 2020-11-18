@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -15,9 +17,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.project.foodinfo.Sign.SignActivity;
+import com.project.foodinfo.Sign.SignFragment;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,12 +49,11 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양
         bottomNavigationView=findViewById(R.id.bottomNavi);
-
-
         mDrawerLayout=findViewById(R.id.drawer_layout);
 
         //네이게이션 화면 설정
         navigationView = findViewById(R.id.nav_view);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -74,16 +81,17 @@ public class MainActivity extends AppCompatActivity {
                 int id=item.getItemId();
 
                 if(id==R.id.mappin){
-                    Log.i("TLqkf","화가나");
+
                 }
                 else if(id==R.id.review){
-                    Log.i("TLqkf","화가나");
+
                     Intent intent=new Intent(MainActivity.this, storeinfo.class);
                     startActivity(intent);
                 }
                 return true;
             }
         });
+
 
     }
 
@@ -98,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+
+
     }
 
 }
