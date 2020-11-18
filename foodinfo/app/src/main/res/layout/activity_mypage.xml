@@ -9,6 +9,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/owner"
+                android:text="사업자"
+                android:layout_marginRight="70dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RadioButton
+                android:text="사용자"
+                android:id="@+id/user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -27,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
+            android:enabled="false"
             android:layout_marginRight="20dp" />
     </LinearLayout>
 
@@ -49,6 +74,7 @@
             android:id="@+id/ed_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp" />
 
@@ -78,6 +104,7 @@
             android:ems="8"
             android:inputType="textPassword"
             tools:layout_editor_absoluteX="126dp"
+
             tools:layout_editor_absoluteY="253dp" />
 
         <Button
@@ -113,6 +140,7 @@
             android:ems="10"
             android:inputType="textEmailAddress"
             app:layout_constraintStart_toStartOf="parent"
+            android:enabled="false"
             tools:layout_editor_absoluteY="381dp" />
 
         <TextView
@@ -133,10 +161,12 @@
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:ems="10"
+            android:enabled="false"
             android:inputType="textEmailAddress" />
 
-    </LinearLayout>
 
+
+    </LinearLayout>
     <Button
         android:id="@+id/Exit_btn"
         android:layout_width="wrap_content"

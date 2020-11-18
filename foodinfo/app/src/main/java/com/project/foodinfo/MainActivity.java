@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button = findViewById(R.id.button);
 
 
         Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
@@ -45,24 +44,9 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        cb1 = (CheckBox)findViewById(R.id.sign_frag_cb_oper);
-
-        cb1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                FragmentTransaction tran_oper = getSupportFragmentManager().beginTransaction();
-                SignFragment tragment1 = new SignFragment();
-            }
-        });
 
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
-        button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignActivity.class);
-                startActivity(intent);
-            }
-        });
+
         NavigationView navigationView=(NavigationView)findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override

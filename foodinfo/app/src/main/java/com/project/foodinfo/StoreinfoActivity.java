@@ -68,6 +68,7 @@ class MyAdapter extends BaseAdapter{
 
         return convertView;
     }
+
     public void addItem(Drawable img,String name,String price){
         MyItem mItem = new MyItem();
 
@@ -142,7 +143,7 @@ class MyItem{
    }
 }
 
-public class storeinfo extends AppCompatActivity {
+public class StoreinfoActivity extends AppCompatActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;

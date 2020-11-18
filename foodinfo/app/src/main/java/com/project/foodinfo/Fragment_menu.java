@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * Use the  factory method to
  * create an instance of this fragment.
  */
-public class Fragment_menu extends Fragment {
+public class Fragment_menu extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
