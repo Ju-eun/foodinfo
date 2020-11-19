@@ -10,11 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodInfo">
         <activity android:name=".IntroActivity"/>
-        <activity android:name=".MypageActivity"/>
+
         <activity android:name=".Sign.SignActivity"></activity>
         <activity android:name=".IdPwActivity" />
         <activity android:name=".MainActivity"/>
-    <activity android:name=".StoreinfoActivity">
+    <activity android:name=".StoreinfoActivity"/>
+        <activity android:name=".MypageActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
