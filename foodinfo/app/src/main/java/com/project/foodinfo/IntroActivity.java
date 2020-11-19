@@ -1,11 +1,11 @@
 package com.project.foodinfo;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 
