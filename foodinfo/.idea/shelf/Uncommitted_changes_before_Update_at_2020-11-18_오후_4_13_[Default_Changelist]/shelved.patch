@@ -1,0 +1,47 @@
+Index: app/src/main/java/com/project/foodinfo/MypageActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.project.foodinfo;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.os.Bundle;\r\nimport android.util.Log;\r\n\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\n\r\n\r\npublic class MypageActivity extends AppCompatActivity {\r\n\r\n    FirebaseDatabase database;\r\n    DatabaseReference myRef;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_mypage);\r\n         database = FirebaseDatabase.getInstance();\r\n         myRef = database.getReference(\"mypage\");\r\n\r\n         myRef.setValue(\"안녕\");\r\n\r\n         myRef.addValueEventListener(new ValueEventListener() {\r\n             @Override\r\n             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n                 String value = dataSnapshot.getValue(String.class);\r\n                 Log.d(\"jungmin\", \"Value is : \" + value);\r\n             }\r\n\r\n             @Override\r\n             public void onCancelled(@NonNull DatabaseError databaseError) {\r\n                 Log.w(\"jungmin\", \"Failed to read value.\", databaseError.toException());\r\n             }\r\n         });\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/MypageActivity.java	(revision 29dc41bd5d099c4cee67348377298100a3abe0f2)
++++ app/src/main/java/com/project/foodinfo/MypageActivity.java	(date 1605683329558)
+@@ -24,10 +24,11 @@
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_mypage);
+          database = FirebaseDatabase.getInstance();
+-         myRef = database.getReference("mypage");
++         myRef = database.getReference("moble-foodtruck").child("MemInfo");
+ 
+          myRef.setValue("안녕");
+ 
++
+          myRef.addValueEventListener(new ValueEventListener() {
+              @Override
+              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.project.foodinfo\">\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_launcher\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.FoodInfo\">\r\n        <activity android:name=\".IntroActivity\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity android:name=\".storeinfo\" />\r\n        <activity android:name=\".MypageActivity\" />\r\n        <activity android:name=\".Sign.SignActivity\"></activity>\r\n        <activity android:name=\".IdPwActivity\" />\r\n        <activity android:name=\".MainActivity\">\r\n\r\n        </activity>\r\n        <activity android:name=\".LoginActivity\" />\r\n\r\n    </application>\r\n\r\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 29dc41bd5d099c4cee67348377298100a3abe0f2)
++++ app/src/main/AndroidManifest.xml	(date 1605680702781)
+@@ -10,13 +10,14 @@
+         android:supportsRtl="true"
+         android:theme="@style/Theme.FoodInfo">
+         <activity android:name=".IntroActivity">
++        </activity>
++        <activity android:name=".storeinfo">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+ 
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
+-        <activity android:name=".storeinfo" />
+         <activity android:name=".MypageActivity" />
+         <activity android:name=".Sign.SignActivity"></activity>
+         <activity android:name=".IdPwActivity" />
