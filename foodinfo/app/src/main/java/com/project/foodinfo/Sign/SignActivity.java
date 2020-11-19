@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -36,6 +39,9 @@ public class SignActivity extends AppCompatActivity {
     Button btn_idcheck;
     Button btn_signup;
     View.OnClickListener mlistener;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +102,6 @@ public class SignActivity extends AppCompatActivity {
                    transaction.commit();
                 }
                 else {
-                    Toast.makeText(SignActivity.this, "풱ㄹ뎃쇗", Toast.LENGTH_SHORT).show();
                     fm.popBackStack("signFragment", fm.POP_BACK_STACK_INCLUSIVE);
                     transaction.remove(signFragment);
                     transaction.commit();
@@ -104,6 +109,9 @@ public class SignActivity extends AppCompatActivity {
 
             }
         });
+
+
+
 
         /*btn_oper_picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,6 +155,32 @@ public class SignActivity extends AppCompatActivity {
         }
     };
 */
+
+    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("뒤로가기").setMessage("저장된 내용이 삭제됩니다.");
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
 
     }
 }
