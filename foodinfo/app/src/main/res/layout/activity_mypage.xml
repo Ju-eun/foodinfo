@@ -17,6 +17,7 @@
             android:gravity="center"
             android:layout_height="wrap_content">
             <RadioButton
+                android:enabled="false"
                 android:id="@+id/owner"
                 android:text="사업자"
                 android:layout_marginRight="70dp"
@@ -24,6 +25,7 @@
                 android:layout_height="wrap_content"/>
             <RadioButton
                 android:text="사용자"
+                android:enabled="false"
                 android:id="@+id/user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
