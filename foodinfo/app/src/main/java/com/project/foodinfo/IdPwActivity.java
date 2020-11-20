@@ -9,6 +9,18 @@ import android.view.View;
 import android.widget.*;
 
 import androidx.annotation.NonNull;
+<<<<<<< HEAD
+=======
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import static android.content.ContentValues.TAG;
+
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,6 +34,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import static android.content.ContentValues.TAG;
 
+<<<<<<< HEAD
+=======
+public class IdPwActivity extends TabActivity implements View.OnClickListener {
+    String key;
+    Info value;
+    Button btn_1;
+    EditText edt_name, edt_email1;
+    DatabaseReference Ref;
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
 
 @SuppressWarnings("deprecation")
 
@@ -37,6 +58,7 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener, O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_idpw);
 
+<<<<<<< HEAD
         edt_idpw_name = findViewById(R.id.edt_idpw_name);
         edt_idpw_id = findViewById(R.id.edt_idpw_id);
         edt_idpw_email1 = findViewById(R.id.edt_idpw_email1);
@@ -47,6 +69,13 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener, O
         btn_idpw_2 = ((Button) findViewById(R.id.btn_idpw_1));
         btn_idpw_2.setOnClickListener(this);
 
+=======
+        edt_name = findViewById(R.id.edt_name);
+        edt_email1 = findViewById(R.id.edt_email1);
+
+        btn_1 = ((Button) findViewById(R.id.btn_1));
+        btn_1.setOnClickListener(this);
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
         TabHost tabHost = getTabHost();
 
         TabHost.TabSpec tabSpecID =
@@ -62,24 +91,37 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener, O
         tabHost.addTab(tabSpecPW);
 
         tabHost.setCurrentTab(0);
+<<<<<<< HEAD
         firebaseAuth = FirebaseAuth.getInstance();
+=======
+
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
 
     }
 
     @Override
+<<<<<<< HEAD
     public void onClick(View view) {
+=======
+    public void onClick(View v) {
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
 
         Ref = FirebaseDatabase.getInstance().getReference("moble-foodtruck").child("MemInfo");
         Ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+<<<<<<< HEAD
                 boolean b = false;
+=======
+
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     try {
 
                         key = snapshot.getKey();
                         value = snapshot.getValue(Info.class);
 
+<<<<<<< HEAD
 
                         Log.d("AA", "key : " + key);
                         Log.d("AA", value.name);
@@ -196,10 +238,33 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener, O
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 }*/
+=======
+                        Log.d("AA", "key : " + key);
+                        Log.d("AA", value.name);
+                        Log.d("AA", value.email);
+                        Log.d("AA", edt_name.getText().toString());
+                        Log.d("AA", edt_email1.getText().toString());
+
+                        if (value.name.equals(edt_name.getText().toString()) && value.email.equals(edt_email1.getText().toString())) {
+                            Toast.makeText(IdPwActivity.this, value.id, Toast.LENGTH_SHORT).show();
+                            Log.d("AAA", "되찌롱~~!!!!!!!!");
+                        }
+
+
+                    } catch (ClassCastException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+<<<<<<< HEAD
             }
         });
     }
@@ -208,6 +273,12 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener, O
     public void onComplete(@NonNull Task<Void> task) {
 
     }
+=======
+
+            }
+        });
+    }
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
 }
 
 class Info {
@@ -235,6 +306,7 @@ class Info {
 
     public void setPassword(String password) {
         this.password = password;
+<<<<<<< HEAD
     }
 
     public int getCheck_owner() {
@@ -245,6 +317,18 @@ class Info {
         return email;
     }
 
+=======
+    }
+
+    public int getCheck_owner() {
+        return check_owner;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
     public String getId() {
         return id;
     }

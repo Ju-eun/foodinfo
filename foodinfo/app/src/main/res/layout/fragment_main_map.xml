@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_fragment_map"
+    tools:context=".Fragment_main_map">
+
+    <androidx.viewpager.widget.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp">
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/main_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="메뉴"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/main_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="지도"/>
+
+        </com.google.android.material.tabs.TabLayout>
+    </androidx.viewpager.widget.ViewPager>
+</FrameLayout>
