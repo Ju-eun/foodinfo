@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@android:id/tabhost"
-    android:src = "@drawable/ja_food"
+    android:src = "@drawable/food"
     tools:context=".IdPwActivity" >
 
     <LinearLayout
@@ -25,7 +25,8 @@
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <LinearLayout
                 android:id="@+id/아이디찾기"
@@ -43,12 +44,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="이름    "
+                        android:text="이름    :"
                         android:textSize="20dp" />
 
                     <EditText
-                        android:id="@+id/edt_name"
-                        android:layout_width="match_parent"
+                        android:id="@+id/edt_idpw_name"
+                        android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:hint="이름을 입력해주세요." />
 
@@ -64,12 +65,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="E-mail"
+                        android:text="E-mail:"
                         android:textSize="20dp" />
 
                     <EditText
-                        android:id="@+id/edt_email1"
-                        android:layout_width="match_parent"
+                        android:id="@+id/edt_idpw_email1"
+                        android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:hint="E-mail을 입력해주세요." />
 
@@ -80,8 +81,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="찾기"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold"
-                    android:id="@+id/btn_1"/>
+                    android:background="@drawable/btn_cut"
+                    android:layout_margin="30dp"
+                    android:id="@+id/btn_idpw_1"
+                    android:onClick="onClick"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/food"/>
 
 
 
@@ -89,7 +99,7 @@
 
             <!--비밀번호 찾기-->
             <LinearLayout
-                android:id="@+id/비밀번호찾기"
+                android:id="@+id/패스워드찾기"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="50dp"
@@ -104,12 +114,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="ID    　"
+                        android:text="ID    　:"
                         android:textSize="20dp" />
 
                     <EditText
-                        android:id="@+id/edt_id"
-                        android:layout_width="match_parent"
+                        android:id="@+id/edt_idpw_id"
+                        android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:hint="아이디를 입력해주세요." />
 
@@ -125,12 +135,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="E-mail"
+                        android:text="E-mail:"
                         android:textSize="20dp" />
 
                     <EditText
-                        android:id="@+id/edt_email2"
-                        android:layout_width="match_parent"
+                        android:id="@+id/edt_idpw_email2"
+                        android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:hint="E-mail을 입력해주세요." />
 
@@ -141,9 +151,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="찾기"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold"
-                    android:id="@+id/btn_2"/>
+                    android:background="@drawable/btn_cut"
+                    android:layout_margin="30dp"
+                    android:onClick="onClick2"
+                    android:id="@+id/btn_idpw_2"/>
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/food"/>
 
             </LinearLayout>
 
