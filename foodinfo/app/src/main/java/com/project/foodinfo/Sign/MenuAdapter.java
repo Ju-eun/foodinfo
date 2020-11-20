@@ -84,4 +84,3 @@ public class MenuAdapter extends BaseAdapter {
     }
 }
 
-

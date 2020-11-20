@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.project.foodinfo.R;
 
 
-public class oper extends AppCompatActivity {
+public class OperActivity extends AppCompatActivity {
 
    private final int GET_GALLERY_IMAGE = 200;
    public ImageView imageview;
