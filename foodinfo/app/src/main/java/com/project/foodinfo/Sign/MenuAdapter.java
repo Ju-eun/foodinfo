@@ -9,11 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-<<<<<<< HEAD
-public class MenuAdapter  {
-
-
-=======
 import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
 
@@ -87,7 +82,5 @@ public class MenuAdapter extends BaseAdapter {
             myItems.remove(myItems.size()-1);
         }
     }
->>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
 }
-
 
