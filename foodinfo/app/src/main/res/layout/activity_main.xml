@@ -37,25 +37,20 @@
         </androidx.appcompat.widget.Toolbar>
 
         <include
+            android:id="@+id/main_1"
             layout="@layout/content_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <include
-            layout="@layout/fragment_main_map"
+            layout="@layout/main_tablayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_below="@id/main_1"
+            />
+
 
     </RelativeLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:foregroundGravity="bottom"
-        android:gravity="bottom"
-        android:orientation="horizontal">
-    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -65,5 +60,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/navi_header"
         app:menu="@menu/navi_menu" />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
