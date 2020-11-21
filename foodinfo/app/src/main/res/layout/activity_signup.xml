@@ -9,9 +9,9 @@
 
 
     <ScrollView
+        android:id="@+id/scrollView123"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView123">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                     android:id="@+id/btn_idcheck"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="중복확인"
+                    android:text="중복\n확인"
                     android:textSize="10dp" />
             </LinearLayout>
 
@@ -111,11 +111,88 @@
                     android:text="비밀번호 확인 : "
                     android:textSize="12dp" />
 
+
                 <EditText
                     android:id="@+id/et_pwcheck"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center"
+                    android:text="핸드폰 번호 : "
+                    android:textSize="12dp" />
+
+
+                <EditText
+                    android:id="@+id/et_phone1"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="010" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="-"
+                    android:textSize="30dp" />
+
+                <EditText
+                    android:id="@+id/et_phone2"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="-"
+                    android:textSize="30dp" />
+
+                <EditText
+                    android:id="@+id/et_phone3"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center"
+                    android:text="생년월일 : "
+                    android:textSize="15dp" />
+
+
+                <TextView
+                    android:id="@+id/sign_tv_yy_mm_dd"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center"
+                    android:text="생년월일 입력"
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -176,7 +253,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp">
 
                 <Button
                     android:id="@+id/btn_signUp"
@@ -191,11 +269,13 @@
                     android:text="뒤로 가기" />
 
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
 
 </LinearLayout>
+
 
 
     <!--<LinearLayout-->

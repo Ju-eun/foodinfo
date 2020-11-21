@@ -95,6 +95,7 @@ public class SignFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         return view;
     }
 
