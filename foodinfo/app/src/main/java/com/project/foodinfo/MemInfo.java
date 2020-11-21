@@ -5,6 +5,16 @@ public class MemInfo {
     private String name;
     private String email;
     private String password;
+    private String time;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
     private int check_owner;
 
     public MemInfo(){}

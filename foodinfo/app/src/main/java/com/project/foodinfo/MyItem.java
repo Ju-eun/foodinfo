@@ -2,6 +2,7 @@ package com.project.foodinfo;
 
 public class MyItem {
     private int icon;
+    private String menuImg;
     private String name;
     private String price;
 
@@ -11,6 +12,14 @@ public class MyItem {
 
     public void setIcon(int icon) {
         this.icon = icon;
+    }
+
+    public String getMenuImg() {
+        return menuImg;
+    }
+
+    public void setMenuImg(String menuImg) {
+        this.menuImg = menuImg;
     }
 
     public String getName() {
@@ -28,4 +37,6 @@ public class MyItem {
     public void setPrice(String price) {
         this.price = price;
     }
+
+
 }
