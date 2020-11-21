@@ -30,10 +30,10 @@ public class Fragment_review extends Fragment {
 
         MyAdapter myAdapter = new MyAdapter();
         lv_review.setAdapter(myAdapter);
-        for(int i = 0;i<10;i++){
-            myAdapter.addItem("국밥","1000");
-            myAdapter.notifyDataSetChanged();
-        }
+//        for(int i = 0;i<10;i++){
+//            myAdapter.addItem("국밥","1000");
+//            myAdapter.notifyDataSetChanged();
+//        }
         return view;
     }
 }

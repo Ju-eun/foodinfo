@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
-
-
 import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
 
 import java.util.ArrayList;
+
+
 
 public class MenuAdapter extends BaseAdapter {
     private ArrayList<MyItem> myItems = new ArrayList<>();

@@ -7,30 +7,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
-import android.animation.Animator;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.google.android.material.navigation.NavigationView;
-
-import com.project.foodinfo.Sign.SignFragment;
-
+import com.google.android.material.tabs.TabLayout;
 
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     NavigationView navigationView;
     private DrawerLayout mDrawerLayout;
-    private Context context=this;
+    private TabLayout tabLayout;
+    ViewPager main_viewpager;
+
+   // MyAdapter myAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar=findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();  //제목줄 객체 얻어오기
-        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우
+        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양
         mDrawerLayout=findViewById(R.id.drawer_layout);
@@ -60,18 +59,52 @@ public class MainActivity extends AppCompatActivity {
 
                 if(id == R.id.login){
                     Intent intent=new Intent(MainActivity.this, LoginActivity.class);
-                    Toast.makeText(context, title + ": 계정 정보를 확인합니다.", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 }
                 else if(id == R.id.connection){
-                    Toast.makeText(context, title + ": 설정 정보를 확인합니다.", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
         });
 
+   //     myAdapter = new MyAdapter();
 
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
+        tabLayout.addTab(tabLayout.newTab().setText("지 도"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        main_viewpager = findViewById(R.id.main_viewpager);
+
+        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        main_viewpager.setAdapter(pagerAdapter);
+
+//
+//        lv_menu.setAdapter(myAdapter);
+        pagerAdapter.notifyDataSetChanged();
+
+        main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                main_viewpager.setCurrentItem(tab.getPosition());
+                //TODO : tab 상태가 선택 상태로 변경
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //TODO : tab의 상태가 선택되지 않음으로 변경.
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                //TODO : 이미 선택된 tab이 다시
+            }
+        });
+        //lv_menu = (ListView)findViewById(R.id.lv_menu);
+//        lv_menu.setAdapter(myAdapter);
     }
 
     @Override
@@ -89,4 +122,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
 }
+
+class MainTabPagerAdapter extends FragmentStatePagerAdapter {
+
+    private  int tabCount;
+    public MainTabPagerAdapter(FragmentManager fm, int tabCount){
+        super(fm);
+        this.tabCount=tabCount;
+    }
+
+    @NonNull
+    @Override
+    public Fragment getItem(int position) {
+
+        switch (position){
+            case  0:
+                Fragment_main_menu main_menu = new Fragment_main_menu();
+                return main_menu;
+            case 1:
+                Fragment_main_map main_map = new Fragment_main_map();
+                return main_map;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public int getCount() {
+        return tabCount;
+    }
+}
+
