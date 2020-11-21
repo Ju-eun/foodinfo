@@ -69,38 +69,40 @@ public class MainActivity extends AppCompatActivity {
 
    //     myAdapter = new MyAdapter();
 
-//        tabLayout = findViewById(R.id.tabLayout);
-//        tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
-//        tabLayout.addTab(tabLayout.newTab().setText("지 도"));
-//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-//
-//        main_viewpager = findViewById(R.id.main_viewpager);
-//
-//        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
-//        main_viewpager.setAdapter(pagerAdapter);
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
+        tabLayout.addTab(tabLayout.newTab().setText("지 도"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        main_viewpager = findViewById(R.id.main_viewpager);
+
+        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        main_viewpager.setAdapter(pagerAdapter);
 
 //
 //        lv_menu.setAdapter(myAdapter);
-       // pagerAdapter.notifyDataSetChanged();
+        pagerAdapter.notifyDataSetChanged();
 
-//        main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//
-//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                main_viewpager.setCurrentItem(tab.getPosition());
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
+        main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                main_viewpager.setCurrentItem(tab.getPosition());
+                //TODO : tab 상태가 선택 상태로 변경
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                //TODO : tab의 상태가 선택되지 않음으로 변경.
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                //TODO : 이미 선택된 tab이 다시
+            }
+        });
         //lv_menu = (ListView)findViewById(R.id.lv_menu);
 //        lv_menu.setAdapter(myAdapter);
     }
@@ -124,33 +126,33 @@ public class MainActivity extends AppCompatActivity {
 
 }
 
-//class MainTabPagerAdapter extends FragmentStatePagerAdapter {
-//
-//    private  int tabCount;
-//    public MainTabPagerAdapter(FragmentManager fm, int tabCount){
-//        super(fm);
-//        this.tabCount=tabCount;
-//    }
-//
-//    @NonNull
-//    @Override
-//    public Fragment getItem(int position) {
-//
-//        switch (position){
-//            case  0:
-//                Fragment_main_menu main_menu = new Fragment_main_menu();
-//                return main_menu;
-//            case 1:
-//                Fragment_main_map main_map = new Fragment_main_map();
-//                return main_map;
-//            default:
-//                return null;
-//        }
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        return tabCount;
-//    }
-//}
+class MainTabPagerAdapter extends FragmentStatePagerAdapter {
+
+    private  int tabCount;
+    public MainTabPagerAdapter(FragmentManager fm, int tabCount){
+        super(fm);
+        this.tabCount=tabCount;
+    }
+
+    @NonNull
+    @Override
+    public Fragment getItem(int position) {
+
+        switch (position){
+            case  0:
+                Fragment_main_menu main_menu = new Fragment_main_menu();
+                return main_menu;
+            case 1:
+                Fragment_main_map main_map = new Fragment_main_map();
+                return main_map;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public int getCount() {
+        return tabCount;
+    }
+}
 
