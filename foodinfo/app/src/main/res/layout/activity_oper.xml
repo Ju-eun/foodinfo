@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Sign.oper">
+    tools:context=".Sign.OperActivity">
 
     <Button
         android:id="@+id/btn_oper_image"
