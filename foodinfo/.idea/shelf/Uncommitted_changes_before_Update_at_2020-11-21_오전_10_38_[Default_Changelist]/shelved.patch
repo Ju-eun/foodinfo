@@ -1,0 +1,552 @@
+Index: app/src/main/java/com/project/foodinfo/Fragment_main_map.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//package com.project.foodinfo;\r\n//\r\n//import android.os.Bundle;\r\n//\r\n//import androidx.annotation.NonNull;\r\n//import androidx.annotation.Nullable;\r\n//import androidx.fragment.app.Fragment;\r\n//\r\n//import android.view.LayoutInflater;\r\n//import android.view.View;\r\n//import android.view.ViewGroup;\r\n//\r\n//import com.google.android.gms.maps.GoogleMap;\r\n//import com.google.android.gms.maps.MapView;\r\n//import com.google.android.gms.maps.MapsInitializer;\r\n//import com.google.android.gms.maps.OnMapReadyCallback;\r\n//\r\n///**\r\n// * A simple {@link Fragment} subclass.\r\n// * Use the  factory method to\r\n// * create an instance of this fragment.\r\n// */\r\n//public class Fragment_main_map extends Fragment implements OnMapReadyCallback {\r\n//\r\n//    GoogleMap mMap;\r\n//    MapView mapView;\r\n//    View mView;\r\n//\r\n//    @Override\r\n//    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n//                             Bundle savedInstanceState) {\r\n//        // Inflate the layout for this fragment\r\n//        return inflater.inflate(R.layout.fragment_main_map, container, false);\r\n//    }\r\n//\r\n//    @Override\r\n//    public void onMapReady(GoogleMap googleMap) {\r\n//        MapsInitializer.initialize(getContext());\r\n//        mMap=googleMap;\r\n//        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);\r\n//    }\r\n//\r\n//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\r\n//        super.onViewCreated(view, savedInstanceState);\r\n//\r\n//        mapView = mView.findViewById(R.id.main_mapview);\r\n//        if (mapView != null) {\r\n//            mapView.onCreate(null);\r\n//            mapView.onResume();\r\n//            mapView.getMapAsync(this);\r\n//        }\r\n//    }\r\n//\r\n//\r\n//}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/Fragment_main_map.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/Fragment_main_map.java	(date 1605858171344)
+@@ -1,55 +1,94 @@
+-//package com.project.foodinfo;
+-//
+-//import android.os.Bundle;
+-//
+-//import androidx.annotation.NonNull;
+-//import androidx.annotation.Nullable;
+-//import androidx.fragment.app.Fragment;
+-//
+-//import android.view.LayoutInflater;
+-//import android.view.View;
+-//import android.view.ViewGroup;
+-//
+-//import com.google.android.gms.maps.GoogleMap;
+-//import com.google.android.gms.maps.MapView;
+-//import com.google.android.gms.maps.MapsInitializer;
+-//import com.google.android.gms.maps.OnMapReadyCallback;
+-//
+-///**
+-// * A simple {@link Fragment} subclass.
+-// * Use the  factory method to
+-// * create an instance of this fragment.
+-// */
+-//public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
+-//
+-//    GoogleMap mMap;
+-//    MapView mapView;
+-//    View mView;
+-//
+-//    @Override
+-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+-//                             Bundle savedInstanceState) {
+-//        // Inflate the layout for this fragment
+-//        return inflater.inflate(R.layout.fragment_main_map, container, false);
+-//    }
+-//
+-//    @Override
+-//    public void onMapReady(GoogleMap googleMap) {
+-//        MapsInitializer.initialize(getContext());
+-//        mMap=googleMap;
+-//        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+-//    }
+-//
+-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+-//        super.onViewCreated(view, savedInstanceState);
+-//
+-//        mapView = mView.findViewById(R.id.main_mapview);
+-//        if (mapView != null) {
+-//            mapView.onCreate(null);
+-//            mapView.onResume();
+-//            mapView.getMapAsync(this);
++package com.project.foodinfo;
++
++import android.Manifest;
++import android.os.Bundle;
++
++import androidx.annotation.NonNull;
++import androidx.annotation.Nullable;
++import androidx.fragment.app.Fragment;
++
++import android.view.LayoutInflater;
++import android.view.MenuItem;
++import android.view.View;
++import android.view.ViewGroup;
++
++import com.google.android.gms.maps.CameraUpdate;
++import com.google.android.gms.maps.CameraUpdateFactory;
++import com.google.android.gms.maps.GoogleMap;
++import com.google.android.gms.maps.MapView;
++import com.google.android.gms.maps.MapsInitializer;
++import com.google.android.gms.maps.OnMapReadyCallback;
++import com.google.android.gms.maps.model.BitmapDescriptorFactory;
++import com.google.android.gms.maps.model.LatLng;
++import com.google.android.gms.maps.model.MarkerOptions;
++
++import java.util.Map;
++
++/**
++ * A simple {@link Fragment} subclass.
++ * Use the  factory method to
++ * create an instance of this fragment.
++ */
++public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
++
++    GoogleMap mMap;
++    MapView mapView;
++    View mView;
++
++String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
++
++
++    @Override
++    public void onMapReady(GoogleMap googleMap) {
++        MapsInitializer.initialize(getContext());
++        mMap=googleMap;
++        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
++    }
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                             Bundle savedInstanceState) {
++        // Inflate the layout for this fragment
++
++        LatLng coordinate = null;
++        MarkerOptions marker;
++
++//        for(int index = 0; index < 10; index++) {
++//            coordinate = new LatLng(37.52487 + index, 126.92723);
++//            marker = new MarkerOptions();
++//            marker.position(coordinate);
++//            marker.alpha(0.8f);
++//            marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
++//            mMap.addMarker(marker);
+ //        }
+-//    }
+-//
+-//
+-//}
+\ No newline at end of file
++
++        mView = inflater.inflate(R.layout.fragment_main_map, container, false);
++        return mView;
++    }
++
++
++    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
++        super.onViewCreated(view, savedInstanceState);
++
++        mapView = (MapView)mView.findViewById(R.id.main_mapview);
++        if (mapView != null) {
++            mapView.onCreate(null);
++            mapView.onResume();
++            mapView.getMapAsync(this);
++        }
++    }
++
++    @Override
++    public boolean onOptionsItemSelected(MenuItem item) {
++        if (item.getItemId() == R.id.main_mapview) {
++            showCurrentPlace();
++        }
++        return true;
++    }
++
++    private void showCurrentPlace() {
++    }
++    ////////////////////////////////////////////////////////////////////////////////////
++
++
++}
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    package=\"com.project.foodinfo\">\r\n    <uses-permission android:name=\"android.permission.INTERNET\"/>\r\n    <uses-permission android:name=\"com.google.android.proveders.gsf.permission.READ_GSERVICES\"/>\r\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>\r\n    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>\r\n\r\n    <application\r\n        android:allowBackup=\"true\"\r\n        android:icon=\"@mipmap/ic_food\"\r\n        android:label=\"@string/app_name\"\r\n        android:roundIcon=\"@mipmap/ic_food_round\"\r\n        android:supportsRtl=\"true\"\r\n        android:theme=\"@style/Theme.FoodInfo\">\r\n        <activity android:name=\".IntroActivity\"/>\r\n\r\n        <meta-data\r\n            android:name=\"com.google.android.geo.API_KEY\"\r\n            android:value=\"AIzaSyD0fsBcXuJN0_Fq8vQXgFw234UlxWDgIqs\" />\r\n\r\n\r\n        <activity android:name=\".IntroActivity\">\r\n            <intent-filter>\r\n                <action android:name=\"android.intent.action.MAIN\" />\r\n                <category android:name=\"android.intent.category.LAUNCHER\" />\r\n            </intent-filter>\r\n        </activity>\r\n        <activity android:name=\".MypageActivity\">\r\n\r\n        </activity>\r\n        <activity android:name=\".StoreinfoActivity\"></activity>\r\n        <activity android:name=\".Sign.SignActivity\" />\r\n        <activity android:name=\".IdPwActivity\" />\r\n        <activity android:name=\".MainActivity\"/>\r\n    <activity android:name=\".StoreinfoActivity\"/>\r\n        <activity android:name=\".MypageActivity\">\r\n        <intent-filter>\r\n            <action android:name=\"android.intent.action.MAIN\" />\r\n            <category android:name=\"android.intent.category.LAUNCHER\" />\r\n        </intent-filter>\r\n    </activity>\r\n        <activity android:name=\".LoginActivity\" />\r\n\r\n    </application>\r\n\r\n</manifest>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/AndroidManifest.xml	(date 1605842454704)
+@@ -13,7 +13,6 @@
+         android:roundIcon="@mipmap/ic_food_round"
+         android:supportsRtl="true"
+         android:theme="@style/Theme.FoodInfo">
+-        <activity android:name=".IntroActivity"/>
+ 
+         <meta-data
+             android:name="com.google.android.geo.API_KEY"
+@@ -26,10 +25,6 @@
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
+-        <activity android:name=".MypageActivity">
+-
+-        </activity>
+-        <activity android:name=".StoreinfoActivity"></activity>
+         <activity android:name=".Sign.SignActivity" />
+         <activity android:name=".IdPwActivity" />
+         <activity android:name=".MainActivity"/>
+Index: app/src/main/java/com/project/foodinfo/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.project.foodinfo;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.RequiresApi;\r\nimport androidx.appcompat.app.ActionBar;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.appcompat.widget.Toolbar;\r\nimport androidx.core.view.GravityCompat;\r\nimport androidx.drawerlayout.widget.DrawerLayout;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.fragment.app.FragmentManager;\r\nimport androidx.fragment.app.FragmentStatePagerAdapter;\r\nimport androidx.viewpager.widget.ViewPager;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Build;\r\nimport android.os.Bundle;\r\nimport android.view.MenuItem;\r\nimport android.widget.ListView;\r\n\r\nimport com.google.android.material.navigation.NavigationView;\r\nimport com.google.android.material.tabs.TabLayout;\r\n\r\n\r\npublic class MainActivity extends AppCompatActivity {\r\n    Toolbar toolbar;\r\n    NavigationView navigationView;\r\n    private DrawerLayout mDrawerLayout;\r\n    private TabLayout tabLayout;\r\n    ViewPager main_viewpager;\r\n\r\n   // MyAdapter myAdapter;\r\n\r\n    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_main);\r\n\r\n        //툴바 설정\r\n        toolbar=findViewById(R.id.toolbar);\r\n        setSupportActionBar(toolbar);\r\n        ActionBar actionBar = getSupportActionBar();  //제목줄 객체 얻어오기\r\n        actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기\r\n        actionBar.setDisplayHomeAsUpEnabled(true);\r\n        actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양\r\n        mDrawerLayout=findViewById(R.id.drawer_layout);\r\n\r\n        //네이게이션 화면 설정\r\n        navigationView = findViewById(R.id.nav_view);\r\n\r\n        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {\r\n            @Override\r\n            public boolean onNavigationItemSelected(@NonNull MenuItem item) {\r\n                item.setChecked(true);\r\n                mDrawerLayout.closeDrawers();\r\n                int id = item.getItemId();\r\n                String title = item.getTitle().toString();\r\n\r\n                if(id == R.id.login){\r\n                    Intent intent=new Intent(MainActivity.this, LoginActivity.class);\r\n                    startActivity(intent);\r\n                }\r\n                else if(id == R.id.connection){\r\n                }\r\n                return true;\r\n            }\r\n        });\r\n\r\n   //     myAdapter = new MyAdapter();\r\n\r\n//        tabLayout = findViewById(R.id.tabLayout);\r\n//        tabLayout.addTab(tabLayout.newTab().setText(\"메 뉴\"));\r\n//        tabLayout.addTab(tabLayout.newTab().setText(\"지 도\"));\r\n//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);\r\n//\r\n//        main_viewpager = findViewById(R.id.main_viewpager);\r\n//\r\n//        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());\r\n//        main_viewpager.setAdapter(pagerAdapter);\r\n\r\n//\r\n//        lv_menu.setAdapter(myAdapter);\r\n       // pagerAdapter.notifyDataSetChanged();\r\n\r\n//        main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));\r\n//\r\n//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {\r\n//            @Override\r\n//            public void onTabSelected(TabLayout.Tab tab) {\r\n//                main_viewpager.setCurrentItem(tab.getPosition());\r\n//            }\r\n//\r\n//            @Override\r\n//            public void onTabUnselected(TabLayout.Tab tab) {\r\n//\r\n//            }\r\n//\r\n//            @Override\r\n//            public void onTabReselected(TabLayout.Tab tab) {\r\n//\r\n//            }\r\n//        });\r\n        //lv_menu = (ListView)findViewById(R.id.lv_menu);\r\n//        lv_menu.setAdapter(myAdapter);\r\n    }\r\n\r\n    @Override\r\n    public boolean onOptionsItemSelected(@NonNull MenuItem item) {\r\n        int id=item.getItemId();\r\n        switch(id){\r\n            case android.R.id.home:{\r\n                mDrawerLayout.openDrawer(GravityCompat.START);\r\n                return true;\r\n\r\n            }\r\n        }\r\n        return super.onOptionsItemSelected(item);\r\n\r\n\r\n    }\r\n\r\n\r\n\r\n}\r\n\r\n//class MainTabPagerAdapter extends FragmentStatePagerAdapter {\r\n//\r\n//    private  int tabCount;\r\n//    public MainTabPagerAdapter(FragmentManager fm, int tabCount){\r\n//        super(fm);\r\n//        this.tabCount=tabCount;\r\n//    }\r\n//\r\n//    @NonNull\r\n//    @Override\r\n//    public Fragment getItem(int position) {\r\n//\r\n//        switch (position){\r\n//            case  0:\r\n//                Fragment_main_menu main_menu = new Fragment_main_menu();\r\n//                return main_menu;\r\n//            case 1:\r\n//                Fragment_main_map main_map = new Fragment_main_map();\r\n//                return main_map;\r\n//            default:\r\n//                return null;\r\n//        }\r\n//    }\r\n//\r\n//    @Override\r\n//    public int getCount() {\r\n//        return tabCount;\r\n//    }\r\n//}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/MainActivity.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/MainActivity.java	(date 1605851500998)
+@@ -69,38 +69,40 @@
+ 
+    //     myAdapter = new MyAdapter();
+ 
+-//        tabLayout = findViewById(R.id.tabLayout);
+-//        tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
+-//        tabLayout.addTab(tabLayout.newTab().setText("지 도"));
+-//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+-//
+-//        main_viewpager = findViewById(R.id.main_viewpager);
+-//
+-//        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+-//        main_viewpager.setAdapter(pagerAdapter);
++        tabLayout = findViewById(R.id.tabLayout);
++        tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
++        tabLayout.addTab(tabLayout.newTab().setText("지 도"));
++        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
++
++        main_viewpager = findViewById(R.id.main_viewpager);
++
++        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
++        main_viewpager.setAdapter(pagerAdapter);
+ 
+ //
+ //        lv_menu.setAdapter(myAdapter);
+-       // pagerAdapter.notifyDataSetChanged();
++        pagerAdapter.notifyDataSetChanged();
++
++        main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
++
++        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
++            @Override
++            public void onTabSelected(TabLayout.Tab tab) {
++                main_viewpager.setCurrentItem(tab.getPosition());
++                //TODO : tab 상태가 선택 상태로 변경
++            }
++
++            @Override
++            public void onTabUnselected(TabLayout.Tab tab) {
++                //TODO : tab의 상태가 선택되지 않음으로 변경.
+ 
+-//        main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+-//
+-//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+-//            @Override
+-//            public void onTabSelected(TabLayout.Tab tab) {
+-//                main_viewpager.setCurrentItem(tab.getPosition());
+-//            }
+-//
+-//            @Override
+-//            public void onTabUnselected(TabLayout.Tab tab) {
+-//
+-//            }
+-//
+-//            @Override
+-//            public void onTabReselected(TabLayout.Tab tab) {
+-//
+-//            }
+-//        });
++            }
++
++            @Override
++            public void onTabReselected(TabLayout.Tab tab) {
++                //TODO : 이미 선택된 tab이 다시
++            }
++        });
+         //lv_menu = (ListView)findViewById(R.id.lv_menu);
+ //        lv_menu.setAdapter(myAdapter);
+     }
+@@ -124,33 +126,33 @@
+ 
+ }
+ 
+-//class MainTabPagerAdapter extends FragmentStatePagerAdapter {
+-//
+-//    private  int tabCount;
+-//    public MainTabPagerAdapter(FragmentManager fm, int tabCount){
+-//        super(fm);
+-//        this.tabCount=tabCount;
+-//    }
+-//
+-//    @NonNull
+-//    @Override
+-//    public Fragment getItem(int position) {
+-//
+-//        switch (position){
+-//            case  0:
+-//                Fragment_main_menu main_menu = new Fragment_main_menu();
+-//                return main_menu;
+-//            case 1:
+-//                Fragment_main_map main_map = new Fragment_main_map();
+-//                return main_map;
+-//            default:
+-//                return null;
+-//        }
+-//    }
+-//
+-//    @Override
+-//    public int getCount() {
+-//        return tabCount;
+-//    }
+-//}
++class MainTabPagerAdapter extends FragmentStatePagerAdapter {
++
++    private  int tabCount;
++    public MainTabPagerAdapter(FragmentManager fm, int tabCount){
++        super(fm);
++        this.tabCount=tabCount;
++    }
++
++    @NonNull
++    @Override
++    public Fragment getItem(int position) {
++
++        switch (position){
++            case  0:
++                Fragment_main_menu main_menu = new Fragment_main_menu();
++                return main_menu;
++            case 1:
++                Fragment_main_map main_map = new Fragment_main_map();
++                return main_map;
++            default:
++                return null;
++        }
++    }
++
++    @Override
++    public int getCount() {
++        return tabCount;
++    }
++}
+ 
+Index: app/src/main/res/layout/fragment_main_map.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<FrameLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:id=\"@+id/main_fragment_map\"\r\n    tools:context=\".Fragment_main_map\">\r\n\r\n    <com.google.android.gms.maps.MapView\r\n        android:id=\"@+id/main_mapview\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"/>\r\n\r\n</FrameLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/fragment_main_map.xml	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/res/layout/fragment_main_map.xml	(date 1605851961429)
+@@ -9,6 +9,7 @@
+     <com.google.android.gms.maps.MapView
+         android:id="@+id/main_mapview"
+         android:layout_width="match_parent"
+-        android:layout_height="match_parent"/>
++        android:layout_height="match_parent"
++        android:name="com.google.android.gms.maps.MapFragment" />
+ 
+ </FrameLayout>
+\ No newline at end of file
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'com.android.application'\r\n    id 'com.google.gms.google-services'\r\n}\r\n\r\nandroid {\r\n    compileSdkVersion 30\r\n    buildToolsVersion \"30.0.2\"\r\n\r\n    defaultConfig {\r\n        applicationId \"com.project.foodinfo\"\r\n        minSdkVersion 16\r\n        targetSdkVersion 30\r\n        versionCode 1\r\n        versionName \"1.0\"\r\n\r\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled false\r\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation 'androidx.appcompat:appcompat:1.2.0'\r\n    implementation 'com.google.android.material:material:1.2.1'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'\r\n    implementation 'com.android.support:appcompat-v7:30.1.1'\r\n    implementation 'com.google.firebase:firebase-database:19.5.1'\r\n    implementation 'com.airbnb.android:lottie:3.0.7'\r\n    implementation 'com.google.firebase:firebase-auth:20.0.1'\r\n    implementation 'com.google.firebase:firebase-storage:19.2.0'\r\n    implementation 'com.github.bumptech.glide:glide:4.11.0'\r\n    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'\r\n    testImplementation 'junit:junit:4.+'\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.2'\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/build.gradle	(date 1605853014328)
+@@ -40,6 +40,8 @@
+     implementation 'com.google.firebase:firebase-auth:20.0.1'
+     implementation 'com.google.firebase:firebase-storage:19.2.0'
+     implementation 'com.github.bumptech.glide:glide:4.11.0'
++    implementation 'com.google.android.gms:play-services-maps:17.0.0'
++    implementation 'com.google.android.gms:play-services-location:17.0.0'
+     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+     testImplementation 'junit:junit:4.+'
+     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+Index: app/src/main/java/com/project/foodinfo/IdPwActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/*\r\npackage com.project.foodinfo;\r\n\r\nimport android.app.*;\r\nimport android.content.DialogInterface;\r\nimport android.content.Intent;\r\nimport android.os.*;\r\nimport android.util.Log;\r\nimport android.view.View;\r\nimport android.widget.*;\r\n\r\nimport androidx.annotation.NonNull;\r\n\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport static android.content.ContentValues.TAG;\r\nimport com.google.android.gms.tasks.OnCompleteListener;\r\nimport com.google.android.gms.tasks.Task;\r\nimport com.google.firebase.auth.FirebaseAuth;\r\nimport com.google.firebase.auth.FirebaseUser;\r\nimport com.google.firebase.database.DataSnapshot;\r\nimport com.google.firebase.database.DatabaseError;\r\nimport com.google.firebase.database.DatabaseReference;\r\nimport com.google.firebase.database.FirebaseDatabase;\r\nimport com.google.firebase.database.ValueEventListener;\r\n\r\nimport static android.content.ContentValues.TAG;\r\n\r\n\r\n//public class IdPwActivity extends TabActivity implements View.OnClickListener {\r\n//    String key;\r\n//    Info value;\r\n//    Button btn_1;\r\n//    EditText edt_name, edt_email1;\r\n//    DatabaseReference Ref;\r\n\r\npublic class IdPwActivity extends TabActivity implements View.OnClickListener, OnCompleteListener<Void> {\r\n    String key;\r\n    Info value;\r\n    Button btn_idpw_1, btn_idpw_2;\r\n    EditText edt_idpw_name, edt_idpw_id, edt_idpw_email1, edt_idpw_email2;\r\n    DatabaseReference Ref;\r\n    FirebaseAuth firebaseAuth;\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_idpw);\r\n\r\n        edt_idpw_name = findViewById(R.id.edt_idpw_name);\r\n        edt_idpw_id = findViewById(R.id.edt_idpw_id);\r\n        edt_idpw_email1 = findViewById(R.id.edt_idpw_email1);\r\n        edt_idpw_email2 = findViewById(R.id.edt_idpw_email2);\r\n\r\n        btn_idpw_1 = ((Button) findViewById(R.id.btn_idpw_1));\r\n        btn_idpw_1.setOnClickListener(this);\r\n        btn_idpw_2 = ((Button) findViewById(R.id.btn_idpw_1));\r\n        btn_idpw_2.setOnClickListener(this);\r\n\r\n\r\n        TabHost tabHost = getTabHost();\r\n\r\n        TabHost.TabSpec tabSpecID =\r\n                tabHost.newTabSpec(\"ID\").setIndicator(\"아이디 찾기\");\r\n\r\n        TabHost.TabSpec tabSpecPW =\r\n                tabHost.newTabSpec(\"PW\").setIndicator(\"비밀번호 찾기\");\r\n\r\n        tabSpecID.setContent(R.id.아이디찾기);\r\n        tabSpecPW.setContent(R.id.패스워드찾기);\r\n\r\n        tabHost.addTab(tabSpecID);\r\n        tabHost.addTab(tabSpecPW);\r\n\r\n        tabHost.setCurrentTab(0);\r\n        firebaseAuth = FirebaseAuth.getInstance();\r\n\r\n\r\n\r\n    }\r\n\r\n    @Override\r\n\r\n    public void onClick(View view) {\r\n\r\n\r\n\r\n        Ref = FirebaseDatabase.getInstance().getReference(\"moble-foodtruck\").child(\"MemInfo\");\r\n        Ref.addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n\r\n                boolean b = false;\r\n\r\n\r\n\r\n                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {\r\n                    try {\r\n\r\n                        key = snapshot.getKey();\r\n                        value = snapshot.getValue(Info.class);\r\n\r\n                        Log.d(\"AA\", \"key : \" + key);\r\n                        Log.d(\"AA\", value.name);\r\n                        Log.d(\"AA\", value.email);\r\n                        Log.d(\"AA\", edt_idpw_name.getText().toString());\r\n                        Log.d(\"AA\", edt_idpw_email1.getText().toString());\r\n\r\n                        if (value.name.equals(edt_idpw_name.getText().toString()) && value.email.equals(edt_idpw_email1.getText().toString()))  {\r\n                            AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);\r\n                            builder.setTitle(\"아이디\").setMessage(\"사용자의 아이디는: \"+value.id+\" 입니다.\");\r\n                            builder.setPositiveButton(\"OK\", new DialogInterface.OnClickListener() {\r\n                                @Override\r\n                                public void onClick(DialogInterface dialog, int id) {\r\n                                }\r\n                            });\r\n                            AlertDialog alertDialog = builder.create();\r\n                            alertDialog.show();\r\n                            b = true;\r\n                            break;\r\n                        }\r\n\r\n                    } catch (ClassCastException e) {\r\n                        e.printStackTrace();\r\n                    }\r\n                }\r\n                 if(b == false) {\r\n                    AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);\r\n                    builder.setTitle(\"오류\").setMessage(\"입력한 정보의 아이디가 없습니다.\");\r\n                    builder.setPositiveButton(\"OK\", new DialogInterface.OnClickListener() {\r\n                        @Override\r\n                        public void onClick(DialogInterface dialog, int id) {\r\n                        }\r\n                    });\r\n                    AlertDialog alertDialog = builder.create();\r\n                    alertDialog.show();\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n            }\r\n        });\r\n    }\r\n\r\n    public void onClick2(View view) {\r\n        Ref = FirebaseDatabase.getInstance().getReference(\"moble-foodtruck\").child(\"MemInfo\");\r\n        Ref.addListenerForSingleValueEvent(new ValueEventListener() {\r\n            @Override\r\n            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {\r\n                boolean b = false;\r\n                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {\r\n                    try {\r\n\r\n                        key = snapshot.getKey();\r\n                        value = snapshot.getValue(Info.class);\r\n\r\n                        Log.d(\"AA\", \"key : \" + key);\r\n                        Log.d(\"AA\", value.name);\r\n                        Log.d(\"AA\", value.email);\r\n                        Log.d(\"AA\", edt_idpw_name.getText().toString());\r\n                        Log.d(\"AA\", edt_idpw_email1.getText().toString());\r\n\r\n                        if (value.id.equals(edt_idpw_id.getText().toString()) && value.email.equals(edt_idpw_email2.getText().toString()))  {\r\n                            FirebaseAuth auth = FirebaseAuth.getInstance();\r\n                            String emailAdress = value.email;\r\n                           auth.sendPasswordResetEmail(emailAdress).addOnCompleteListener(new OnCompleteListener<Void>() {\r\n                               @Override\r\n                               public void onComplete(@NonNull Task<Void> task) {\r\n                                   */\r\n/*if*//*\r\n\r\n                                   if (task.isSuccessful()) {\r\n                                       AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);\r\n                                       builder.setTitle(\"패스워드\").setMessage(\"사용자의 이메일에 전송했습니다.\");\r\n                                       builder.setPositiveButton(\"OK\", new DialogInterface.OnClickListener() {\r\n                                           @Override\r\n                                           public void onClick(DialogInterface dialog, int id) {\r\n                                           }\r\n                                       });\r\n                                       AlertDialog alertDialog = builder.create();\r\n                                       alertDialog.show();\r\n\r\n                                   }\r\n                                   else {\r\n                                       AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);\r\n                                       builder.setTitle(\"오류\").setMessage(\"입력한 정보의 패스워드가 없습니다.\");\r\n                                       builder.setPositiveButton(\"OK\", new DialogInterface.OnClickListener() {\r\n                                           @Override\r\n                                           public void onClick(DialogInterface dialog, int password) {\r\n                                           }\r\n                                       });\r\n                                       AlertDialog alertDialog = builder.create();\r\n                                       alertDialog.show();\r\n\r\n                                   }\r\n                               }\r\n                           });\r\n                        }\r\n\r\n                    } catch (ClassCastException e) {\r\n                        e.printStackTrace();\r\n                    }\r\n                }\r\n\r\n\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n\r\n            @Override\r\n            public void onCancelled(@NonNull DatabaseError error) {\r\n\r\n            }\r\n        });\r\n    }\r\n\r\n    @Override\r\n    public void onComplete(@NonNull Task<Void> task) {\r\n\r\n    }\r\n            }\r\n        });\r\n    }\r\n}\r\n\r\nclass Info {\r\n    int check_owner;\r\n    String email;\r\n    String id;\r\n    String name;\r\n    String password;\r\n\r\n    public void setCheck_owner(int check_owner) {\r\n        this.check_owner = check_owner;\r\n    }\r\n\r\n    public void setEmail(String email) {\r\n        this.email = email;\r\n    }\r\n\r\n    public void setId(String id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public void setPassword(String password) {\r\n        this.password = password;\r\n\r\n    }\r\n\r\n    public int getCheck_owner() {\r\n        return check_owner;\r\n    }\r\n\r\n    public String getEmail() {\r\n        return email;\r\n    }\r\n\r\n}\r\n\r\n    public int getCheck_owner() {\r\n        return check_owner;\r\n    }\r\n\r\n    public String getEmail() {\r\n        return email;\r\n    }\r\n\r\n    public String getId() {\r\n        return id;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public String getPassword() {\r\n        return password;\r\n    }\r\n\r\n\r\n}*/\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/IdPwActivity.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/IdPwActivity.java	(date 1605842540174)
+@@ -170,8 +170,7 @@
+                            auth.sendPasswordResetEmail(emailAdress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+-                                   */
+-/*if*//*
++if
+ 
+                                    if (task.isSuccessful()) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
+@@ -287,4 +286,5 @@
+     }
+ 
+ 
+-}*/
++}
++*/
+Index: app/src/main/java/com/project/foodinfo/Fragment_main_menu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>//package com.project.foodinfo;\r\n//\r\n//import android.os.Bundle;\r\n//\r\n//import androidx.fragment.app.Fragment;\r\n//\r\n//import android.view.LayoutInflater;\r\n//import android.view.View;\r\n//import android.view.ViewGroup;\r\n//\r\n///**\r\n// * A simple {@link Fragment} subclass.\r\n// * Use the factory method to\r\n// * create an instance of this fragment.\r\n// */\r\n//public class Fragment_main_menu extends Fragment {\r\n//\r\n//\r\n//\r\n//    @Override\r\n//    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n//                             Bundle savedInstanceState) {\r\n//        // Inflate the layout for this fragment\r\n//        return inflater.inflate(R.layout.fragment_main_menu, container, false);\r\n//    }\r\n//}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/Fragment_main_menu.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/Fragment_main_menu.java	(date 1605843174586)
+@@ -1,26 +1,26 @@
+-//package com.project.foodinfo;
+-//
+-//import android.os.Bundle;
+-//
+-//import androidx.fragment.app.Fragment;
+-//
+-//import android.view.LayoutInflater;
+-//import android.view.View;
+-//import android.view.ViewGroup;
+-//
+-///**
+-// * A simple {@link Fragment} subclass.
+-// * Use the factory method to
+-// * create an instance of this fragment.
+-// */
+-//public class Fragment_main_menu extends Fragment {
+-//
+-//
+-//
+-//    @Override
+-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+-//                             Bundle savedInstanceState) {
+-//        // Inflate the layout for this fragment
+-//        return inflater.inflate(R.layout.fragment_main_menu, container, false);
+-//    }
+-//}
+\ No newline at end of file
++package com.project.foodinfo;
++
++import android.os.Bundle;
++
++import androidx.fragment.app.Fragment;
++
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++
++/**
++ * A simple {@link Fragment} subclass.
++ * Use the factory method to
++ * create an instance of this fragment.
++ */
++public class Fragment_main_menu extends Fragment {
++
++
++
++    @Override
++    public View onCreateView(LayoutInflater inflater, ViewGroup container,
++                             Bundle savedInstanceState) {
++        // Inflate the layout for this fragment
++        return inflater.inflate(R.layout.fragment_main_menu, container, false);
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/project/foodinfo/Fragment_menu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.project.foodinfo;\r\n\r\nimport android.net.Uri;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.ImageView;\r\nimport android.widget.ListView;\r\n\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.bumptech.glide.Glide;\r\nimport com.google.android.gms.tasks.OnSuccessListener;\r\nimport com.google.firebase.storage.FirebaseStorage;\r\nimport com.google.firebase.storage.StorageReference;\r\n\r\nimport java.io.File;\r\n\r\n/**\r\n * A simple {@link Fragment} subclass.\r\n * Use the  factory method to\r\n * create an instance of this fragment.\r\n */\r\npublic class Fragment_menu extends Fragment {\r\n\r\n    ListView lv_menu;\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n\r\n\r\n        View view;\r\n\r\n        view = inflater.inflate(R.layout.fragment_menu, container, false);\r\n\r\n        lv_menu = (ListView) view.findViewById(R.id.lv_menu);\r\n        MyAdapter myAdapter = new MyAdapter();\r\n\r\n\r\n\r\n        for(int i = 0;i<10;i++){\r\n            myAdapter.addItem(\"국밥\",\"1000\");\r\n            myAdapter.notifyDataSetChanged();\r\n        }\r\n        lv_menu.setAdapter(myAdapter);\r\n\r\n\r\n\r\n\r\n        return view;\r\n    }\r\n\r\n\r\n\r\n\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/Fragment_menu.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/Fragment_menu.java	(date 1605843710602)
+@@ -1,24 +1,13 @@
+ package com.project.foodinfo;
+ 
+-import android.net.Uri;
+ import android.os.Bundle;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+-import android.widget.ArrayAdapter;
+-import android.widget.ImageView;
+ import android.widget.ListView;
+ 
+-import androidx.core.content.ContextCompat;
+ import androidx.fragment.app.Fragment;
+ 
+-import com.bumptech.glide.Glide;
+-import com.google.android.gms.tasks.OnSuccessListener;
+-import com.google.firebase.storage.FirebaseStorage;
+-import com.google.firebase.storage.StorageReference;
+-
+-import java.io.File;
+-
+ /**
+  * A simple {@link Fragment} subclass.
+  * Use the  factory method to
+Index: app/src/main/java/com/project/foodinfo/LoginActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.project.foodinfo;\r\n\r\nimport androidx.appcompat.app.AppCompatActivity;\r\n\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\n\r\nimport com.project.foodinfo.Sign.SignActivity;\r\n\r\npublic class LoginActivity extends AppCompatActivity {\r\n    EditText et_id;\r\n    EditText et_password;\r\n\r\n\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n        setContentView(R.layout.activity_login);\r\n        et_id = findViewById(R.id.et_id);\r\n        et_password = findViewById(R.id.et_password);\r\n\r\n    }\r\n\r\n    //로그인 버튼 클릭시 이벤트\r\n    public void loginOnClick(View v){\r\n\r\n    }\r\n    //회원가입 버튼 클릭시 이벤트\r\n    public void signOnClick(View v){\r\n        Intent intent = new Intent(LoginActivity.this, SignActivity.class);\r\n        startActivity(intent);\r\n    }\r\n    //아이디 비밀번호 찾기 클릭시 이벤트\r\n    public void findOnClick(View v){\r\n        Intent intent = new Intent(LoginActivity.this, IdPwActivity.class);\r\n        startActivity(intent);\r\n    }\r\n\r\n\r\n    //핸드폰 뒤로가기 눌렸을시\r\n    @Override\r\n    public void onBackPressed() {\r\n        finish();\r\n        super.onBackPressed();\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/LoginActivity.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/LoginActivity.java	(date 1605842549940)
+@@ -36,8 +36,8 @@
+     }
+     //아이디 비밀번호 찾기 클릭시 이벤트
+     public void findOnClick(View v){
+-        Intent intent = new Intent(LoginActivity.this, IdPwActivity.class);
+-        startActivity(intent);
++  /*      Intent intent = new Intent(LoginActivity.this, IdPwActivity.class);
++        startActivity(intent);*/
+     }
+ 
+ 
+Index: app/src/main/java/com/project/foodinfo/Sign/MenuAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.project.foodinfo.Sign;\r\n\r\nimport android.content.Context;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.BaseAdapter;\r\nimport android.widget.EditText;\r\nimport android.widget.Toast;\r\n\r\n\r\n<<<<<<< HEAD\r\npublic class MenuAdapter  {\r\n\r\n\r\n=======\r\nimport com.project.foodinfo.MyItem;\r\nimport com.project.foodinfo.R;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class MenuAdapter extends BaseAdapter {\r\n    private ArrayList<MyItem> myItems = new ArrayList<>();\r\n    Context context;\r\n    int itemH;\r\n\r\n    @Override\r\n    public int getCount() {\r\n        return myItems.size();\r\n    }\r\n\r\n    @Override\r\n    public MyItem getItem(int position) {\r\n        return myItems.get(position);\r\n    }\r\n\r\n    @Override\r\n    public long getItemId(int position) {\r\n        return 0;\r\n    }\r\n\r\n    public int getItemH(){\r\n        return itemH;\r\n    }\r\n\r\n\r\n    @Override\r\n    public View getView(int position, View convertView, ViewGroup parent) {\r\n        context = parent.getContext();\r\n\r\n        if(convertView == null){\r\n            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);\r\n            convertView = inflater.inflate(R.layout.menu_row, parent,false);\r\n        }\r\n\r\n        itemH = convertView.getHeight();\r\n\r\n        EditText et_name = convertView.findViewById(R.id.et_menu_row_name);\r\n        EditText et_price = convertView.findViewById(R.id.et_menu_row_price);\r\n\r\n        MyItem myItem = getItem(position);\r\n\r\n        et_name.setText(myItem.getName());\r\n        et_price.setText(myItem.getPrice());\r\n\r\n        return convertView;\r\n    }\r\n    public void addItem(String name, String price){\r\n        if(myItems.size() >=5){\r\n            Toast.makeText(context, \"최대 값입니다.\", Toast.LENGTH_SHORT).show();\r\n        }\r\n        else{\r\n            MyItem mItem = new MyItem();\r\n//        mItem.setIcon(img);\r\n            mItem.setName(name);\r\n            mItem.setPrice(price);\r\n\r\n            myItems.add(mItem);\r\n        }\r\n\r\n    }\r\n    public void removeItem(){\r\n        if(myItems.size() <= 1 ){\r\n            Toast.makeText(context, \"최소 값입니다.\", Toast.LENGTH_SHORT).show();\r\n        }\r\n        else{\r\n            myItems.remove(myItems.size()-1);\r\n        }\r\n    }\r\n>>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/project/foodinfo/Sign/MenuAdapter.java	(revision 64ddd1bd913d0b733a52db5a0a372591f3d78921)
++++ app/src/main/java/com/project/foodinfo/Sign/MenuAdapter.java	(date 1605842405045)
+@@ -7,18 +7,12 @@
+ import android.widget.BaseAdapter;
+ import android.widget.EditText;
+ import android.widget.Toast;
+-
+-
+-<<<<<<< HEAD
+-public class MenuAdapter  {
+-
+-
+-=======
+ import com.project.foodinfo.MyItem;
+ import com.project.foodinfo.R;
+ 
+ import java.util.ArrayList;
+ 
++
+ public class MenuAdapter extends BaseAdapter {
+     private ArrayList<MyItem> myItems = new ArrayList<>();
+     Context context;
+@@ -87,7 +81,6 @@
+             myItems.remove(myItems.size()-1);
+         }
+     }
+->>>>>>> 3fafbedf64d985216590b26f3aa0484d71f1dd93
+ }
+ 
+ 
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-18__5_51__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-18__5_51__Default_Changelist_.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-19__11_02__Default_Changelist_1.xml .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-19__11_02__Default_Changelist_1.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-19__11_02__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-19__11_02__Default_Changelist_.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-18__4_13__Default_Changelist_1.xml .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-18__4_13__Default_Changelist_1.xml
+diff --git .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-18__4_13__Default_Changelist_.xml .idea/shelf/Uncommitted_changes_before_Update_at_2020-11-18__4_13__Default_Changelist_.xml
