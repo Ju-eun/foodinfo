@@ -153,6 +153,6 @@ public class SignFragment extends Fragment {
         String memo = sign_frag_memo.getText().toString();
 
 
-        ((SignActivity)getActivity()).setFragmentValue(storename, category, firstopen, close, memo);
+//        ((SignActivity)getActivity()).setFragmentValue(storename, category, firstopen, close, memo);
     }
 }
