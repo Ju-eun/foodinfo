@@ -42,6 +42,7 @@ public class StoreinfoActivity extends AppCompatActivity {
     ListView lv_menu;
     MyAdapter myAdapter;
     EditText ed_storename;
+    EditText storeinfo_et_time;
     RecyclerView recyclerView;
 
 
@@ -56,6 +57,7 @@ public class StoreinfoActivity extends AppCompatActivity {
         setContentView(R.layout.storeinfo);
         ed_storename = findViewById(R.id.ed_storename);
 
+
         myAdapter = new MyAdapter();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -66,7 +68,7 @@ public class StoreinfoActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 MemInfo m = dataSnapshot.getValue(MemInfo.class);
 
-                ed_storename.setText(m.getId());
+                ed_storename.setText(m.getEmail());
 
             }
 
@@ -86,7 +88,7 @@ public class StoreinfoActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.pager);
         lv_menu = (ListView) findViewById(R.id.lv_menu);
 
-        TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        MenuPagerAdapter pagerAdapter = new MenuPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
 //        getImages();
 //
@@ -116,147 +118,5 @@ public class StoreinfoActivity extends AppCompatActivity {
 
 }
 
-class MyAdapter extends BaseAdapter {
-    private ArrayList<MyItem> myItems = new ArrayList<>();
-    MyItem mItem;
-    @Override
-    public int getCount() {
-        return myItems.size();
-    }
-
-    @Override
-    public MyItem getItem(int position) {
-        return myItems.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Context context = parent.getContext();
-
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.row_menu, parent, false);
-        }
-
-        ImageView iv_menuImg = (ImageView) convertView.findViewById(R.id.iv_menu);
-        TextView tv_menuName = (TextView) convertView.findViewById(R.id.tv_name);
-        TextView tv_price = (TextView) convertView.findViewById(R.id.tv_price);
-
-//        MyItem myItem = getItem(position);
-        mItem = myItems.get(position);
 
 
-        Log.d("12345", position +" : " +mItem.getImageName());
-
-        Glide.with(context).
-                load(mItem.getImageName()).
-                into(iv_menuImg);
-
-        tv_menuName.setText(mItem.getName());
-        tv_price.setText(mItem.getPrice());
-
-        return convertView;
-    }
-
-    public void addItem(String imageName, String name, String price) {
-        mItem = new MyItem();
-//        mItem.setIcon(img);
-        mItem.setImagename(imageName);
-//        mItem.setImg(img);
-        mItem.setName(name);
-        mItem.setPrice(price);
-
-        myItems.add(mItem);
-    }
-
-    class MyItem {
-
-        private int icon;
-        private String name;
-        private String price;
-        private String imagename;
-        private StorageReference img;
-
-        public StorageReference getImg() {
-            return img;
-        }
-
-        public void setImg(StorageReference img) {
-            this.img = img;
-        }
-
-        public String getImageName() {
-            return imagename;
-        }
-
-        public void setImagename(String imagename) {
-            this.imagename = imagename;
-        }
-
-        public int getIcon() {
-            return icon;
-        }
-
-        public void setIcon(int icon) {
-            this.icon = icon;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
-    }
-}
-
-class TabPagerAdapter extends FragmentStatePagerAdapter {
-
-    private int tabCount;
-
-    public TabPagerAdapter(FragmentManager fm, int tabCount) {
-        super(fm);
-        this.tabCount = tabCount;
-    }
-
-    @NonNull
-    @Override
-    public Fragment getItem(int position) {
-
-        switch (position) {
-            case 0:
-                Fragment_menu menu = new Fragment_menu();
-                return menu;
-            case 1:
-                Fragment_info info = new Fragment_info();
-                return info;
-            case 2:
-                Fragment_map map = new Fragment_map();
-                return map;
-            case 3:
-                Fragment_review review = new Fragment_review();
-                return review;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public int getCount() {
-        return tabCount;
-    }
-
-}

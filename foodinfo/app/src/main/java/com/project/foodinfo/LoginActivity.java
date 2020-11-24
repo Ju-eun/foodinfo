@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.project.foodinfo.Sign.SignActivity;
+//import com.project.foodinfo.Sign.SignActivity;
 
 public class LoginActivity extends AppCompatActivity {
     EditText et_id;
@@ -31,8 +31,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     //회원가입 버튼 클릭시 이벤트
     public void signOnClick(View v){
-        Intent intent = new Intent(LoginActivity.this, SignActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(LoginActivity.this, SignActivity.class);
+//        startActivity(intent);
     }
     //아이디 비밀번호 찾기 클릭시 이벤트
     public void findOnClick(View v){

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="20dp"
     android:orientation="vertical"
     tools:context=".StoreinfoActivity">
 
@@ -19,16 +19,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="가게 이름 :" />
+            android:text="가게 이름 :"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/ed_storename"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_weight="3"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="Name"
+            android:background="@android:color/transparent"/>
+        <Button
+            android:id="@+id/Storeinfo_btn_revice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="수 정"
+            />
 
     </LinearLayout>
 
@@ -44,11 +54,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="카테 고리:" />
+            android:text="카테 고리:"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
 
         <Spinner
             android:id="@+id/spinner_kategorie"
-            android:layout_width="2dp"
+            android:layout_width="3dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:entries="@array/카테고리" />
