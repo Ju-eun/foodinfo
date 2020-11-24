@@ -280,7 +280,7 @@ public class SignActivity extends AppCompatActivity {
 
                     if (cb_oper.isChecked()) {
                         minfo.setCheck_owner(1);
-                        minfo.Strore_infoExtends.
+                       // minfo.Strore_infoExtends.
 //                        minfo.setStore_category(store_category);
 //                        minfo.setStore_time(store_opentime + store_closetime);
 //                        minfo.setStore_memo(store_memo);

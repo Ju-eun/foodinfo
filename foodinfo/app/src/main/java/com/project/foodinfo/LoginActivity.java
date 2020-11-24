@@ -36,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     //아이디 비밀번호 찾기 클릭시 이벤트
     public void findOnClick(View v){
-  /*      Intent intent = new Intent(LoginActivity.this, IdPwActivity.class);
-        startActivity(intent);*/
+      Intent intent = new Intent(LoginActivity.this, IdPwActivity.class);
+        startActivity(intent);
     }
 
 
