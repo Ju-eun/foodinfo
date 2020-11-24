@@ -34,8 +34,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.project.foodinfo.IdPwActivity;
 import com.project.foodinfo.MemInfo;
 import com.project.foodinfo.R;
 
@@ -70,7 +74,6 @@ public class SignActivity extends AppCompatActivity {
     EditText m_pn;
     EditText e_pn;
 
-
     View fragment_view;
     SignFragment signFragment;
     TextView datePicker;
@@ -81,6 +84,11 @@ public class SignActivity extends AppCompatActivity {
 
     public static boolean check = false;
 
+    String key;
+    Info value;
+    Button btn_idpw_1, btn_idpw_2;
+    EditText edt_idpw_name, edt_idpw_id, edt_idpw_email1, edt_idpw_email2;
+    DatabaseReference Ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +120,38 @@ public class SignActivity extends AppCompatActivity {
         btn_idcheck.setOnClickListener(sign_mlistener);
 
 
+        btn_idcheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Ref = FirebaseDatabase.getInstance().getReference("moble-foodtruck").child("MemInfo");                  //모블 푸드트럭에 있는 MenInfo에 들어있는 정보를 가지고온다.
+                Ref.addListenerForSingleValueEvent(new ValueEventListener() {                                                 //데이터 불러오기
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {                                          //데이터스냅샷의 데이터를 가지고옴                             //에러가 발생할 수 있는 코드
+                            try {
+                                key = snapshot.getKey();                                                                    //키를 얻음
+                                value = snapshot.getValue(com.project.foodinfo.Sign.Info.class);                                                      //인포 클래스 객체 안에 있는 값 불러오기
+                                if (et_id.getText().toString().equals(value.id)) {
+                                    Toast.makeText(SignActivity.this, "아이디가 중복되었습니다.", Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
 
+                            }                         //오류 출력
+                            catch (ClassCastException e) {
+                                e.printStackTrace();                                                                                    //오류 출력
+                                Log.i("aa", "aa");
+                            }
+                        }
+                             if(!et_id.getText().toString().equals(value.id)) {
+                            Toast.makeText(SignActivity.this, "사용가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        });
 
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,7 +319,6 @@ public class SignActivity extends AppCompatActivity {
 
                     if (cb_oper.isChecked()) {
                         minfo.setCheck_owner(1);
-                        minfo.Strore_infoExtends.
 //                        minfo.setStore_category(store_category);
 //                        minfo.setStore_time(store_opentime + store_closetime);
 //                        minfo.setStore_memo(store_memo);
@@ -371,4 +409,53 @@ public class SignActivity extends AppCompatActivity {
 
 }
 
+class Info {
+    int check_owner;
+    String email;
+    String id;
+    String name;
+    String password;
 
+
+    public void setCheck_owner(int check_owner) {
+        this.check_owner = check_owner;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getCheck_owner() {
+        return check_owner;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+
+}

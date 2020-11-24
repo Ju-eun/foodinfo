@@ -9,6 +9,7 @@ public class MemInfo {
     private int check_owner = 0;
     private String birth = "";
     private String Phonenumber = "";
+    private String picture = "";
 
 
     public Store_Info Strore_infoExtend = new Store_Info();
@@ -79,6 +80,10 @@ public class MemInfo {
     public void setBirth(String birth) {
         this.birth = birth;
     }
+
+    public String getPicture() { return picture; }
+
+    public void setPicture() { this.picture = picture; }
 
     public String getPhonenumber() {
         return Phonenumber;
@@ -153,7 +158,6 @@ class Store_Menu {
 
         memInfo.Strore_infoExtend.store_menuExtend = new Store_Menu[5];
 
-        memInfo.Strore_infoExtend.st
     }
 
     public String getMenu_img() {

@@ -95,16 +95,16 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
                             builder.setTitle("사용자의 아이디").setMessage("아이디는 " + value.id + " 입니다.");                 // 제목 설정, 메시지 설정
                             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {                       //확인 버튼 클릭시 창 닫기
                                 @Override
-                                public void onClick(DialogInterface dialog, int id) {                                           //토스크 메시지 알람 띄어주기(하고싶은 사람만)
-                                }
-                            });
-                            AlertDialog alertDialog = builder.create();                                                         //알람창 객체 생성
-                            alertDialog.show();                                                                                 //알람창 보여주기
-                            b = true;
-                            break;
-                        }
+                    public void onClick(DialogInterface dialog, int id) {                                           //토스크 메시지 알람 띄어주기(하고싶은 사람만)
+                    }
+                });
+                AlertDialog alertDialog = builder.create();                                                         //알람창 객체 생성
+                alertDialog.show();                                                                                 //알람창 보여주기
+                b = true;
+                break;
+            }
 
-                    } catch (ClassCastException e) {
+        } catch (ClassCastException e) {
                         e.printStackTrace();                                                                                    //오류 출력
                     }
                 }
