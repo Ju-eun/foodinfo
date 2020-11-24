@@ -45,7 +45,7 @@ public class MenuChangeActivity{
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                menuName_modify.setText(MemInfo.class.get);
+                menuName_modify.setText(MemInfo.class.getName());
             }
 
             @Override
