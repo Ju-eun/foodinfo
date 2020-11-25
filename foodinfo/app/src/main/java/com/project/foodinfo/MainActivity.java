@@ -57,6 +57,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
 
+        imgbtn_kor = findViewById(R.id.imgbtn_kor);
+        imgbtn_cha = findViewById(R.id.imgbtn_cha);
+        imgbtn_jan = findViewById(R.id.imgbtn_jan);
+        imgbtn_wes = findViewById(R.id.imgbtn_wes);
+        imgbtn_coffee = findViewById(R.id.imgbtn_coffee);
+        imgbtn_gochi = findViewById(R.id.imgbtn_gochi);
+
         ((ImageButton) findViewById(R.id.imgbtn_kor)).setOnClickListener(this);
         ((ImageButton) findViewById(R.id.imgbtn_cha)).setOnClickListener(this);
         ((ImageButton) findViewById(R.id.imgbtn_wes)).setOnClickListener(this);
@@ -144,13 +151,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         Log.d("AA", "클릭해부럿졍");
         fragment_main_menu = new Fragment_main_menu();
+        int b = imgbtn_kor.getId();
         int a = v.getId();
-        Log.d("AA", String.valueOf(a));
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
         Bundle bundle = new Bundle(1);
-        bundle.putString("key",String.valueOf(a));
+        if(a == imgbtn_kor.getId()){
+            bundle.putString("key","한식");
+        }
+        else if(a == imgbtn_cha.getId()){
+            bundle.putString("key","중식");
+        }
+        else if(a == imgbtn_jan.getId()){
+            bundle.putString("key","일식");
+        }
+        else if(a == imgbtn_wes.getId()){
+            bundle.putString("key","양식");
+        }
+        else if(a == imgbtn_coffee.getId()){
+            bundle.putString("key","커피");
+        }
+        else if(a == imgbtn_gochi.getId()){
+            bundle.putString("key","꼬치");
+        }
         fragment_main_menu.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
+
+
 
 //        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 //            @Override

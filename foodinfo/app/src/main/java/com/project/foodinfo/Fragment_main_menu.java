@@ -26,13 +26,11 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Fragment_main_menu extends Fragment {
 
-    Fragment_main_menu fragment_main_menu;
 
     MyAdapter myAdapter;
     ListView lv_main_menu;
     String menu_01, menu_02;
     String clicking;
-    int getId_string;
 
     ImageButton imgbtn_kor;
     @Override
@@ -55,7 +53,6 @@ public class Fragment_main_menu extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 myAdapter = new MyAdapter();
-                Log.d("AA",String.valueOf(view.getId()));
            //     getId_string = imgbtn_kor.getId();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -65,7 +62,7 @@ public class Fragment_main_menu extends Fragment {
 
                     String category = store_info.getStore_category();
 
-                    if (clicking.equals(String.valueOf(getId_string))) {
+                    if (clicking.equals(category)) {
                         menu_01 = snapshot.child("123").child("menu_img").getValue(String.class);
                         menu_02 = snapshot.child("345").child("menu_img").getValue(String.class);
 
