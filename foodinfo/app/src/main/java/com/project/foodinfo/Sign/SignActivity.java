@@ -2,16 +2,12 @@ package com.project.foodinfo.Sign;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,7 +29,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.foodinfo.MemInfo;
@@ -42,18 +37,12 @@ import com.project.foodinfo.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignActivity extends AppCompatActivity {
 
     String[] names = {"@naver.com", "@kakao.com", "@hanmail.net", "@gmail.com"};
-    String store_name = null;
-    String store_opentime = null;
-    String store_closetime = null;
-    String store_memo = null;
-    String store_category = null;
     public static final String DATE_FORMAT_1 = "yyyy-MM-dd";
     EditText et_name;
     EditText et_id;
@@ -77,10 +66,7 @@ public class SignActivity extends AppCompatActivity {
 
 
     String select_spinner = "";
-
-
-    public static boolean check = false;
-
+    MemInfo minfo = new MemInfo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +76,7 @@ public class SignActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         fragment_view = inflater.inflate(R.layout.fragment_sign, null);
 
-
-//        Button btn_oper_picture = (Button) findViewById(R.id.btn_oper_picture);
-        et_id = (EditText) findViewById(R.id.id);
+        et_id = (EditText) findViewById(R.id.et_id);
         et_name = (EditText) findViewById(R.id.et_name);
         et_email = (EditText) findViewById(R.id.et_email);
         et_pw = (EditText) findViewById(R.id.et_pw);
@@ -195,14 +179,16 @@ public class SignActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(); //파이어베이스에 접근
-            String name = et_id.getText().toString();
-            String id = et_name.getText().toString();
-            String b_day = b_tv.getText().toString();
-            String password = et_pw.getText().toString();
-            String email = et_email.getText().toString();
+            String name = et_name.getText().toString().trim();
+            String id = et_id.getText().toString().trim();
+            String b_day = b_tv.getText().toString().trim();
+            String password = et_pw.getText().toString().trim();
+            String email = et_email.getText().toString().trim();
 
 
             if (v.getId() == R.id.btn_signUp) {
+                signFragment = (SignFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
+
                 if (name.isEmpty() || id.isEmpty() || password.isEmpty() || email.isEmpty()) { //id ,name ,password, email 공백 체크
                     AlertDialog.Builder builder = new AlertDialog.Builder(SignActivity.this);
 
@@ -264,30 +250,21 @@ public class SignActivity extends AppCompatActivity {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else if (et_pw.getText().toString().equals(et_pwcheck.getText().toString())) { // 비밀번호 체크
-                    MemInfo minfo = new MemInfo();
 
-                    minfo.setId(name);
+                    minfo.setName(name);
                     minfo.setName(id);
                     minfo.setPassword(password);
                     minfo.setEmail(email + select_spinner);// 스피너 값도 가져와야함
                     minfo.setBirth(b_day);
                     minfo.setPhonenumber(f_pn.getText().toString(),m_pn.getText().toString(),e_pn.getText().toString());
-                    Log.d("123", (et_email.getText().toString() + select_spinner).trim());
-
-                    //프레그먼트 값 가져오기
-//                    SignFragment sf = (SignFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
-//                    sf.getFragmentValue();
 
                     if (cb_oper.isChecked()) {
                         minfo.setCheck_owner(1);
-                        minfo.Strore_infoExtends.
-//                        minfo.setStore_category(store_category);
-//                        minfo.setStore_time(store_opentime + store_closetime);
-//                        minfo.setStore_memo(store_memo);
+                        signFragment.onTest();
                     } else {
                         minfo.setCheck_owner(0);
                     }
-                    if (minfo.blank_Check() == null) {
+                    if (minfo.blank_Check().equals("")) { //나중에 체크
                         Log.d("why?", minfo.getId() + "\n" + minfo.getName() + "\n" + minfo.getEmail() + "\n" + minfo.getPassword());
                         Toast.makeText(SignActivity.this, minfo.blank_Check() + " 값이 비어있습니다.", Toast.LENGTH_SHORT).show();
                     } else {
@@ -296,13 +273,10 @@ public class SignActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     final String uid = task.getResult().getUser().getUid();
-                                    Log.d("why?", uid);
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid);//토큰 가져와서 넣고
                                     myRef.setValue(minfo);
-
                                     Toast.makeText(SignActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-
                                 } else {
 
                                 }
@@ -340,15 +314,6 @@ public class SignActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void setFragmentValue(String store_name, String store_opentime, String store_closetime, String store_memo, String store_category) {
-        this.store_name = store_name;
-        this.store_category = store_category;
-        this.store_opentime = store_opentime;
-        this.store_closetime = store_closetime;
-        this.store_memo = store_memo;
-    }
-
-
     private boolean isValidPasswd(String target) { //비밀번호 형식 검사
         Pattern p = Pattern.compile("(^.*(?=.{6,100})(?=.*[0-9])(?=.*[a-zA-Z]).*$)");
 
@@ -366,6 +331,16 @@ public class SignActivity extends AppCompatActivity {
         } else {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
+    }
+
+
+
+    public void getValue(MemInfo.Store_Info store_info){
+
+        minfo.setStore_info(store_info);
+//        minfo.setStore_time(store_info.getStore_time());
+//        minfo.setStore_category(store_info.getStore_category());
+//        minfo.setStore_memo(store_info.getStore_memo());
     }
 
 

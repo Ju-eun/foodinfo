@@ -44,7 +44,7 @@ public class Fragment_info extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 MemInfo m = dataSnapshot.getValue(MemInfo.class);
 
-                fragment_et_time.setText(m.getTime());
+//                fragment_et_time.setText(m.getTime());
             }
 
             @Override

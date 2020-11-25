@@ -1,6 +1,8 @@
 package com.project.foodinfo.Sign;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,79 +11,120 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
-
 import java.util.ArrayList;
 
 
-
 public class MenuAdapter extends BaseAdapter {
-    private ArrayList<MyItem> myItems = new ArrayList<>();
+    public  ArrayList<MyItem> myItems = new ArrayList<MyItem>();
+    private ArrayList<MyItem> filteredItemList = myItems;
+
+    EditText et_name;
+    EditText et_price;
+
     Context context;
-    int itemH;
 
     @Override
     public int getCount() {
-        return myItems.size();
+        return filteredItemList.size();
     }
 
     @Override
     public MyItem getItem(int position) {
-        return myItems.get(position);
+        return filteredItemList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
-    }
-
-    public int getItemH(){
-        return itemH;
+        return position;
     }
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        final int pos = filteredItemList.get(position).getNum();
         context = parent.getContext();
+        final ViewHolder holder;
 
-        if(convertView == null){
-            LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.menu_row, parent,false);
-        }
 
-        itemH = convertView.getHeight();
-
-        EditText et_name = convertView.findViewById(R.id.et_menu_row_name);
-        EditText et_price = convertView.findViewById(R.id.et_menu_row_price);
-
-        MyItem myItem = getItem(position);
-
-        et_name.setText(myItem.getName());
-        et_price.setText(myItem.getPrice());
-
-        return convertView;
-    }
-    public void addItem(String name, String price){
-        if(myItems.size() >=5){
-            Toast.makeText(context, "최대 값입니다.", Toast.LENGTH_SHORT).show();
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.menu_row, parent, false);
+            holder = new ViewHolder();
+            holder.VHmenu_et_name = (EditText)convertView.findViewById(R.id.et_menu_row_name);
+            holder.VHmenu_et_price = (EditText)convertView.findViewById(R.id.et_menu_row_price);
+            convertView.setTag(holder);
         }
         else{
-            MyItem mItem = new MyItem();
+            holder = (ViewHolder)convertView.getTag();
+        }
+        holder.ref = position;
+
+        et_name = convertView.findViewById(R.id.et_menu_row_name);
+        et_price = convertView.findViewById(R.id.et_menu_row_price);
+
+
+        final MyItem listViewItem = filteredItemList.get(position);
+
+        holder.VHmenu_et_name.setText(listViewItem.getName());
+        holder.VHmenu_et_price.setText(listViewItem.getPrice());
+
+        holder.VHmenu_et_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filteredItemList.get(holder.ref).setName(s.toString());
+            }
+        });
+        holder.VHmenu_et_price.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filteredItemList.get(holder.ref).setPrice(s.toString());
+            }
+        });
+        return convertView;
+    }
+
+    public void addItem(String name, String price, int num) {
+        MyItem mItem = new MyItem();
+        if (myItems.size() >= 5) {
+            Toast.makeText(context, "최대 값입니다.", Toast.LENGTH_SHORT).show();
+        } else {
 //        mItem.setIcon(img);
             mItem.setName(name);
             mItem.setPrice(price);
-
+            mItem.setNum(num);
             myItems.add(mItem);
         }
 
     }
-    public void removeItem(){
-        if(myItems.size() <= 1 ){
+
+    public void removeItem() {
+        if (myItems.size() <= 1) {
             Toast.makeText(context, "최소 값입니다.", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            myItems.remove(myItems.size()-1);
+        } else {
+            myItems.remove(myItems.size() - 1);
         }
     }
 }
+
 
 
