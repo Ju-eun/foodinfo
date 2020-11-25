@@ -19,7 +19,8 @@
             android:value="AIzaSyD0fsBcXuJN0_Fq8vQXgFw234UlxWDgIqs" />
 
 
-        <activity android:name=".IntroActivity">
+        <activity android:name=".IntroActivity"/>
+            <activity android:name=".MypageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,7 +30,7 @@
         <activity android:name=".IdPwActivity" />
 
     <activity android:name=".StoreinfoActivity"/>
-        <activity android:name=".MypageActivity"/>
+
         <activity android:name=".MainActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
