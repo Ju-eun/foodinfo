@@ -1,17 +1,20 @@
 package com.project.foodinfo;
 
 import android.Manifest;
+import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -141,6 +144,32 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
     }
 
+}
+
+class GPSListener implements LocationListener{
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Double latitude=location.getLatitude();
+        Double longitude=location.getLongitude();
+        String message = "내 위치 -> Latitude : " + latitude + "\nLongitude:" + longitude;
+        Log.d("Map",message);
+
+        showCurrentLocation(latitude,longitude);
+    }
+    public void onStatusChanged(String provider, int status, Bundle extras){
+
+    }
+
+    public void onProviderEnabled(String provider) {
+    }
+
+    public void onProviderDisabled(String provider) {
+    }
+
+    private void showCurrentLocation(Double latitude, Double longitude) {
+
+    }
 }
 
 
