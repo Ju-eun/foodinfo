@@ -12,24 +12,40 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Toolbar toolbar;
     NavigationView navigationView;
     private DrawerLayout mDrawerLayout;
     private TabLayout tabLayout;
     ViewPager main_viewpager;
-
-   // MyAdapter myAdapter;
+    ImageButton imgbtn_kor, imgbtn_coffee, imgbtn_cha, imgbtn_gochi, imgbtn_jan, imgbtn_wes;
+    MyAdapter myAdapter;
+    String menu_01, menu_02;
+    ListView lv_main_menu;
+    DatabaseReference myRef;
+    Fragment_main_menu fragment_main_menu;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -37,14 +53,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
+        lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
+
+        imgbtn_kor = findViewById(R.id.imgbtn_kor);
+        imgbtn_cha = findViewById(R.id.imgbtn_cha);
+        imgbtn_jan = findViewById(R.id.imgbtn_jan);
+        imgbtn_wes = findViewById(R.id.imgbtn_wes);
+        imgbtn_coffee = findViewById(R.id.imgbtn_coffee);
+        imgbtn_gochi = findViewById(R.id.imgbtn_gochi);
+
+        ((ImageButton) findViewById(R.id.imgbtn_kor)).setOnClickListener(this);
+        ((ImageButton) findViewById(R.id.imgbtn_cha)).setOnClickListener(this);
+        ((ImageButton) findViewById(R.id.imgbtn_wes)).setOnClickListener(this);
+        ((ImageButton) findViewById(R.id.imgbtn_coffee)).setOnClickListener(this);
+        ((ImageButton) findViewById(R.id.imgbtn_jan)).setOnClickListener(this);
+        ((ImageButton) findViewById(R.id.imgbtn_gochi)).setOnClickListener(this);
+
         //툴바 설정
-        toolbar=findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();  //제목줄 객체 얻어오기
         actionBar.setDisplayShowTitleEnabled(false); // 기존 title 지우기
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양
-        mDrawerLayout=findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
 
         //네이게이션 화면 설정
         navigationView = findViewById(R.id.nav_view);
@@ -57,17 +91,15 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
                 String title = item.getTitle().toString();
 
-                if(id == R.id.login){
-                    Intent intent=new Intent(MainActivity.this, LoginActivity.class);
+                if (id == R.id.login) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
-                }
-                else if(id == R.id.connection){
+                } else if (id == R.id.connection) {
                 }
                 return true;
             }
         });
 
-   //     myAdapter = new MyAdapter();
 
         tabLayout = findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
@@ -76,11 +108,9 @@ public class MainActivity extends AppCompatActivity {
 
         main_viewpager = findViewById(R.id.main_viewpager);
 
-        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
+        MainTabPagerAdapter pagerAdapter = new MainTabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         main_viewpager.setAdapter(pagerAdapter);
 
-//
-//        lv_menu.setAdapter(myAdapter);
         pagerAdapter.notifyDataSetChanged();
 
         main_viewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -95,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 //TODO : tab의 상태가 선택되지 않음으로 변경.
-
             }
 
             @Override
@@ -103,43 +132,88 @@ public class MainActivity extends AppCompatActivity {
                 //TODO : 이미 선택된 tab이 다시
             }
         });
-        //lv_menu = (ListView)findViewById(R.id.lv_menu);
-//        lv_menu.setAdapter(myAdapter);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id=item.getItemId();
-        switch(id){
-            case android.R.id.home:{
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-
             }
         }
         return super.onOptionsItemSelected(item);
-
-
     }
 
+    @Override
+    public void onClick(View v) {
+        Log.d("AA", "클릭해부럿졍");
+        fragment_main_menu = new Fragment_main_menu();
+        int b = imgbtn_kor.getId();
+        int a = v.getId();
+        Bundle bundle = new Bundle(1);
+        if(a == imgbtn_kor.getId()){
+            bundle.putString("key","한식");
+        }
+        else if(a == imgbtn_cha.getId()){
+            bundle.putString("key","중식");
+        }
+        else if(a == imgbtn_jan.getId()){
+            bundle.putString("key","일식");
+        }
+        else if(a == imgbtn_wes.getId()){
+            bundle.putString("key","양식");
+        }
+        else if(a == imgbtn_coffee.getId()){
+            bundle.putString("key","커피");
+        }
+        else if(a == imgbtn_gochi.getId()){
+            bundle.putString("key","꼬치");
+        }
+        fragment_main_menu.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
 
 
+
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    String test1 = "jongmin";
+//                    MemInfo m = dataSnapshot.getValue(MemInfo.class);
+//                    String test = m.getName();
+//                    if (test.equals(test1)) {
+//
+//
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+    }
 }
 
 class MainTabPagerAdapter extends FragmentStatePagerAdapter {
 
-    private  int tabCount;
-    public MainTabPagerAdapter(FragmentManager fm, int tabCount){
+    private int tabCount;
+
+    public MainTabPagerAdapter(FragmentManager fm, int tabCount) {
         super(fm);
-        this.tabCount=tabCount;
+        this.tabCount = tabCount;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
 
-        switch (position){
-            case  0:
+        switch (position) {
+            case 0:
                 Fragment_main_menu main_menu = new Fragment_main_menu();
                 return main_menu;
             case 1:
@@ -156,3 +230,17 @@ class MainTabPagerAdapter extends FragmentStatePagerAdapter {
     }
 }
 
+//                myRef.addValueEventListener(new ValueEventListener() {
+//@Override
+//public void onDataChange(@NonNull DataSnapshot snapshot) {
+//        myAdapter = new MyAdapter();
+//        menu_01 = snapshot.child("123").child("menu_img").getValue(String.class);
+//        menu_02 = snapshot.child("345").child("menu_img").getValue(String.class);
+//
+//        myAdapter.addItem(menu_01, "국밥", "1000");
+//        myAdapter.addItem(menu_02, "af", "fald");
+//        myAdapter.addItem(menu_01, "국밥", "1000");
+//        myAdapter.addItem(menu_02, "af", "fald");
+//
+//        myAdapter.notifyDataSetChanged();
+//        lv_main_menu.setAdapter(myAdapter);

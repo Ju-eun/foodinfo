@@ -52,7 +52,7 @@ public class SignFragment extends Fragment {
         lv_sign_menu = view.findViewById(R.id.sign_frag_lv_menulist);
         btn_sign_menu_plus = view.findViewById(R.id.sign_frag_btn_plus);
         btn_sign_menu_minus = view.findViewById(R.id.sign_frag_btn_minus);
-        btn_oper_picture = view.findViewById(R.id.sign_frag_btn_picture);
+        btn_oper_picture = (Button)view.findViewById(R.id.sign_frag_btn_picture);
 
         sign_frag_storename = view.findViewById(R.id.sign_frag_storename);
         sign_frag_et_firstopen = view.findViewById(R.id.sign_frag_et_firstopen);
@@ -91,10 +91,11 @@ public class SignFragment extends Fragment {
         btn_oper_picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, OperActivity.class);
+                Intent intent = new Intent(getActivity(), OperActivity.class);
                 startActivity(intent);
             }
         });
+
         return view;
     }
 
@@ -152,6 +153,6 @@ public class SignFragment extends Fragment {
         String memo = sign_frag_memo.getText().toString();
 
 
-        ((SignActivity)getActivity()).setFragmentValue(storename, category, firstopen, close, memo);
+//        ((SignActivity)getActivity()).setFragmentValue(storename, category, firstopen, close, memo);
     }
 }

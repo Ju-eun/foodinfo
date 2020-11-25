@@ -7,11 +7,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +22,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,10 +34,21 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.project.foodinfo.IdPwActivity;
 import com.project.foodinfo.MemInfo;
 import com.project.foodinfo.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignActivity extends AppCompatActivity {
 
@@ -43,20 +58,37 @@ public class SignActivity extends AppCompatActivity {
     String store_closetime = null;
     String store_memo = null;
     String store_category = null;
-
+    public static final String DATE_FORMAT_1 = "yyyy-MM-dd";
     EditText et_name;
     EditText et_id;
     EditText et_pw;
     EditText et_pwcheck;
     EditText et_email;
     CheckBox cb_oper;
-
     Button btn_idcheck;
     Button btn_signup;
 
+    TextView b_tv;
+
+    EditText f_pn;
+    EditText m_pn;
+    EditText e_pn;
 
     View fragment_view;
     SignFragment signFragment;
+    TextView datePicker;
+
+
+    String select_spinner = "";
+
+
+    public static boolean check = false;
+
+    String key;
+    Info value;
+    Button btn_idpw_1, btn_idpw_2;
+    EditText edt_idpw_name, edt_idpw_id, edt_idpw_email1, edt_idpw_email2;
+    DatabaseReference Ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +109,76 @@ public class SignActivity extends AppCompatActivity {
 
         btn_idcheck = (Button) findViewById(R.id.btn_idcheck);
         btn_signup = (Button) findViewById(R.id.btn_signUp);
+        datePicker = (TextView) findViewById(R.id.sign_tv_yy_mm_dd);
+
+        b_tv = (TextView) findViewById(R.id.sign_tv_yy_mm_dd);
+        f_pn = (EditText) findViewById(R.id.et_phone1);
+        m_pn = (EditText) findViewById(R.id.et_phone2);
+        e_pn = (EditText) findViewById(R.id.et_phone3);
 
         btn_signup.setOnClickListener(sign_mlistener);
         btn_idcheck.setOnClickListener(sign_mlistener);
+
+
+        btn_idcheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Ref = FirebaseDatabase.getInstance().getReference("moble-foodtruck").child("MemInfo");                  //모블 푸드트럭에 있는 MenInfo에 들어있는 정보를 가지고온다.
+                Ref.addListenerForSingleValueEvent(new ValueEventListener() {                                                 //데이터 불러오기
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {                                          //데이터스냅샷의 데이터를 가지고옴                             //에러가 발생할 수 있는 코드
+                            try {
+                                key = snapshot.getKey();                                                                    //키를 얻음
+                                value = snapshot.getValue(com.project.foodinfo.Sign.Info.class);                                                      //인포 클래스 객체 안에 있는 값 불러오기
+                                if (et_id.getText().toString().equals(value.id)) {
+                                    Toast.makeText(SignActivity.this, "아이디가 중복되었습니다.", Toast.LENGTH_SHORT).show();
+                                    break;
+                                }
+
+                            }                         //오류 출력
+                            catch (ClassCastException e) {
+                                e.printStackTrace();                                                                                    //오류 출력
+                                Log.i("aa", "aa");
+                            }
+                        }
+                             if(!et_id.getText().toString().equals(value.id)) {
+                            Toast.makeText(SignActivity.this, "사용가능한 아이디 입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        });
+
+        datePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar c = Calendar.getInstance();
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(SignActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        try {
+                            SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_1);
+                            Date de = format.parse(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                            String de_string = format.format(de);
+                            datePicker.setText(de_string);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            e.printStackTrace();
+                        }
+                    }
+                },c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setCalendarViewShown(false);
+                datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                datePickerDialog.show();
+            }
+        });
+
 
         final Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -91,6 +190,7 @@ public class SignActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getApplicationContext(), "선택된 아이템 :" + names[position], Toast.LENGTH_SHORT).show();
+                select_spinner = names[position];
             }
 
             @Override
@@ -134,14 +234,84 @@ public class SignActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(); //파이어베이스에 접근
+            String name = et_id.getText().toString();
+            String id = et_name.getText().toString();
+            String b_day = b_tv.getText().toString();
+            String password = et_pw.getText().toString();
+            String email = et_email.getText().toString();
+
+
             if (v.getId() == R.id.btn_signUp) {
-                if (et_pw.getText().toString().equals(et_pwcheck.getText().toString())) { // 비밀번호 체크
+                if (name.isEmpty() || id.isEmpty() || password.isEmpty() || email.isEmpty()) { //id ,name ,password, email 공백 체크
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignActivity.this);
+
+                    builder.setTitle("값이 없어").setMessage("용용 죽겠지.");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(), "Cancel Click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                } else if (isValidEmail(email)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignActivity.this);
+
+                    builder.setTitle("이게 이메일이라고 만든거니?").setMessage("용용 죽겠지.");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(), "Cancel Click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                } else if (isValidPasswd(password)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SignActivity.this);
+
+                    builder.setTitle("비밀번호 재대로 입력하세요!").setMessage("용용 죽겠지.");
+
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(getApplicationContext(), "Cancel Click", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                } else if (et_pw.getText().toString().equals(et_pwcheck.getText().toString())) { // 비밀번호 체크
                     MemInfo minfo = new MemInfo();
 
-                    minfo.setId(et_id.getText().toString());
-                    minfo.setName(et_name.getText().toString());
-                    minfo.setPassword(et_pw.getText().toString());
-                    minfo.setEmail(et_email.getText().toString());// 스피너 값도 가져와야함
+                    minfo.setId(name);
+                    minfo.setName(id);
+                    minfo.setPassword(password);
+                    minfo.setEmail(email + select_spinner);// 스피너 값도 가져와야함
+                    minfo.setBirth(b_day);
+                    minfo.setPhonenumber(f_pn.getText().toString(),m_pn.getText().toString(),e_pn.getText().toString());
+                    Log.d("123", (et_email.getText().toString() + select_spinner).trim());
 
                     //프레그먼트 값 가져오기
 //                    SignFragment sf = (SignFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
@@ -149,32 +319,29 @@ public class SignActivity extends AppCompatActivity {
 
                     if (cb_oper.isChecked()) {
                         minfo.setCheck_owner(1);
-                        minfo.setStore_name(store_name);
-                        minfo.setStore_category(store_category);
-                        minfo.setStore_time(store_opentime + store_closetime);
-                        minfo.setStore_memo(store_memo);
+//                        minfo.setStore_category(store_category);
+//                        minfo.setStore_time(store_opentime + store_closetime);
+//                        minfo.setStore_memo(store_memo);
                     } else {
                         minfo.setCheck_owner(0);
-                        minfo.setStore_name(store_name);
-                        minfo.setStore_category(store_category);
-                        minfo.setStore_time(store_opentime + store_closetime);
-                        minfo.setStore_memo(store_memo);
                     }
                     if (minfo.blank_Check() == null) {
-                        Log.d("why?", minfo.getId()+"\n" +minfo.getName() +"\n" +minfo.getEmail()+"\n"+minfo.getPassword());
+                        Log.d("why?", minfo.getId() + "\n" + minfo.getName() + "\n" + minfo.getEmail() + "\n" + minfo.getPassword());
                         Toast.makeText(SignActivity.this, minfo.blank_Check() + " 값이 비어있습니다.", Toast.LENGTH_SHORT).show();
                     } else {
-                        firebaseAuth.createUserWithEmailAndPassword("water8048@naver.com", minfo.getPassword()).addOnCompleteListener(SignActivity.this, new OnCompleteListener<AuthResult>() {
+                        firebaseAuth.createUserWithEmailAndPassword(minfo.getEmail(), minfo.getPassword()).addOnCompleteListener(SignActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignActivity.this, "?????", Toast.LENGTH_SHORT).show();
-                                if(!task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     final String uid = task.getResult().getUser().getUid();
+                                    Log.d("why?", uid);
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                    DatabaseReference myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid); //토큰 가져와서 넣고
+                                    DatabaseReference myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid);//토큰 가져와서 넣고
                                     myRef.setValue(minfo);
 
                                     Toast.makeText(SignActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+
+                                } else {
 
                                 }
                             }
@@ -182,7 +349,6 @@ public class SignActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(SignActivity.this, "꺼졍", Toast.LENGTH_SHORT).show();
-
                 }
             }
         }
@@ -219,6 +385,77 @@ public class SignActivity extends AppCompatActivity {
         this.store_closetime = store_closetime;
         this.store_memo = store_memo;
     }
+
+
+    private boolean isValidPasswd(String target) { //비밀번호 형식 검사
+        Pattern p = Pattern.compile("(^.*(?=.{6,100})(?=.*[0-9])(?=.*[a-zA-Z]).*$)");
+
+        Matcher m = p.matcher(target);
+        if (m.find() && !target.matches(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isValidEmail(String target) {// 이메일 형식 검사
+        if (target == null || TextUtils.isEmpty(target)) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
+
 }
 
+class Info {
+    int check_owner;
+    String email;
+    String id;
+    String name;
+    String password;
 
+
+    public void setCheck_owner(int check_owner) {
+        this.check_owner = check_owner;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getCheck_owner() {
+        return check_owner;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+
+}

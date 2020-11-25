@@ -32,17 +32,15 @@ import java.util.Map;
 public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
 
     GoogleMap mMap;
-    MapView mapView;
+    MapView mapView = null;
     View mView;
 
-String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
+    String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
+    public void onCreate(@Nullable Bundle savedlnstanceState) {
+        super.onCreate(savedlnstanceState);
 
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(getContext());
-        mMap=googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     @Override
@@ -63,32 +61,87 @@ String[] REQUIRED_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION,Manife
 //        }
 
         mView = inflater.inflate(R.layout.fragment_main_map, container, false);
+
+        mapView = (MapView)mView.findViewById(R.id.main_mapview);
+        mapView.getMapAsync(this);
+
         return mView;
     }
 
 
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
 
-        mapView = (MapView)mView.findViewById(R.id.main_mapview);
-        if (mapView != null) {
-            mapView.onCreate(null);
-            mapView.onResume();
-            mapView.getMapAsync(this);
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onLowMemory();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        //액티비티가 처음 생성될 때 실행되는 함수
+
+        if(mapView != null)
+        {
+            mapView.onCreate(savedInstanceState);
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.main_mapview) {
-            showCurrentPlace();
-        }
-        return true;
-    }
+    public void onMapReady(GoogleMap googleMap) {
+        LatLng SEOUL = new LatLng(37.56, 126.97);
 
-    private void showCurrentPlace() {
-    }
-    ////////////////////////////////////////////////////////////////////////////////////
+        MarkerOptions markerOptions = new MarkerOptions();
 
+        markerOptions.position(SEOUL);
+
+        markerOptions.title("서울");
+
+        markerOptions.snippet("수도");
+
+        googleMap.addMarker(markerOptions);
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(SEOUL));
+
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+    }
 
 }
+
+
+
