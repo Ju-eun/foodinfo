@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="30dp"
         android:orientation="vertical"
-        >
+        android:padding="30dp">
 
 
         <LinearLayout
@@ -19,52 +19,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingRight="30dp"
-
             android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/imgbtn_kor"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:onClick=""
                     android:scaleType="fitXY"
-                    android:id="@+id/imgbtn_kor"
                     android:src="@drawable/kor_food" />
 
                 <ImageButton
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:scaleType="fitXY"
                     android:id="@+id/imgbtn_cha"
-                    android:src="@drawable/chi_food"/>
-                <ImageButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
+
+                    android:src="@drawable/chi_food" />
+
+                <ImageButton
                     android:id="@+id/imgbtn_jan"
-                    android:src="@drawable/ja_food"/>
-                <ImageButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
+                    android:src="@drawable/ja_food" />
+
+                <ImageButton
                     android:id="@+id/imgbtn_wes"
-                    android:src="@drawable/wes_food"/>
-                <ImageButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
+                    android:src="@drawable/wes_food" />
+
+                <ImageButton
                     android:id="@+id/imgbtn_coffee"
-                    android:src="@drawable/coffee"/>
-                <ImageButton
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="fitXY"
+                    android:src="@drawable/coffee" />
+
+                <ImageButton
                     android:id="@+id/imgbtn_gochi"
-                    android:src="@drawable/gochi"/>
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/gochi" />
 
             </LinearLayout>
 

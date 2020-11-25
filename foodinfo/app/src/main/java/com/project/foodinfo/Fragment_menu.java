@@ -1,11 +1,14 @@
 package com.project.foodinfo;
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,12 +42,16 @@ public class Fragment_menu extends Fragment {
     String menu_02 = "";
     MyAdapter myAdapter;
 
+    Context context;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view;
+
+        context = container.getContext();
+
 
         view = inflater.inflate(R.layout.fragment_menu, container, false);
 
@@ -77,7 +84,14 @@ public class Fragment_menu extends Fragment {
                 Log.w("ASDG", "Failed to read value.", error.toException());
             }
         });
+       lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           @Override
+           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+               MenuChangeActivity menuChangeActivityDialog = new MenuChangeActivity(context);
+               menuChangeActivityDialog.menuChangeCallFunction();
+           }
+       });
 //
 //        storageRef = storage.getReferenceFromUrl(menu_01);
 
