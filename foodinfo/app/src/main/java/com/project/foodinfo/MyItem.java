@@ -1,12 +1,12 @@
 package com.project.foodinfo;
 
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
 
 public class MyItem {
-    private int icon;
     private int num;
-    private String menuImg;
+    private Uri menuImg;
     private String name;
     private String price;
 
@@ -14,19 +14,11 @@ public class MyItem {
     public TextWatcher priceWatcher;
 
 
-    public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
-
-    public String getMenuImg() {
+    public Uri getMenuImg() {
         return menuImg;
     }
 
-    public void setMenuImg(String menuImg) {
+    public void setMenuImg(Uri menuImg) {
         this.menuImg = menuImg;
     }
 

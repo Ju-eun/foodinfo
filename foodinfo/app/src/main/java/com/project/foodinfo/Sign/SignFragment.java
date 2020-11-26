@@ -79,7 +79,6 @@ public class SignFragment extends Fragment {
 
         menuAdapter = new MenuAdapter(getActivity());
 
-
         spinner = view.findViewById(R.id.sign_frag_spinner_categori);
         lv_sign_menu = view.findViewById(R.id.sign_frag_lv_menulist);
         btn_sign_menu_plus = view.findViewById(R.id.sign_frag_btn_plus);
@@ -123,6 +122,7 @@ public class SignFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         return view;
     }
 
@@ -131,7 +131,6 @@ public class SignFragment extends Fragment {
         public void onClick(View v) {
             if(v.getId() == btn_sign_menu_plus.getId()){
 
-                ArrayList<MyItem> almy = new ArrayList<>();
                 menuAdapter.addItem("","", menu_size);
                 menu_size++;
 
@@ -174,7 +173,6 @@ public class SignFragment extends Fragment {
                 lv_sign_menu.setLayoutParams(params);
 
                 menuAdapter.notifyDataSetChanged();
-
             }
         }
     };
@@ -201,15 +199,27 @@ public class SignFragment extends Fragment {
             
             MyItem myItem = menuAdapter.getItem(i);
 
-            store_menu.setMenu_name("test" + i);//myItem.getName());
+            store_menu.setMenu_name(myItem.getName());//myItem.getName());
             store_menu.setMenu_price(myItem.getPrice());
-            store_menu.setMenu_img("gg");
+            store_menu.setMenu_img(myItem.getMenuImg());
             al_menu.add(store_menu);
         }
 
         store_info.setStore_menus(al_menu);
         menuAdapter.notifyDataSetChanged();
-        ((SignActivity)getActivity()).getValue(store_info);
+        ((SignActivity)getActivity()).getValue(store_info); // **
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        ((SignActivity) getActivity()).setImageUri(menuAdapter);
+        menuAdapter.notifyDataSetChanged();
+
+        super.onResume();
+    }
 }
