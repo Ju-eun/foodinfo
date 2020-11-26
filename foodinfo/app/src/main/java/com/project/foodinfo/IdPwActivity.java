@@ -29,7 +29,7 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
     Button btn_idpw_1, btn_idpw_2;
     EditText edt_idpw_name, edt_idpw_birth, edt_idpw_email, edt_idpw_number;
     DatabaseReference Ref;
-    boolean b = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +48,16 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
 
         TabHost tabHost = getTabHost();
 
-        TabHost.TabSpec tabSpecID =
-                tabHost.newTabSpec("ID").setIndicator("아이디 찾기");
+        TabHost.TabSpec tabSpecEmail =
+                tabHost.newTabSpec("Email").setIndicator("이메일 찾기");
 
         TabHost.TabSpec tabSpecPW =
                 tabHost.newTabSpec("PW").setIndicator("비밀번호 찾기");
 
-        tabSpecID.setContent(R.id.이메일찾기);
+        tabSpecEmail.setContent(R.id.이메일찾기);
         tabSpecPW.setContent(R.id.패스워드찾기);
 
-        tabHost.addTab(tabSpecID);
+        tabHost.addTab(tabSpecEmail);
         tabHost.addTab(tabSpecPW);
 
         tabHost.setCurrentTab(0);
@@ -73,48 +73,52 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                boolean a = false;
+                boolean b = false;
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
                     try {
 
                         key = snapshot.getKey();
                         value = snapshot.getValue(Info.class);
-
                         Log.d("AA", "key : " + key);
-                        Log.d("AA", value.name);
                         Log.d("AA", value.email);
                         Log.d("AA", edt_idpw_name.getText().toString());
-                        Log.d("AA", edt_idpw_email.getText().toString());
+                        Log.d("AA", edt_idpw_number.getText().toString());
 
                         if (value.name.equals(edt_idpw_name.getText().toString()) && value.number.equals(edt_idpw_number.getText().toString())) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
-                            builder.setTitle("사용자의 패스워드").setMessage(value.id);
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            });
-                            AlertDialog alertDialog = builder.create();
-                            alertDialog.show();
-                        }
 
-                    } catch (ClassCastException e) {
-                        e.printStackTrace();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
+                                    builder.setTitle("이메일").setMessage("이메일은" +value.email+ " 입니다.");
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+                            b = true;
+                            break;
+                            }
+
+
+                        } catch (ClassCastException e) {
+                             e.printStackTrace();
                     }
+
                 }
-                if(a == false) {
+                if (b == false) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
-                    builder.setTitle("오류").setMessage("입력한 정보의 패스워드가 없습니다.");
+                    builder.setTitle("오류").setMessage("이름 또는 전화번호가 잘못되었습니다.");
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int id) {
+                        public void onClick(DialogInterface dialog, int password) {
                         }
                     });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -127,10 +131,9 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
         Ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                boolean a = false;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (b == true)
-                        break;
+
                     try {
 
                         key = snapshot.getKey();
@@ -140,54 +143,51 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
                         Log.d("AA", edt_idpw_name.getText().toString());
                         Log.d("AA", edt_idpw_number.getText().toString());
 
-                        if (value.email.equals(edt_idpw_email.getText().toString()) && value.birth.equals(edt_idpw_birth.getText().toString())) {
+                        if (value.birth.equals(edt_idpw_birth.getText().toString()) && value.email.equals(edt_idpw_email.getText().toString())) {
                             Log.d("AA", value.email);
                             FirebaseAuth auth = FirebaseAuth.getInstance();
                             String emailAdress = value.email;
                             auth.sendPasswordResetEmail(emailAdress).addOnCompleteListener(task ->  {
-                                    if (task.isSuccessful()) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
-                                        builder.setTitle("패스워드").setMessage("사용자의 이메일에 전송했습니다.");
-                                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int id) {
-                                            }
-                                        });
-                                        AlertDialog alertDialog = builder.create();
-                                        alertDialog.show();
-                                        b = true;
-                                    }
+                                if (task.isSuccessful()) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
+                                    builder.setTitle("패스워드").setMessage("사용자의 이메일에 전송했습니다.");
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.show();
+
+                                }
 
                             });
-
+                            a = true;
+                            break;
                         }
 
                     } catch (ClassCastException e) {
                         e.printStackTrace();
                     }
-
                 }
-
-            }
+                if (a == false) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
+                    builder.setTitle("오류").setMessage("생년월일 또는 이메일이 잘못되었습니다.");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int password) {
+                        }
+                    });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+                }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
-        if (b == false) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
-            builder.setTitle("오류").setMessage("입력한 정보의 패스워드가 없습니다.");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int password) {
-                }
-            });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
     }
-
 }
 
 class Info {
