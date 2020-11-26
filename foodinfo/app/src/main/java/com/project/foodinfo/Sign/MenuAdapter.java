@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
@@ -20,8 +21,14 @@ public class MenuAdapter extends BaseAdapter {
 
     EditText et_name;
     EditText et_price;
+    ImageButton ib_menu_row;
 
     Context context;
+    Context SignContext;
+
+    public MenuAdapter(Context SignContext){
+        this.SignContext = SignContext;
+    }
 
     @Override
     public int getCount() {
@@ -52,6 +59,7 @@ public class MenuAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.VHmenu_et_name = (EditText)convertView.findViewById(R.id.et_menu_row_name);
             holder.VHmenu_et_price = (EditText)convertView.findViewById(R.id.et_menu_row_price);
+            holder.VHmenu_ib_menu = (ImageButton)convertView.findViewById(R.id.ib_menu_row);
             convertView.setTag(holder);
         }
         else{
@@ -61,6 +69,7 @@ public class MenuAdapter extends BaseAdapter {
 
         et_name = convertView.findViewById(R.id.et_menu_row_name);
         et_price = convertView.findViewById(R.id.et_menu_row_price);
+        ib_menu_row = convertView.findViewById(R.id.ib_menu_row);
 
 
         final MyItem listViewItem = filteredItemList.get(position);
@@ -100,6 +109,14 @@ public class MenuAdapter extends BaseAdapter {
                 filteredItemList.get(holder.ref).setPrice(s.toString());
             }
         });
+        holder.VHmenu_ib_menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SignContext instanceof SignActivity){
+                    ((SignActivity)SignContext).get_Menu_Image();
+                }
+            }
+        });
         return convertView;
     }
 
@@ -124,7 +141,10 @@ public class MenuAdapter extends BaseAdapter {
             myItems.remove(myItems.size() - 1);
         }
     }
+    
+
 }
+
 
 
 

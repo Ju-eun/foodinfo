@@ -2,18 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.project.foodinfo">
 
-    <permission
-        android:name="org.techtown.location.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="your_packagename.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.proveders.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="wonpa.alwaysweb.com.myloctest.permission.MAPS_RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -23,16 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodInfo">
 
-        <uses-library android:name="com.google.android.maps" />
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" /> <!-- Maps Android Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD0fsBcXuJN0_Fq8vQXgFw234UlxWDgIqs" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
 
         <activity android:name=".IntroActivity">
             <intent-filter>
@@ -44,9 +30,9 @@
         <activity android:name=".Sign.SignActivity" />
         <activity android:name=".IdPwActivity" />
         <activity android:name=".Sign.OperActivity" />
-        <activity android:name=".StoreinfoActivity"></activity>
+        <activity android:name=".StoreinfoActivity" />
         <activity android:name=".MypageActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
     </application>
 

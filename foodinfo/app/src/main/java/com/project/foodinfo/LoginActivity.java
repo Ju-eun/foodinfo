@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 import com.project.foodinfo.Sign.SignActivity;
 
-//import com.project.foodinfo.Sign.SignActivity;
 
 public class LoginActivity extends AppCompatActivity {
     EditText et_id;
