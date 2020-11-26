@@ -7,6 +7,7 @@
     android:id="@+id/drawer_layout"
     tools:context=".MainActivity">
 
+
     <RelativeLayout
         android:id="@+id/layout_map"
         android:layout_width="match_parent"
