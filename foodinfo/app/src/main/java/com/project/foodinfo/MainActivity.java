@@ -5,15 +5,21 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,16 +31,30 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.internal.IGoogleMapDelegate;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import java.security.Permission;
+import java.util.ArrayList;
+
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final int REQUEST_CODE_PERMISSION = 1000;
     Toolbar toolbar;
     NavigationView navigationView;
     private DrawerLayout mDrawerLayout;
@@ -46,6 +66,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView lv_main_menu;
     DatabaseReference myRef;
     Fragment_main_menu fragment_main_menu;
+    FusedLocationProviderClient mFusedLocationClient;
+
+//    PermissionListener permissionListener = new PermissionListener() {
+//        @Override
+//        public void onPermissionGranted() {
+//            initView();
+//        }
+//
+//        @Override
+//        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+//            Toast.makeText(context, "권한 허용을 하지 않으면 서비스를 이용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+//        }
+//    };
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -53,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
@@ -132,7 +166,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO : 이미 선택된 tab이 다시
             }
         });
+//        checkPermission();
     }
+//    private void checkPermission(){
+//        if(Build.VERSION.SDK_INT>=23){
+//            TedPermission.with(context)
+//                    .setPermissionListener(permissionListener)
+//                    .setRationaleMessage("앱을 이용하기 위해서는 접근 권한이 필요합니다.")
+//                    .setDeniedMessage("앱에서 요구하는 권한설정이 필요합니다...\n [설정]>[권한]에서 사용으로 활성화 해주세요")
+//                    .setPermissions(new String[]{
+//                            Manifest.permission.ACCESS_FINE_LOCATION,
+//                            Manifest.permission.ACCESS_COARSE_LOCATION
+//                    })
+//                    .check();
+//        }else{
+//            initView();
+//        }
+//    }
+//    private void initView(){
+//        if(findViewById(R.id.main_fragment_map)!=null){
+//            Fragment fragment = new Fragment_main_map();
+//            fragment.setArguments(getIntent().getExtras());
+//
+//        }
+
+//    }
 
 
     @Override
@@ -154,27 +212,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int b = imgbtn_kor.getId();
         int a = v.getId();
         Bundle bundle = new Bundle(1);
-        if(a == imgbtn_kor.getId()){
-            bundle.putString("key","한식");
-        }
-        else if(a == imgbtn_cha.getId()){
-            bundle.putString("key","중식");
-        }
-        else if(a == imgbtn_jan.getId()){
-            bundle.putString("key","일식");
-        }
-        else if(a == imgbtn_wes.getId()){
-            bundle.putString("key","양식");
-        }
-        else if(a == imgbtn_coffee.getId()){
-            bundle.putString("key","커피");
-        }
-        else if(a == imgbtn_gochi.getId()){
-            bundle.putString("key","꼬치");
+        if (a == imgbtn_kor.getId()) {
+            bundle.putString("key", "한식");
+        } else if (a == imgbtn_cha.getId()) {
+            bundle.putString("key", "중식");
+        } else if (a == imgbtn_jan.getId()) {
+            bundle.putString("key", "일식");
+        } else if (a == imgbtn_wes.getId()) {
+            bundle.putString("key", "양식");
+        } else if (a == imgbtn_coffee.getId()) {
+            bundle.putString("key", "커피");
+        } else if (a == imgbtn_gochi.getId()) {
+            bundle.putString("key", "꼬치");
         }
         fragment_main_menu.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
-
 
 
 //        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -197,6 +249,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
     }
+    public void onLastLocationButtonClicked(View view) {
+        Fragment_main_map fragment_main_map = new Fragment_main_map();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_CODE_PERMISSION);
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    GoogleMap mMap;
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    LatLng myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+                    markerOptions.position(myLocation);
+                    markerOptions.title("내위치");
+                    markerOptions.snippet("내자리");
+                    fragment_main_map.mMap.addMarker(markerOptions);
+                    fragment_main_map.mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+                    fragment_main_map.mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_CODE_PERMISSION:
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                {
+                    Toast.makeText(this, "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
+                }
+
+        }
+    }
+
+
 }
 
 class MainTabPagerAdapter extends FragmentStatePagerAdapter {
