@@ -10,6 +10,7 @@ import androidx.loader.content.CursorLoader;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -48,6 +49,7 @@ import com.project.foodinfo.MemInfo;
 import com.project.foodinfo.R;
 
 import java.io.File;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +74,7 @@ public class SignActivity extends AppCompatActivity {
     EditText f_pn;
     EditText m_pn;
     EditText e_pn;
-
+    Uri selectedImageUri;
 
     View fragment_view;
     SignFragment signFragment;
@@ -364,44 +366,28 @@ public class SignActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
         }
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-        // 권한
-        storage = FirebaseStorage.getInstance();
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 , "image/*");
         startActivityForResult(intent, GET_GALLERY_IMAGE);
 
+        Log.i("jungmin!!!!!!", selectedImageUri + "");
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data!=null && data.getData() != null)
-        {
-            StorageReference storageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
-
-            Uri selectedImageUri = data.getData();
-
+        if(requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data!=null && data.getData() != null) {
             super.onActivityResult(requestCode, resultCode, data);
+            selectedImageUri = data.getData();
 
-            Uri file = Uri.fromFile(new File(getPath(data.getData())));
-            StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
-            UploadTask uploadTask = riversRef.putFile(file);
 
-// Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
-                }
-            });
+
 
         }
+    }
+
+    public Uri getUri(){
+        return selectedImageUri;
     }
     public String getPath(Uri uri) {
         String[] proj = {MediaStore.Images.Media.DATA};

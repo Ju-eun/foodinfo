@@ -1,8 +1,10 @@
 package com.project.foodinfo.Sign;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
+
+import java.net.URI;
 import java.util.ArrayList;
 
 
@@ -22,7 +26,7 @@ public class MenuAdapter extends BaseAdapter {
     EditText et_name;
     EditText et_price;
     ImageButton ib_menu_row;
-
+    Uri uri;
     Context context;
     Context SignContext;
 
@@ -61,6 +65,7 @@ public class MenuAdapter extends BaseAdapter {
             holder.VHmenu_et_price = (EditText)convertView.findViewById(R.id.et_menu_row_price);
             holder.VHmenu_ib_menu = (ImageButton)convertView.findViewById(R.id.ib_menu_row);
             convertView.setTag(holder);
+
         }
         else{
             holder = (ViewHolder)convertView.getTag();
@@ -112,11 +117,15 @@ public class MenuAdapter extends BaseAdapter {
         holder.VHmenu_ib_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(SignContext instanceof SignActivity){
+
                     ((SignActivity)SignContext).get_Menu_Image();
+
                 }
             }
         });
+
         return convertView;
     }
 
@@ -141,7 +150,7 @@ public class MenuAdapter extends BaseAdapter {
             myItems.remove(myItems.size() - 1);
         }
     }
-    
+
 
 }
 
