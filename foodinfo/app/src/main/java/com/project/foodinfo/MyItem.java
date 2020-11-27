@@ -5,7 +5,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 public class MyItem {
-    private int icon;
     private int num;
     private Uri menuImg;
     private String name;
@@ -14,14 +13,6 @@ public class MyItem {
     public TextWatcher nameWatcher;
     public TextWatcher priceWatcher;
 
-
-    public int getIcon() {
-        return icon;
-    }
-
-    public void setIcon(int icon) {
-        this.icon = icon;
-    }
 
     public Uri getMenuImg() {
         return menuImg;

@@ -1,5 +1,7 @@
 package com.project.foodinfo;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public class MemInfo {
@@ -156,15 +158,15 @@ public class MemInfo {
         }
 
         public static class Store_Menu {
-            private String menu_img = "";
+            private Uri menu_img = null;
             private String menu_name = "진순";
             private String menu_price = "";
 
-            public String getMenu_img() {
+            public Uri getMenu_img() {
                 return menu_img;
             }
 
-            public void setMenu_img(String menu_img) {
+            public void setMenu_img(Uri menu_img) {
                 this.menu_img = menu_img;
             }
 

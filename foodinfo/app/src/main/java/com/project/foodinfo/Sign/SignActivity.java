@@ -10,7 +10,6 @@ import androidx.loader.content.CursorLoader;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,14 +28,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,17 +43,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.project.foodinfo.MemInfo;
+import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
 
-import java.io.File;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static androidx.core.app.ActivityCompat.requestPermissions;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 public class SignActivity extends AppCompatActivity {
 
@@ -74,18 +74,20 @@ public class SignActivity extends AppCompatActivity {
     EditText f_pn;
     EditText m_pn;
     EditText e_pn;
-    Uri selectedImageUri;
 
+    ImageView imageview;
     View fragment_view;
     SignFragment signFragment;
     TextView datePicker;
 
-    private StorageReference mStorageRef;
-    private FirebaseStorage storage;
+    MenuAdapter select_ma_uri;
+
     private final int GET_GALLERY_IMAGE = 200;
+    Uri selectedImageUri;
 
     String select_spinner = "";
     MemInfo minfo = new MemInfo();
+    int pos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +115,6 @@ public class SignActivity extends AppCompatActivity {
 
         btn_signup.setOnClickListener(sign_mlistener);
         btn_idcheck.setOnClickListener(sign_mlistener);
-
-
 
 
         datePicker.setOnClickListener(new View.OnClickListener() {
@@ -361,45 +361,36 @@ public class SignActivity extends AppCompatActivity {
 //        minfo.setStore_category(store_info.getStore_category());
 //        minfo.setStore_memo(store_info.getStore_memo());
     }
-
-    protected void get_Menu_Image(){
+    protected void get_Menu_Image() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
         }
+        // 권한
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                , "image/*");
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, GET_GALLERY_IMAGE);
-
-        Log.i("jungmin!!!!!!", selectedImageUri + "");
-
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data!=null && data.getData() != null) {
+        if(requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data!=null && data.getData() != null)
+        {
             super.onActivityResult(requestCode, resultCode, data);
             selectedImageUri = data.getData();
+            Log.d("asd1", selectedImageUri+"");
+            imageview.setImageURI(selectedImageUri);
+            select_ma_uri.myItems.get(pos).setMenuImg(selectedImageUri);
 
 
-
+            //Log.d("asd1", imageButton.+"");
 
         }
     }
 
-    public Uri getUri(){
-        return selectedImageUri;
-    }
-    public String getPath(Uri uri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
 
-        Cursor cursor = cursorLoader.loadInBackground();
-        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+    public void setImageView(ImageView imageview, int pos){ this.imageview = imageview;
+                                                            this.pos = pos;}
 
-        cursor.moveToFirst();
-
-        return cursor.getString(index);
-    }
+    public void setImageUri(MenuAdapter menuAdapter){this.select_ma_uri = menuAdapter; }
 
 }
 

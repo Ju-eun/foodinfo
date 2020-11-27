@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -55,6 +56,8 @@ public class OperActivity extends AppCompatActivity {
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         , "image/*");
                 startActivityForResult(intent, GET_GALLERY_IMAGE);
+
+
             }
         });
 
@@ -74,11 +77,14 @@ public class OperActivity extends AppCompatActivity {
        if(requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data!=null && data.getData() != null)
         {
             StorageReference storageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
+
             Uri selectedImageUri = data.getData();
             imageview.setImageURI(selectedImageUri);
             super.onActivityResult(requestCode, resultCode, data);
 
             Uri file = Uri.fromFile(new File(getPath(data.getData())));
+
+            Log.i("ff", selectedImageUri+"\n"+getPath(data.getData()) );
             StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
             UploadTask uploadTask = riversRef.putFile(file);
 
@@ -102,8 +108,8 @@ public class OperActivity extends AppCompatActivity {
     public String getPath(Uri uri){
             String [] proj = {MediaStore.Images.Media.DATA};
         CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
-
         Cursor cursor = cursorLoader.loadInBackground();
+
         int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 
         cursor.moveToFirst();
