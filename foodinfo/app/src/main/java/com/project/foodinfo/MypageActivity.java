@@ -3,6 +3,7 @@ package com.project.foodinfo;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,14 +27,19 @@ public class MypageActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference myRef;
     EditText ed_id;
-    EditText ed_password;
+    EditText ed_password, ed_birth, ed_phone;
     EditText ed_email;
     EditText ed_name;
     RadioButton owner, user;
     MemInfo memInfo = new MemInfo();
     Button modifybtn, Exit_btn;
+
+    String uid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
         ed_password = findViewById(R.id.ed_pw);
@@ -42,25 +50,38 @@ public class MypageActivity extends AppCompatActivity {
         ed_name = findViewById(R.id.ed_name);
         owner = findViewById(R.id.owner);
         user = findViewById(R.id.user);
+        ed_birth = findViewById(R.id.ed_birth);
+        ed_phone = findViewById(R.id.ed_phone);
         database = FirebaseDatabase.getInstance();
 
-        myRef = database.getReference("moble-foodtruck").child("MemInfo").child("123");
+        uid = firebaseUser.getUid();
+
+        Log.i("AA", uid);
+
+        myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                memInfo = snapshot.getValue(MemInfo.class);
+                Log.i("AA", uid);
+                Log.i("AA", myRef+"");
+                MemInfo m = snapshot.getValue(MemInfo.class);
+                Log.i("AAphone", m.getphonenumber()+"널이냐?");
 
-                ed_id.setText(memInfo.getId());
-                ed_name.setText(memInfo.getName());
-                ed_email.setText(memInfo.getEmail());
 
-                if(memInfo.getCheck_owner() == 0){
+                ed_birth.setText(m.getBirth());
+                ed_id.setText(m.getId());
+                ed_name.setText(m.getName());
+                ed_email.setText(m.getEmail());
+                ed_phone.setText(m.getphonenumber());
+                if (m.getCheck_owner() == 0) {
                     user.setChecked(true);
-                }else{
+                } else {
                     owner.setChecked(true);
                 }
+
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -156,6 +177,7 @@ public class MypageActivity extends AppCompatActivity {
                         myRef.removeValue();
                         Toast.makeText(context, "회원탈퇴 완료", Toast.LENGTH_SHORT).show();
                         dlg.dismiss();
+                        finish();
                     }
                     else{
                         Toast.makeText(context, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
@@ -202,18 +224,7 @@ public class MypageActivity extends AppCompatActivity {
 
                     if(pwchange.getText().toString().equals(pwchange2.getText().toString()))
                     {
-                        memInfo.setEmail(ed_email.getText().toString());
-                        memInfo.setPassword(pwchange.getText().toString());
-                        memInfo.setId(ed_id.getText().toString());
-                        memInfo.setName(ed_name.getText().toString());
-                        memInfo.setCheck_owner(1);
-                        myRef.setValue(memInfo);
-
-                        if(user.isChecked())
-                            memInfo.setCheck_owner(0);
-                        else
-                            memInfo.setCheck_owner(1);
-                        Toast.makeText(context, "비밀번호 변경 완료", Toast.LENGTH_SHORT).show();
+                        myRef.child("password").setValue(pwchange.getText().toString());
                         dlg.dismiss();
                     }
 

@@ -36,6 +36,35 @@
         </RadioGroup>
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:id="@+id/tv_email"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:text="이메일" />
+
+        <EditText
+            android:backgroundTint="@color/black"
+            android:id="@+id/ed_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginRight="20dp"
+            android:enabled="false" />
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,7 +81,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
-            android:text="아이디" />
+            android:text="닉네임" />
 
         <EditText
             android:backgroundTint="@color/black"
@@ -135,6 +164,34 @@
             tools:layout_editor_absoluteX="251dp"
             tools:layout_editor_absoluteY="253dp" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:id="@+id/tv_phone"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:text="폰 번호" />
+
+        <EditText
+            android:backgroundTint="@color/black"
+            android:id="@+id/ed_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginRight="20dp"
+            android:enabled="false" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -144,18 +201,18 @@
         <TextView
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:id="@+id/tv_email"
+            android:id="@+id/tv_birth"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
-            android:text="이메일" />
+            android:text="생년월일" />
 
         <EditText
             android:backgroundTint="@color/black"
-            android:id="@+id/ed_email"
+            android:id="@+id/ed_birth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -165,6 +222,7 @@
 
 
     </LinearLayout>
+
     <Button
         android:backgroundTint="@color/black"
         android:textColor="@color/white"
