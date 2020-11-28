@@ -36,6 +36,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.internal.IGoogleMapDelegate;
 import com.google.android.gms.maps.model.LatLng;
@@ -51,6 +52,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.project.foodinfo.Sign.MenuAdapter;
 
 import java.security.Permission;
 import java.util.ArrayList;
@@ -71,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Fragment_main_menu fragment_main_menu;
     FusedLocationProviderClient mFusedLocationClient;
     GoogleMap mMap;
+    LatLng latLng;
+
+    MapView mapView;
 
 //    PermissionListener permissionListener = new PermissionListener() {
 //        @Override
@@ -120,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //네이게이션 화면 설정
         navigationView = findViewById(R.id.nav_view);
-
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -170,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO : 이미 선택된 tab이 다시
             }
         });
+
 //        checkPermission();
     }
 //    private void checkPermission(){
@@ -194,8 +199,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
 //        }
 
-//    }
-
+    //    }
+    public void getmap(GoogleMap mMap, LatLng latLng) {
+        this.mMap = mMap;
+        this.latLng = latLng;
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -252,6 +260,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
 //            }
 //        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
+                }
+                Log.d("asd3", "3");
+            mMap.setMyLocationEnabled(true);
+//            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                Log.d("asd4", "4");
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
+        }
     }
 
 }

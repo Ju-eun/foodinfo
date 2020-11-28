@@ -53,11 +53,11 @@ public class Fragment_main_menu extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 myAdapter = new MyAdapter();
-           //     getId_string = imgbtn_kor.getId();
+                //     getId_string = imgbtn_kor.getId();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
+//                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
                     MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
 
                     String category = store_info.getStore_category();

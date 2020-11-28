@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -51,9 +52,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.libraries.places.api.Places;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.project.foodinfo.Sign.SignActivity;
+
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -73,8 +73,9 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
 
     private static final int REQUEST_CODE_PERMISSION = 1000;
     FusedLocationProviderClient mFusedLocationClient;
-    private MapView mapView;
+    public MapView mapView;
     public GoogleMap mMap;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,8 +83,7 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         mapView = (MapView) view.findViewById(R.id.main_mapview);
         mapView.getMapAsync(this);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
+//        mapView.onCreate(savedInstanceState);
         return view;
     }
 
@@ -139,15 +139,15 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
             mapView.onCreate(savedInstanceState);
         }
     }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        MarkerOptions markerOptions = new MarkerOptions();
         LatLng seoul = new LatLng(37.55, 126.97);
+        ((MainActivity)getActivity()).getmap(mMap,seoul);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
+//        MarkerOptions markerOptions = new MarkerOptions();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -155,51 +155,20 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            // for ActivityCompat#requestPermissions for more details.\
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_CODE_PERMISSION);
             return;
         }
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                LatLng mylocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-            }
-        });
         mMap.setMyLocationEnabled(true);
-
-       // mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        // mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 
 //        markerOptions.position(seoul);
 //        markerOptions.title("서울");
 //        markerOptions.snippet("수도");
 //        mMap.addMarker(markerOptions);
-
-
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:01095563826"));
-                if (intent.resolveActivity(getActivity().getPackageManager()) == null) {
-                    startActivity(intent);
-                }
-            }
-        });
     }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSION:
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
-                }
 
-        }
-    }
 }
-
