@@ -57,7 +57,7 @@ public class Fragment_main_menu extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
+//                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
                     MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
 
                     String category = store_info.getStore_category();
@@ -67,7 +67,7 @@ public class Fragment_main_menu extends Fragment {
                         menu_02 = snapshot.child("345").child("menu_img").getValue(String.class);
 
                         myAdapter.addItem(menu_01, "국밥", "1000");
-                        // myAdapter.addItem(menu_02, "af", "fald");
+                         myAdapter.addItem(menu_02, "af", "fald");
 
                         myAdapter.notifyDataSetChanged();
                         lv_main_menu.setAdapter(myAdapter);
