@@ -49,13 +49,13 @@ public class MypageActivity extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MemInfo m = snapshot.getValue(MemInfo.class);
+                memInfo = snapshot.getValue(MemInfo.class);
 
-                ed_id.setText(m.getId());
-                ed_name.setText(m.getName());
-                ed_email.setText(m.getEmail());
+                ed_id.setText(memInfo.getId());
+                ed_name.setText(memInfo.getName());
+                ed_email.setText(memInfo.getEmail());
 
-                if(m.getCheck_owner() == 0){
+                if(memInfo.getCheck_owner() == 0){
                     user.setChecked(true);
                 }else{
                     owner.setChecked(true);
