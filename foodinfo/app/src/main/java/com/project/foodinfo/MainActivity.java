@@ -11,40 +11,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.util.MapUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.internal.IGoogleMapDelegate;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -52,24 +39,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-import com.project.foodinfo.Sign.MenuAdapter;
-
-import java.security.Permission;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_CODE_PERMISSION = 1000;
+    private static final String OWNER = "1";
     Toolbar toolbar;
     NavigationView navigationView;
     private DrawerLayout mDrawerLayout;
     private TabLayout tabLayout;
     ViewPager main_viewpager;
     ImageButton imgbtn_kor, imgbtn_coffee, imgbtn_cha, imgbtn_gochi, imgbtn_jan, imgbtn_wes;
-    MyAdapter myAdapter;
-    String menu_01, menu_02;
     ListView lv_main_menu;
     DatabaseReference myRef;
     Fragment_main_menu fragment_main_menu;
@@ -77,7 +57,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GoogleMap mMap;
     LatLng latLng;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    MapView mapView;
+    NavigationView navi_view;
+    String Check_Owner;
+    String uid;
+    FirebaseAuth firebase;
+
 
 //    PermissionListener permissionListener = new PermissionListener() {
 //        @Override
@@ -94,16 +78,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        String uid = user.getUid();
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        firebase = FirebaseAuth.getInstance();
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            uid = user.getUid();
+        }
+        catch (Exception e){
+            uid = null;
+        }
+
+
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(user.getUid());
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
 
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
@@ -128,9 +115,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_dehaze_black_24dp);//메뉴모양
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        navi_view = findViewById(R.id.nav_view);
 
+
+        if(uid != null){
+            myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
+            Log.d("qwer", "1");
+            myRef.child("check_owner").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Log.d("qwer", "2");
+                    Check_Owner = String.valueOf(snapshot.getValue(Integer.class));
+                    if(Check_Owner.equals(OWNER)){
+                        navigationView.getMenu().clear();
+                        navigationView.inflateMenu(R.menu.seller_menu);
+                    }
+                    else{
+                        navigationView.getMenu().clear();
+                        navigationView.inflateMenu(R.menu.consumer_menu);
+                    }
+                    navigationView = navi_view;
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
         //네이게이션 화면 설정
-        navigationView = findViewById(R.id.nav_view);
+        navigationView = navi_view;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -143,7 +158,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.connection) {
+                    //구글연동(가능하면)
+                } else if(id == R.id.mypage){
+                    Intent intent = new Intent(MainActivity.this, MypageActivity.class);
+                    startActivity(intent);
+                } else if(id == R.id.storeinfo){
+                    Intent intent = new Intent(MainActivity.this, StoreinfoActivity.class);
+                    startActivity(intent);
+                } else if(id == R.id.logout){
+                    //로그아웃 + 메인 액티비티 새로고침
+                    firebase.signOut();
+                    finish();
                 }
+
                 return true;
             }
         });
