@@ -201,10 +201,10 @@ public class SignFragment extends Fragment {
 
             store_menu.setMenu_name(myItem.getName());//myItem.getName());
             store_menu.setMenu_price(myItem.getPrice());
-            store_menu.setMenu_img(myItem.getMenuImg());
+            store_menu.setMenu_img(myItem.getMenuImg() + "");//이미지 넣는부분
             al_menu.add(store_menu);
         }
-
+        //이 근처에서 이뤄줘야함
         store_info.setStore_menus(al_menu);
         menuAdapter.notifyDataSetChanged();
         ((SignActivity)getActivity()).getValue(store_info); // **
