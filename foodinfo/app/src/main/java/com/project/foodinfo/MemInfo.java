@@ -1,5 +1,7 @@
 package com.project.foodinfo;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public class MemInfo {
@@ -112,6 +114,10 @@ public class MemInfo {
                 return "store_category";
             }
             return null;
+        }
+
+        public int getStore_Size(){
+            return store_menus.size();
         }
 
         public ArrayList<Store_Menu> getStore_menus() {

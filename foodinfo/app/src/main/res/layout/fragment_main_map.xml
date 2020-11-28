@@ -8,7 +8,6 @@
     tools:context=".Fragment_main_map">
 
 
-
   <!--  <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

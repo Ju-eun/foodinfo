@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import com.airbnb.lottie.L;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -24,19 +23,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the  factory method to
- * create an instance of this fragment.
- */
+public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
 
-public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
-
+    private static final int REQUEST_CODE_PERMISSION = 1000;
+    FusedLocationProviderClient mFusedLocationClient;
     private MapView mapView;
     public GoogleMap mMap;
     public SupportMapFragment mapFragment;
@@ -44,13 +36,12 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
     private FragmentActivity myContext;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_map, container, false);
         // Inflate the layout for this fragment
-        mapView = (MapView)view.findViewById(R.id.main_mapview);
+        mapView = (MapView) view.findViewById(R.id.main_mapview);
         mapView.getMapAsync(this);
-
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         return view;
 
@@ -139,8 +130,7 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
 
 //액티비티가 처음 생성될 때 실행되는 함수
 
-        if(mapView != null)
-        {
+        if (mapView != null) {
             mapView.onCreate(savedInstanceState);
         }
     }
@@ -148,9 +138,11 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Bundle bundle = new Bundle();
-        bundle.putString("key", String.valueOf(mMap));
-        MarkerOptions markerOptions = new MarkerOptions();
+//        MarkerOptions markerOptions = new MarkerOptions();
+        LatLng seoul = new LatLng(37.55, 126.97);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
 
         LatLng seoul = new LatLng(37.56,126.97);          //좌표
 
@@ -163,12 +155,44 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
         mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_CODE_PERMISSION);
+            return;
+        }
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                LatLng mylocation = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(mylocation));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+            }
+        });
+        mMap.setMyLocationEnabled(true);
+
+       // mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
+//        markerOptions.position(seoul);
+//        markerOptions.title("서울");
+//        markerOptions.snippet("수도");
+//        mMap.addMarker(markerOptions);
+
+
+
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:01095563826"));
-                if(intent.resolveActivity(getActivity().getPackageManager())==null){
+                if (intent.resolveActivity(getActivity().getPackageManager()) == null) {
                     startActivity(intent);
                 }
             }
@@ -176,6 +200,17 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
 
 
 
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_PERMISSION:
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(), "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
+                }
+
+        }
     }
 }
 

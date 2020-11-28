@@ -30,6 +30,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.google.android.gms.common.util.MapUtils;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,8 +46,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Fragment_main_menu fragment_main_menu;
     FusedLocationProviderClient mFusedLocationClient;
     GoogleMap mMap;
+    static FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
 
 
 
@@ -78,12 +93,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            Toast.makeText(context, "권한 허용을 하지 않으면 서비스를 이용할 수 없습니다.", Toast.LENGTH_SHORT).show();
 //        }
 //    };
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
+
+
+    protected void onDestroy() {
+        user = null;
+        Log.i("아몰랑크123크", user+" : Destroy");
+        super.onDestroy();
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
+
+        if(user !=null){
+
+            user = null;
+        }
+        else if(user !=null){
+            user = FirebaseAuth.getInstance().getCurrentUser();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        Log.i("아몰랑크크크", user+"");
+
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -304,8 +339,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void getMap(GoogleMap map) {
         mMap = map;
     }
-
-
 
 }
 
