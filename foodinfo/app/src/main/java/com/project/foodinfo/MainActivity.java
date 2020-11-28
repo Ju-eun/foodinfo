@@ -11,48 +11,42 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
-
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.internal.IGoogleMapDelegate;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
-import java.security.Permission;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -71,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FusedLocationProviderClient mFusedLocationClient;
     GoogleMap mMap;
 
+
+
 //    PermissionListener permissionListener = new PermissionListener() {
 //        @Override
 //        public void onPermissionGranted() {
@@ -88,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -170,6 +167,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 //        checkPermission();
+
+
+
+
     }
 //    private void checkPermission(){
 //        if(Build.VERSION.SDK_INT>=23){
@@ -254,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onLastLocationButtonClicked(View view) {
-        Fragment_main_map fragment_main_map = new Fragment_main_map();
+        Fragment_main_map fragment_main_map = new Fragment_main_map();     /*//구글맵을 불러와서 권한 조건이 하나라도 맞으면 권한 허용*/
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -287,6 +288,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -302,6 +304,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void getMap(GoogleMap map) {
         mMap = map;
     }
+
 
 
 }

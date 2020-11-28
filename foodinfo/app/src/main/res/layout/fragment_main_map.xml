@@ -8,11 +8,24 @@
     tools:context=".Fragment_main_map">
 
 
+
+  <!--  <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sv_location"
+        android:queryHint="Search..."
+        android:iconifiedByDefault="false"
+        android:layout_margin="50dp"
+        android:elevation="5dp"
+        android:background="#ffffff"/>-->
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="onLastLocationButtonClicked"
-        android:text="현재 위치"/>
+        android:text="현재 위치"
+        tools:ignore="OnClick" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/main_mapview"

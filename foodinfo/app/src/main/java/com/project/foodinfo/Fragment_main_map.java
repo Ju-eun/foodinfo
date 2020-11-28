@@ -1,66 +1,33 @@
 package com.project.foodinfo;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.SearchView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.maps.CameraUpdate;
+import com.airbnb.lottie.L;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,6 +39,9 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
 
     private MapView mapView;
     public GoogleMap mMap;
+    public SupportMapFragment mapFragment;
+    public SearchView searchView;
+    private FragmentActivity myContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +53,42 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
 
 
         return view;
+
+
+       /* searchView = (SearchView)view.findViewById(R.id.sv_location);
+        mapFragment = (SupportMapFragment)getFragmentManager()
+                .findFragmentById(R.id.google_map);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String location = searchView.getQuery().toString();
+                List<Address> addressList = null;
+
+                if (location != null || !location.equals("")){
+                    Geocoder geocoder = new Geocoder(getActivity());
+                    try{
+                        addressList = geocoder.getFromLocationName(location, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
+*/
+
     }
 
     @Override
@@ -146,11 +152,11 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
         bundle.putString("key", String.valueOf(mMap));
         MarkerOptions markerOptions = new MarkerOptions();
 
-        LatLng seoul = new LatLng(37.56,126.97);
+        LatLng seoul = new LatLng(37.56,126.97);          //좌표
 
-        ((MainActivity)getActivity()).getMap(mMap);
 
-        markerOptions.position(seoul);
+
+        markerOptions.position(seoul);                          //서울에 마커를 표시합니다.
         markerOptions.title("서울");
         markerOptions.snippet("수도");
         mMap.addMarker(markerOptions);
@@ -167,6 +173,9 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback{
                 }
             }
         });
+
+
+
     }
 }
 
