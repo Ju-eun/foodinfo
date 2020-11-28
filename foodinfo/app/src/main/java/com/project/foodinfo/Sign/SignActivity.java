@@ -141,7 +141,7 @@ public class SignActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-                },c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.getDatePicker().setCalendarViewShown(false);
                 datePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 datePickerDialog.show();
@@ -280,7 +280,7 @@ public class SignActivity extends AppCompatActivity {
                     minfo.setPassword(password);
                     minfo.setEmail(email + select_spinner);// 스피너 값도 가져와야함
                     minfo.setBirth(b_day);
-                    minfo.setPhonenumber(f_pn.getText().toString(),m_pn.getText().toString(),e_pn.getText().toString());
+                    minfo.setPhonenumber(f_pn.getText().toString(), m_pn.getText().toString(), e_pn.getText().toString());
 
                     if (cb_oper.isChecked()) {
                         minfo.setCheck_owner(1);
@@ -300,45 +300,47 @@ public class SignActivity extends AppCompatActivity {
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid);//토큰 가져와서 넣고
 
-                                    storage = FirebaseStorage.getInstance();
-                                    mStorageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
-                                    UploadTask[] uploadTask = new UploadTask[minfo.getStore_info().getStore_Size()];
+                                    if (minfo.getCheck_owner() == 1) {
+                                        storage = FirebaseStorage.getInstance();
+                                        mStorageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
+                                        UploadTask[] uploadTask = new UploadTask[minfo.getStore_info().getStore_Size()];
 
-                                    Uri file[] = new Uri[minfo.getStore_info().getStore_Size()];
-                                    for(int i = 0; i < minfo.getStore_info().getStore_Size(); i++){
-                                        file[i] = Uri.fromFile(new File(getPath(Uri.parse(minfo.getStore_info().getStore_menus().get(i).getMenu_img()))));
+                                        Uri file[] = new Uri[minfo.getStore_info().getStore_Size()];
+                                        for (int i = 0; i < minfo.getStore_info().getStore_Size(); i++) {
+                                            file[i] = Uri.fromFile(new File(getPath(Uri.parse(minfo.getStore_info().getStore_menus().get(i).getMenu_img()))));
 
-                                        StorageReference riversRef = mStorageRef.child("images/"+file[i].getLastPathSegment());
-                                        Log.i("qsc1", Uri.parse(minfo.getStore_info().getStore_menus().get(i).getMenu_img())+"");
-                                        uploadTask[i] = riversRef.putFile(file[i]);
+                                            StorageReference riversRef = mStorageRef.child("images/" + file[i].getLastPathSegment());
+                                            Log.i("qsc1", Uri.parse(minfo.getStore_info().getStore_menus().get(i).getMenu_img()) + "");
+                                            uploadTask[i] = riversRef.putFile(file[i]);
 
+                                        }
+
+                                        for (int i = 0; i < minfo.getStore_info().getStore_Size(); i++) {
+                                            uploadTask[i].addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    // Handle unsuccessful uploads
+                                                }
+                                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                                                    while (!uri.isComplete()) ;
+                                                    Uri url = uri.getResult();
+                                                    String str_str = String.valueOf(url);
+                                                    Log.i("qsc2", input_pos + "");
+                                                    Log.i("qsc3", str_str);
+                                                    minfo.getStore_info().getStore_menus().get(input_pos).setMenu_img(str_str);
+                                                    myRef.child("store_info").child("store_menus").child(input_pos + "").child("menu_img").setValue(str_str);
+
+                                                    input_pos++;
+                                                }
+                                            });
+                                        }
                                     }
-
-                                    for(int i = 0; i < minfo.getStore_info().getStore_Size(); i++){
-                                        uploadTask[i].addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception exception) {
-                                                // Handle unsuccessful uploads
-                                            }
-                                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
-                                                while(!uri.isComplete());
-                                                Uri url = uri.getResult();
-                                                String str_str = String.valueOf(url);
-                                                Log.i("qsc2", input_pos+"");
-                                                Log.i("qsc3", str_str );
-                                                minfo.getStore_info().getStore_menus().get(input_pos).setMenu_img(str_str);
-                                                myRef.child("store_info").child("store_menus").child(input_pos+"").child("menu_img").setValue(str_str);
-
-                                                input_pos++;
-                                            }
-                                        });
-                                    }
-                                    Log.i("qsc4", minfo.getStore_info().getStore_menus().get(0).getMenu_img());
                                     myRef.setValue(minfo);
                                     Toast.makeText(SignActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+                                    finish();
                                 } else {
 
                                 }
@@ -396,30 +398,30 @@ public class SignActivity extends AppCompatActivity {
     }
 
 
-
-    public void getValue(MemInfo.Store_Info store_info){
+    public void getValue(MemInfo.Store_Info store_info) {
 
         minfo.setStore_info(store_info);
 //        minfo.setStore_time(store_info.getStore_time());
 //        minfo.setStore_category(store_info.getStore_category());
 //        minfo.setStore_memo(store_info.getStore_memo());
     }
+
     protected void get_Menu_Image() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},0);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
         }
         // 권한
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, GET_GALLERY_IMAGE);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data!=null && data.getData() != null)
-        {
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             super.onActivityResult(requestCode, resultCode, data);
             selectedImageUri = data.getData();
-            Log.d("asd1", selectedImageUri+"");
+            Log.d("asd1", selectedImageUri + "");
             imageview.setImageURI(selectedImageUri);
             select_ma_uri.myItems.get(pos).setMenuImg(selectedImageUri);
 
@@ -430,14 +432,18 @@ public class SignActivity extends AppCompatActivity {
     }
 
 
-    public void setImageView(ImageView imageview, int pos){ this.imageview = imageview;
-                                                            this.pos = pos;}
+    public void setImageView(ImageView imageview, int pos) {
+        this.imageview = imageview;
+        this.pos = pos;
+    }
 
-    public void setImageUri(MenuAdapter menuAdapter){this.select_ma_uri = menuAdapter; }
+    public void setImageUri(MenuAdapter menuAdapter) {
+        this.select_ma_uri = menuAdapter;
+    }
 
-    public String getPath(Uri uri){
-        String [] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
+    public String getPath(Uri uri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
         Cursor cursor = cursorLoader.loadInBackground();
 
         int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
