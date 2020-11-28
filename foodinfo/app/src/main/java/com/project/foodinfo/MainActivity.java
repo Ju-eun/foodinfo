@@ -45,6 +45,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FusedLocationProviderClient mFusedLocationClient;
     GoogleMap mMap;
     LatLng latLng;
-
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     MapView mapView;
 
 //    PermissionListener permissionListener = new PermissionListener() {
@@ -92,12 +94,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        String uid = user.getUid();
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
+        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(user.getUid());
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
 
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
