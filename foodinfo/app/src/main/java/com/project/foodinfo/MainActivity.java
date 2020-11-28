@@ -144,8 +144,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
 
         }
+        else{
+            navigationView = navi_view;
+        }
         //네이게이션 화면 설정
-        navigationView = navi_view;
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
