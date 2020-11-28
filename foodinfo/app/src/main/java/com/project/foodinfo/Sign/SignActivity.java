@@ -28,7 +28,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -36,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,18 +44,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.project.foodinfo.MemInfo;
-import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static androidx.core.app.ActivityCompat.requestPermissions;
-import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 public class SignActivity extends AppCompatActivity {
 
@@ -85,6 +84,13 @@ public class SignActivity extends AppCompatActivity {
     private final int GET_GALLERY_IMAGE = 200;
     Uri selectedImageUri;
 
+    int input_pos = 0;
+
+
+    private StorageReference mStorageRef;
+    private FirebaseStorage storage;
+
+
     String select_spinner = "";
     MemInfo minfo = new MemInfo();
     int pos;
@@ -97,7 +103,7 @@ public class SignActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         fragment_view = inflater.inflate(R.layout.fragment_sign, null);
 
-        et_id = (EditText) findViewById(R.id.et_id);
+        et_id = (EditText) findViewById(R.id.et_sign_id);
         et_name = (EditText) findViewById(R.id.et_name);
         et_email = (EditText) findViewById(R.id.et_email);
         et_pw = (EditText) findViewById(R.id.et_pw);
@@ -115,7 +121,6 @@ public class SignActivity extends AppCompatActivity {
 
         btn_signup.setOnClickListener(sign_mlistener);
         btn_idcheck.setOnClickListener(sign_mlistener);
-
 
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,7 +276,7 @@ public class SignActivity extends AppCompatActivity {
                 } else if (et_pw.getText().toString().equals(et_pwcheck.getText().toString())) { // 비밀번호 체크
 
                     minfo.setName(name);
-                    minfo.setName(id);
+                    minfo.setId(id);
                     minfo.setPassword(password);
                     minfo.setEmail(email + select_spinner);// 스피너 값도 가져와야함
                     minfo.setBirth(b_day);
@@ -294,6 +299,44 @@ public class SignActivity extends AppCompatActivity {
                                     final String uid = task.getResult().getUser().getUid();
                                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                                     DatabaseReference myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid);//토큰 가져와서 넣고
+
+                                    storage = FirebaseStorage.getInstance();
+                                    mStorageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
+                                    UploadTask[] uploadTask = new UploadTask[minfo.getStore_info().getStore_Size()];
+
+                                    Uri file[] = new Uri[minfo.getStore_info().getStore_Size()];
+                                    for(int i = 0; i < minfo.getStore_info().getStore_Size(); i++){
+                                        file[i] = Uri.fromFile(new File(getPath(Uri.parse(minfo.getStore_info().getStore_menus().get(i).getMenu_img()))));
+
+                                        StorageReference riversRef = mStorageRef.child("images/"+file[i].getLastPathSegment());
+                                        Log.i("qsc1", Uri.parse(minfo.getStore_info().getStore_menus().get(i).getMenu_img())+"");
+                                        uploadTask[i] = riversRef.putFile(file[i]);
+
+                                    }
+
+                                    for(int i = 0; i < minfo.getStore_info().getStore_Size(); i++){
+                                        uploadTask[i].addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception exception) {
+                                                // Handle unsuccessful uploads
+                                            }
+                                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                            @Override
+                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                                                while(!uri.isComplete());
+                                                Uri url = uri.getResult();
+                                                String str_str = String.valueOf(url);
+                                                Log.i("qsc2", input_pos+"");
+                                                Log.i("qsc3", str_str );
+                                                minfo.getStore_info().getStore_menus().get(input_pos).setMenu_img(str_str);
+                                                myRef.child("store_info").child("store_menus").child(input_pos+"").child("menu_img").setValue(str_str);
+
+                                                input_pos++;
+                                            }
+                                        });
+                                    }
+                                    Log.i("qsc4", minfo.getStore_info().getStore_menus().get(0).getMenu_img());
                                     myRef.setValue(minfo);
                                     Toast.makeText(SignActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
                                 } else {
@@ -391,6 +434,18 @@ public class SignActivity extends AppCompatActivity {
                                                             this.pos = pos;}
 
     public void setImageUri(MenuAdapter menuAdapter){this.select_ma_uri = menuAdapter; }
+
+    public String getPath(Uri uri){
+        String [] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(this,uri,proj,null,null,null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        cursor.moveToFirst();
+
+        return cursor.getString(index);
+    }
 
 }
 

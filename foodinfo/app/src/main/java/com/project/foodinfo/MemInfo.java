@@ -116,6 +116,10 @@ public class MemInfo {
             return null;
         }
 
+        public int getStore_Size(){
+            return store_menus.size();
+        }
+
         public ArrayList<Store_Menu> getStore_menus() {
             return store_menus;
         }
@@ -158,15 +162,15 @@ public class MemInfo {
         }
 
         public static class Store_Menu {
-            private Uri menu_img = null;
+            private String menu_img = "";
             private String menu_name = "진순";
             private String menu_price = "";
 
-            public Uri getMenu_img() {
+            public String getMenu_img() {
                 return menu_img;
             }
 
-            public void setMenu_img(Uri menu_img) {
+            public void setMenu_img(String menu_img) {
                 this.menu_img = menu_img;
             }
 

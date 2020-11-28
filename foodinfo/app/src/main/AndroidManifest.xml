@@ -26,11 +26,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".Sign.SignActivity" />
         <activity android:name=".IdPwActivity" />
         <activity android:name=".Sign.OperActivity" />
-        <activity android:name=".StoreinfoActivity" />
+        <activity android:name=".StoreinfoActivity">
+
+        </activity>
         <activity android:name=".MypageActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
