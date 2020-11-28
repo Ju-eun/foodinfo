@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,8 +44,9 @@ public class StoreinfoActivity extends AppCompatActivity {
     ViewPager viewPager;
     ListView lv_menu;
     MyAdapter myAdapter;
-    EditText ed_storename;
-    EditText storeinfo_et_time;
+    EditText storeinfo_et_name;
+    EditText storeinfo_et_category;
+
     RecyclerView recyclerView;
 
 
@@ -55,21 +59,28 @@ public class StoreinfoActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.storeinfo);
-        ed_storename = findViewById(R.id.ed_storename);
+        storeinfo_et_name = findViewById(R.id.ed_storename);
+        storeinfo_et_category = findViewById(R.id.Storeinfo_et_category);
+
+
 
 
         myAdapter = new MyAdapter();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        String Uid = user.getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child("123");
+        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(Uid).child("store_info");
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                MemInfo m = dataSnapshot.getValue(MemInfo.class);
 
-                ed_storename.setText(m.getEmail());
+                MemInfo.Store_Info  store_info = new MemInfo.Store_Info();
 
+                storeinfo_et_name.setText(store_info.getStore_name());
+                storeinfo_et_category.setText(store_info.getStore_category());
             }
 
             @Override
