@@ -1,7 +1,11 @@
 package com.project.foodinfo;
+
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,7 +66,7 @@ public class Fragment_menu extends Fragment {
         String Uid = user.getUid();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(Uid).child("store_info").child("store_menus");
+        DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(Uid).child("store_info");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -71,22 +75,28 @@ public class Fragment_menu extends Fragment {
                 // whenever data at this location is updated.
                 myAdapter = new MyAdapter();
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
+                MemInfo.Store_Info store_info = snapshot.getValue(MemInfo.Store_Info.class);
 
-                    menu_01 = dataSnapshot.child("123").child("menu_img").getValue(String.class);
-                    menu_02 = dataSnapshot.child("345").child("menu_img").getValue(String.class);
+                for (int i = 0; i < store_info.getStore_Size(); i++) {
+                    myAdapter.addItem(store_info.getStore_menus().get(i).getMenu_img()
+                            , store_info.getStore_menus().get(i).getMenu_name()
+                            , store_info.getStore_menus().get(i).getMenu_price());
+                }
+//
+//
+//                menu_01 = snapshot.child("123").child("menu_img").getValue(String.class);
+//                menu_02 = snapshot.child("345").child("menu_img").getValue(String.class);
 
 //                String name = dataSnapshot.child("123").child("name").getValue(String.class);
 
-                    Log.d("ASDG", "Value is: " + menu_01);
-                    Log.d("ASDG", "Value2 is: " + menu_02);
-                    myAdapter.addItem(menu_01, "국밥", "1000");
-                    myAdapter.addItem(menu_02, "af", "fald");
-                    myAdapter.notifyDataSetChanged();
-                    lv_menu.setAdapter(myAdapter);
-                }
+//                Log.d("ASDG", "Value is: " + menu_01);
+//                Log.d("ASDG", "Value2 is: " + menu_02);
+//                myAdapter.addItem(menu_01, "국밥", "1000");
+//                myAdapter.addItem(menu_02, "af", "fald");
+                myAdapter.notifyDataSetChanged();
+                lv_menu.setAdapter(myAdapter);
+
             }
 
             @Override
@@ -96,14 +106,18 @@ public class Fragment_menu extends Fragment {
             }
 
         });
-       lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-               MenuChangeActivity menuChangeActivityDialog = new MenuChangeActivity(context);
-               menuChangeActivityDialog.menuChangeCallFunction();
-           }
-       });
+                MenuChangeActivity menuChangeActivityDialog = new MenuChangeActivity(context, position);
+                menuChangeActivityDialog.menuChangeCallFunction();
+            }
+        });
 //
 //        storageRef = storage.getReferenceFromUrl(menu_01);
 
