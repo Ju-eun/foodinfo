@@ -280,7 +280,7 @@ public class SignActivity extends AppCompatActivity {
                     minfo.setPassword(password);
                     minfo.setEmail(email + select_spinner);// 스피너 값도 가져와야함
                     minfo.setBirth(b_day);
-                    minfo.setPhonenumber(f_pn.getText().toString(), m_pn.getText().toString(), e_pn.getText().toString());
+                    minfo.setphonenumber(f_pn.getText().toString(), m_pn.getText().toString(), e_pn.getText().toString());
 
                     if (cb_oper.isChecked()) {
                         minfo.setCheck_owner(1);

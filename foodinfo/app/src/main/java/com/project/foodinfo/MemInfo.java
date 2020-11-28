@@ -11,7 +11,7 @@ public class MemInfo {
     private String password = "";
     private int check_owner = 0;
     private String birth = "";
-    private String Phonenumber = "";
+    private String phonenumber = "";
     private Store_Info  store_info;
 
     public Store_Info getStore_info() {
@@ -89,12 +89,12 @@ public class MemInfo {
         this.birth = birth;
     }
 
-    public String getPhonenumber() {
-        return Phonenumber;
+    public String getphonenumber() {
+        return phonenumber;
     }
 
-    public void setPhonenumber(String f_pn, String m_pn, String e_pn) {
-        Phonenumber = f_pn + "-" + m_pn + "-" + e_pn;
+    public void setphonenumber(String f_pn, String m_pn, String e_pn) {
+        phonenumber = f_pn + "-" + m_pn + "-" + e_pn;
 
     }
 
