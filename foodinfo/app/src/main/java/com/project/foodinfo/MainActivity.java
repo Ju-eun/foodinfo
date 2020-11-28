@@ -39,6 +39,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.foodinfo.Sign.SignActivity;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -61,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String Check_Owner;
     String uid;
     FirebaseAuth firebase;
+    long backKeyPressedTime;
 
-
-//    PermissionListener permissionListener = new PermissionListener() {
+    //    PermissionListener permissionListener = new PermissionListener() {
 //        @Override
 //        public void onPermissionGranted() {
 //            initView();
@@ -74,10 +75,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            Toast.makeText(context, "권한 허용을 하지 않으면 서비스를 이용할 수 없습니다.", Toast.LENGTH_SHORT).show();
 //        }
 //    };
+    @Override
+    public void onBackPressed() {
+            //1번째 백버튼 클릭
+            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                backKeyPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "한번 더 누르면 꺼집니당~~", Toast.LENGTH_SHORT).show();
+            }
+            //2번째 백버튼 클릭 (종료)
+            else {
+                AppFinish();
+            }
+        }
+    //앱종료
+    public void AppFinish(){
+        finish();
+        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         firebase = FirebaseAuth.getInstance();
@@ -168,6 +190,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else if(id == R.id.logout){
                     //로그아웃 + 메인 액티비티 새로고침
                     firebase.signOut();
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
                     finish();
                 }
 
@@ -304,11 +328,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
                 }
                 Log.d("asd3", "3");
-            mMap.setMyLocationEnabled(true);
+                mMap.setMyLocationEnabled(true);
 //            mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 Log.d("asd4", "4");
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 
         }
     }
@@ -344,6 +368,8 @@ class MainTabPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return tabCount;
     }
+
+
 }
 
 //                myRef.addValueEventListener(new ValueEventListener() {

@@ -188,7 +188,6 @@ public class SignFragment extends Fragment {
             store_info.setStore_category(sign_frag_et_categori.getText().toString().trim());
         }
         else{
-
             store_info.setStore_category(selected_item);
         }
 
