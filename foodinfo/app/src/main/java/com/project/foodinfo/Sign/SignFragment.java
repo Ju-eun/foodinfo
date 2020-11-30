@@ -1,8 +1,13 @@
 package com.project.foodinfo.Sign;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +25,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.CursorLoader;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.project.foodinfo.MemInfo;
 import com.project.foodinfo.MyItem;
 import com.project.foodinfo.R;
 import com.project.foodinfo.MemInfo.Store_Info.Store_Menu;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 public class SignFragment extends Fragment {
     Spinner spinner;
@@ -34,7 +48,6 @@ public class SignFragment extends Fragment {
     Button btn_sign_menu_minus;
     Button btn_oper_picture;
     ListView lv_sign_menu;
-    MenuAdapter menuAdapter = new MenuAdapter();
 
     MemInfo.Store_Info store_info = new MemInfo.Store_Info();
 
@@ -44,16 +57,18 @@ public class SignFragment extends Fragment {
     EditText sign_frag_et_close;
     EditText sign_frag_et_memo;
 
+    MenuAdapter menuAdapter;
     Context context;
 
     String selected_item;
 
     String[] names = {"한식", "중식", "일식", "기타"};
 
+
+
     private int menu_size = 0;
 
     public SignFragment() {
-
     }
 
     @Nullable
@@ -61,6 +76,9 @@ public class SignFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign, container, false);
         context = container.getContext();
+
+        menuAdapter = new MenuAdapter(getActivity());
+
         spinner = view.findViewById(R.id.sign_frag_spinner_categori);
         lv_sign_menu = view.findViewById(R.id.sign_frag_lv_menulist);
         btn_sign_menu_plus = view.findViewById(R.id.sign_frag_btn_plus);
@@ -104,6 +122,7 @@ public class SignFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
         return view;
     }
 
@@ -112,7 +131,6 @@ public class SignFragment extends Fragment {
         public void onClick(View v) {
             if(v.getId() == btn_sign_menu_plus.getId()){
 
-                ArrayList<MyItem> almy = new ArrayList<>();
                 menuAdapter.addItem("","", menu_size);
                 menu_size++;
 
@@ -155,7 +173,6 @@ public class SignFragment extends Fragment {
                 lv_sign_menu.setLayoutParams(params);
 
                 menuAdapter.notifyDataSetChanged();
-
             }
         }
     };
@@ -171,7 +188,6 @@ public class SignFragment extends Fragment {
             store_info.setStore_category(sign_frag_et_categori.getText().toString().trim());
         }
         else{
-
             store_info.setStore_category(selected_item);
         }
 
@@ -182,15 +198,27 @@ public class SignFragment extends Fragment {
             
             MyItem myItem = menuAdapter.getItem(i);
 
-            store_menu.setMenu_name("test" + i);//myItem.getName());
+            store_menu.setMenu_name(myItem.getName());//myItem.getName());
             store_menu.setMenu_price(myItem.getPrice());
-            store_menu.setMenu_img("gg");
+            store_menu.setMenu_img(myItem.getMenuImg() + "");//이미지 넣는부분
             al_menu.add(store_menu);
         }
-
-
+        //이 근처에서 이뤄줘야함
         store_info.setStore_menus(al_menu);
         menuAdapter.notifyDataSetChanged();
-        ((SignActivity)getActivity()).getValue(store_info);
+        ((SignActivity)getActivity()).getValue(store_info); // **
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        ((SignActivity) getActivity()).setImageUri(menuAdapter);
+        menuAdapter.notifyDataSetChanged();
+
+        super.onResume();
     }
 }

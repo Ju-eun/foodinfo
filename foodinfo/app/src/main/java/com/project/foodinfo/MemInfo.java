@@ -1,5 +1,7 @@
 package com.project.foodinfo;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 public class MemInfo {
@@ -9,7 +11,7 @@ public class MemInfo {
     private String password = "";
     private int check_owner = 0;
     private String birth = "";
-    private String Phonenumber = "";
+    private String phonenumber = "";
     private Store_Info  store_info;
 
     public Store_Info getStore_info() {
@@ -87,12 +89,12 @@ public class MemInfo {
         this.birth = birth;
     }
 
-    public String getPhonenumber() {
-        return Phonenumber;
+    public String getphonenumber() {
+        return phonenumber;
     }
 
-    public void setPhonenumber(String f_pn, String m_pn, String e_pn) {
-        Phonenumber = f_pn + "-" + m_pn + "-" + e_pn;
+    public void setphonenumber(String f_pn, String m_pn, String e_pn) {
+        phonenumber = f_pn + "-" + m_pn + "-" + e_pn;
 
     }
 
@@ -101,6 +103,7 @@ public class MemInfo {
         private String store_time = "";
         private String store_memo = "";
         private String store_category = "";
+        private Store_pos store_pos = new Store_pos();
 
         private ArrayList<Store_Menu> store_menus = new ArrayList<>();
 
@@ -112,6 +115,10 @@ public class MemInfo {
                 return "store_category";
             }
             return null;
+        }
+
+        public int getStore_Size(){
+            return store_menus.size();
         }
 
         public ArrayList<Store_Menu> getStore_menus() {
@@ -185,6 +192,26 @@ public class MemInfo {
             }
         }
 
+    }
+}
+class Store_pos{
+    int x = 0;
+    int y = 0;
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
 }
 

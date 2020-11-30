@@ -58,12 +58,13 @@
             android:textColor="@color/black"
             android:textStyle="bold"/>
 
-        <Spinner
-            android:id="@+id/spinner_kategorie"
-            android:layout_width="3dp"
+        <EditText
+            android:id="@+id/Storeinfo_et_category"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:entries="@array/카테고리" />
+            android:text="카테고리"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 
     <LinearLayout
