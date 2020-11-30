@@ -44,10 +44,8 @@ import java.io.File;
 public class Fragment_menu extends Fragment {
 
     ListView lv_menu;
-    String menu_01 = "";
-    String menu_02 = "";
     MyAdapter myAdapter;
-
+    MenuChangeActivity menuChangeActivityDialog;
     Context context;
 
     @Override
@@ -114,8 +112,9 @@ public class Fragment_menu extends Fragment {
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                MenuChangeActivity menuChangeActivityDialog = new MenuChangeActivity(context, position);
+                menuChangeActivityDialog = new MenuChangeActivity(context, position, myAdapter);
                 menuChangeActivityDialog.menuChangeCallFunction();
+                ((StoreinfoActivity)context).getDialog(menuChangeActivityDialog);
             }
         });
 //
