@@ -34,6 +34,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
 
 public class MenuChangeActivity{
 
@@ -43,7 +46,17 @@ public class MenuChangeActivity{
 
     ImageView menu_modify;
 
-    public MenuChangeActivity(Context context, int pos) {
+    private String beforeImage;
+
+    private Uri selectedImageUri;
+    private MyAdapter myAdapter;
+
+    private StorageReference mStorageRef;
+    private FirebaseStorage storage;
+
+
+    public MenuChangeActivity(Context context, int pos, MyAdapter myAdapter) {
+        this.myAdapter = myAdapter;
         this.context = context;
         this.pos = pos;
     }
@@ -75,11 +88,14 @@ public class MenuChangeActivity{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 store_info = snapshot.getValue(MemInfo.Store_Info.class);
 
+                beforeImage = store_info.getStore_menus().get(pos).getMenu_img();
+
                 Glide.with(context).
                         load(store_info.getStore_menus().get(pos).getMenu_img()).
                         into(menu_modify);
                 menuName_modify.setText(store_info.getStore_menus().get(pos).getMenu_name());
                 menuPrice_modify.setText(store_info.getStore_menus().get(pos).getMenu_price());
+
             }
 
             @Override
@@ -92,8 +108,7 @@ public class MenuChangeActivity{
         menu_modifybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dlg.getContext();
-                ((StoreinfoActivity)context).get_Menu_Image(store_info, menu_modify , pos);
+                ((StoreinfoActivity)context).get_Menu_Image(menu_modify);
                 //새로 넣은 이미지 토큰 uri;
             }
         });
@@ -102,7 +117,49 @@ public class MenuChangeActivity{
         menu_modifyOkbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //이름 가격 변경
+                //기존이미지 삭제필요
+                //바뀐 이미지 토큰 넣어줘야한다
+                store_info.getStore_menus().get(pos).setMenu_name(menuName_modify.getText().toString());
+                store_info.getStore_menus().get(pos).setMenu_price(menuPrice_modify.getText().toString());
 
+
+                storage = FirebaseStorage.getInstance();
+                mStorageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
+                Log.d("zxc", "이미지 잘 떳나요?11111 : " + selectedImageUri);
+                Uri file = Uri.fromFile(new File(getPath(selectedImageUri)));
+                Log.d("zxc", "이미지 잘 떳나요?22222 : " + selectedImageUri);
+
+                StorageReference riversRef = mStorageRef.child("images/"+file.getLastPathSegment());
+                UploadTask uploadTask = riversRef.putFile(file);
+
+// Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.d("faile", "이미지 업로드 실패함");
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        // ...
+                        Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uri.isComplete()) ;
+                        Uri url = uri.getResult();
+                        Log.d("zxc", " 바뀐 후  : " + url);
+                        Log.d("zxc", " 바뀌기 전 : " + beforeImage);
+
+                        String str_str = String.valueOf(url);
+
+                        store_info.getStore_menus().get(pos).setMenu_img(str_str);
+                        myRef.setValue(store_info);
+                        myAdapter.notifyDataSetChanged();
+                        dlg.dismiss();
+
+                    }
+                });
+                menu_modifyOkbtn.setEnabled(true);
             }
         });
 
@@ -110,10 +167,30 @@ public class MenuChangeActivity{
         menu_modifyCancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //취소 되면 이미지 되돌림
+                menu_modify.setImageURI(Uri.parse(beforeImage));
                 Toast.makeText(context, "취소했습니다.", Toast.LENGTH_SHORT).show();
-
                 dlg.dismiss();
             }
         });
+    }
+
+    public void getNewPass(Uri selectedImageUri){
+        this.selectedImageUri = selectedImageUri;
+        Log.d("zxc", "이미지 잘 떳나요? : " + selectedImageUri);
+    }
+
+
+
+    public String getPath(Uri uri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        CursorLoader cursorLoader = new CursorLoader(context, uri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+        cursor.moveToFirst();
+
+        return cursor.getString(index);
     }
 }
