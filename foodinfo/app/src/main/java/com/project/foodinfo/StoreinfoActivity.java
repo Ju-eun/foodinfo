@@ -61,14 +61,13 @@ public class StoreinfoActivity extends AppCompatActivity {
     int pos;
 
     Uri selectedImageUri;
-
+    MenuChangeActivity menuChangeActivityDialog;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference myRef;
 
     MemInfo.Store_Info store_info;
 
-    private StorageReference mStorageRef;
-    private FirebaseStorage storage;
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,11 +144,9 @@ public class StoreinfoActivity extends AppCompatActivity {
 
     }
 
-    protected void get_Menu_Image(MemInfo.Store_Info store_info, ImageView menu_modify, int pos) {
+    protected void get_Menu_Image(ImageView menu_modify) {
         // 권한
         this.menu_modify = menu_modify;
-        this.store_info = store_info;
-        this.pos = pos;
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, GET_GALLERY_IMAGE);
@@ -161,50 +158,14 @@ public class StoreinfoActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
 
             selectedImageUri = data.getData();
-            Log.d("asd1", selectedImageUri + "");
             menu_modify.setImageURI(selectedImageUri);
-
-
-            storage = FirebaseStorage.getInstance();
-            mStorageRef = storage.getReferenceFromUrl("gs://moble-foodtruck.appspot.com/oper_regis");
-
-            Uri file = Uri.fromFile(new File(getPath(selectedImageUri)));
-
-            StorageReference riversRef = mStorageRef.child("images/"+file.getLastPathSegment());
-            UploadTask uploadTask = riversRef.putFile(file);
-
-// Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
-                    Task<Uri> uri = taskSnapshot.getStorage().getDownloadUrl();
-                    while (!uri.isComplete()) ;
-                    Uri url = uri.getResult();
-                    String str_str = String.valueOf(url);
-                    store_info.getStore_menus().get(pos).setMenu_img(str_str); //바뀐 이미지 토큰 넣어줘야한다
-                }
-            });
-
-
+            menuChangeActivityDialog.getNewPass(selectedImageUri);
         }
     }
-    public String getPath(Uri uri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader cursorLoader = new CursorLoader(this, uri, proj, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
 
-        int index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 
-        cursor.moveToFirst();
-
-        return cursor.getString(index);
+    public void getDialog(MenuChangeActivity menuChangeActivityDialog){
+        this.menuChangeActivityDialog = menuChangeActivityDialog;
     }
 
 }
