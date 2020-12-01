@@ -1,11 +1,13 @@
 package com.project.foodinfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -14,10 +16,15 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +32,9 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.L;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ListView lv_main_menu;
     DatabaseReference myRef;
     Fragment_main_menu fragment_main_menu;
-    FusedLocationProviderClient mFusedLocationClient;
     GoogleMap mMap;
     LatLng latLng;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -63,18 +71,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String uid;
     FirebaseAuth firebase;
     long backKeyPressedTime;
+    GpsTracker gpsTracker;
+    double latitude,longitude;
 
-    //    PermissionListener permissionListener = new PermissionListener() {
-//        @Override
-//        public void onPermissionGranted() {
-//            initView();
-//        }
-//
-//        @Override
-//        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-//            Toast.makeText(context, "권한 허용을 하지 않으면 서비스를 이용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-//        }
-//    };
     @Override
     public void onBackPressed() {
             //1번째 백버튼 클릭
@@ -121,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imgbtn_wes = findViewById(R.id.imgbtn_wes);
         imgbtn_coffee = findViewById(R.id.imgbtn_coffee);
         imgbtn_gochi = findViewById(R.id.imgbtn_gochi);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         ((ImageButton) findViewById(R.id.imgbtn_kor)).setOnClickListener(this);
         ((ImageButton) findViewById(R.id.imgbtn_cha)).setOnClickListener(this);
@@ -236,31 +236,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-//        checkPermission();
     }
-//    private void checkPermission(){
-//        if(Build.VERSION.SDK_INT>=23){
-//            TedPermission.with(context)
-//                    .setPermissionListener(permissionListener)
-//                    .setRationaleMessage("앱을 이용하기 위해서는 접근 권한이 필요합니다.")
-//                    .setDeniedMessage("앱에서 요구하는 권한설정이 필요합니다...\n [설정]>[권한]에서 사용으로 활성화 해주세요")
-//                    .setPermissions(new String[]{
-//                            Manifest.permission.ACCESS_FINE_LOCATION,
-//                            Manifest.permission.ACCESS_COARSE_LOCATION
-//                    })
-//                    .check();
-//        }else{
-//            initView();
-//        }
-//    }
-//    private void initView(){
-//        if(findViewById(R.id.main_fragment_map)!=null){
-//            Fragment fragment = new Fragment_main_map();
-//            fragment.setArguments(getIntent().getExtras());
-//
-//        }
 
-    //    }
     public void getmap(GoogleMap mMap, LatLng latLng) {
         this.mMap = mMap;
         this.latLng = latLng;
@@ -302,25 +279,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
 
 
-//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    String test1 = "jongmin";
-//                    MemInfo m = dataSnapshot.getValue(MemInfo.class);
-//                    String test = m.getName();
-//                    if (test.equals(test1)) {
-//
-//
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+
     }
 
     @Override
@@ -340,6 +299,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
+
+
+    public void onSwitch(View view) {
+        Toast.makeText(this, "김영훈 똥멍청이", Toast.LENGTH_SHORT).show();
+        gpsTracker = new GpsTracker(this);
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+        Store_pos store_pos = new Store_pos();
+        store_pos.setX(latitude);
+        store_pos.setY(longitude);
+
+        myRef.child("store_info").child("store_pos").setValue(store_pos);
 
 }
 
@@ -373,21 +344,7 @@ class MainTabPagerAdapter extends FragmentStatePagerAdapter {
         return tabCount;
     }
 
-
 }
 
-//                myRef.addValueEventListener(new ValueEventListener() {
-//@Override
-//public void onDataChange(@NonNull DataSnapshot snapshot) {
-//        myAdapter = new MyAdapter();
-//        menu_01 = snapshot.child("123").child("menu_img").getValue(String.class);
-//        menu_02 = snapshot.child("345").child("menu_img").getValue(String.class);
-//
-//        myAdapter.addItem(menu_01, "국밥", "1000");
-//        myAdapter.addItem(menu_02, "af", "fald");
-//        myAdapter.addItem(menu_01, "국밥", "1000");
-//        myAdapter.addItem(menu_02, "af", "fald");
-//
-//        myAdapter.notifyDataSetChanged();
-//        lv_main_menu.setAdapter(myAdapter);
+}
 

@@ -40,44 +40,43 @@ public class Fragment_main_menu extends Fragment {
 
         imgbtn_kor = ((ImageButton)view.findViewById(R.id.imgbtn_kor));
 
-        clicking = "fucking";
+        clicking = "";
 
         Bundle bundle = getArguments();
 
         if(bundle != null)
             clicking = bundle.getString("key");
-//        myRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                myAdapter = new MyAdapter();
-                //     getId_string = imgbtn_kor.getId();
-//
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//
-//                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
-//                    MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
-//
-//                    String category = store_info.getStore_category();
-//
-//                    if (clicking.equals(category)) {
-//                        menu_01 = snapshot.child("123").child("menu_img").getValue(String.class);
-//                        menu_02 = snapshot.child("345").child("menu_img").getValue(String.class);
-//
-//                        myAdapter.addItem(menu_01, "국밥", "1000");
-//                         myAdapter.addItem(menu_02, "af", "fald");
-//
-//                        myAdapter.notifyDataSetChanged();
-//                        lv_main_menu.setAdapter(myAdapter);
-//
-//                    }
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//            }
-//        });
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                myAdapter = new MyAdapter();
+//                     getId_string = imgbtn_kor.getId();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
+                    MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
+
+                    String category = store_info.getStore_category();
+
+                    if (clicking.equals(category)) {
+                        for (int i = 0; i < store_info.getStore_Size(); i++) {
+                            myAdapter.addItem(store_info.getStore_menus().get(i).getMenu_img()
+                                    , store_info.getStore_menus().get(i).getMenu_name()
+                                    , store_info.getStore_menus().get(i).getMenu_price());
+                        }
+                        myAdapter.notifyDataSetChanged();
+                        lv_main_menu.setAdapter(myAdapter);
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         lv_main_menu = (ListView) view.findViewById(R.id.lv_main_menu);
         return view;
