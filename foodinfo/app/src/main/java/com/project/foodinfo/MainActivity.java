@@ -33,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.airbnb.lottie.L;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton imgbtn_kor, imgbtn_coffee, imgbtn_cha, imgbtn_gochi, imgbtn_jan, imgbtn_wes;
     ListView lv_main_menu;
     DatabaseReference myRef;
+    Switch switch_open;
     Fragment_main_menu fragment_main_menu;
     GoogleMap mMap;
     LatLng latLng;
@@ -75,10 +77,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FirebaseAuth firebase;
     long backKeyPressedTime;
     GpsTracker gpsTracker;
+    MemInfo memInfo;
     double latitude, longitude;
+    Boolean checked_switch = false;
     String store_name;
-
-    LatLng Storeposition;
+    DatabaseReference StoreRef;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     @Override
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
-
+        switch_open = findViewById(R.id. switch_open);
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
         imgbtn_cha = findViewById(R.id.imgbtn_cha);
         imgbtn_jan = findViewById(R.id.imgbtn_jan);
@@ -144,8 +147,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDrawerLayout = findViewById(R.id.drawer_layout);
         navi_view = findViewById(R.id.nav_view);
 
-
         if (uid != null) {
+            DatabaseReference StoremyRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
+            StoremyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    memInfo = snapshot.getValue(MemInfo.class);
+                    store_name = memInfo.getStore_info().getStore_name();
+                    StoreRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore").child(store_name);
+                    StoreRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot Datasnapshot : snapshot.getChildren()){
+                                String x = (String)Datasnapshot.child("x").getValue();
+                                String y = (String)Datasnapshot.child("y").getValue();
+
+                                if(x == "" && y == ""){
+                                    checked_switch = false;
+                                    switch_open.setChecked(false);
+                                }
+                                else{
+                                    checked_switch = true;
+                                    switch_open.setChecked(true);
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
+
+
             myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
             Log.d("qwer", "1");
             myRef.child("check_owner").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -306,32 +346,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onSwitch(View view) {
 
-
-        Toast.makeText(this, "김영훈 똥멍청이", Toast.LENGTH_SHORT).show();
-        gpsTracker = new GpsTracker(this);
-        DatabaseReference StoremyRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
-        StoremyRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                MemInfo memInfo = snapshot.getValue(MemInfo.class);
-
-                store_name = memInfo.getStore_info().getStore_name();
-                Log.i("AAAAAA", store_name + "asd");
-
-                DatabaseReference StoreRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore").child(store_name);
-                Log.i("AAAAAA", store_name);
-                latitude = gpsTracker.getLatitude();
-                longitude = gpsTracker.getLongitude();
-                Store_pos store_pos = new Store_pos();
-                store_pos.setX(String.valueOf(latitude));
-                store_pos.setY(String.valueOf(longitude));
-                StoreRef.setValue(store_pos);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+        if (switch_open.isChecked()) {
+            gpsTracker = new GpsTracker(this);
+            latitude = gpsTracker.getLatitude();
+            longitude = gpsTracker.getLongitude();
+            Store_pos store_pos = new Store_pos();
+            store_pos.setX(String.valueOf(latitude));
+            store_pos.setY(String.valueOf(longitude));
+            StoreRef.setValue(store_pos);
+        }
+        else{
+            StoreRef.removeValue();
+        }
 
 
 //        StoreRef.child("x").setValue(latitude);
