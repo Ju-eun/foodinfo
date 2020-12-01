@@ -201,9 +201,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         tabLayout = findViewById(R.id.tabLayout);
+
+
         tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
         tabLayout.addTab(tabLayout.newTab().setText("지 도"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.getTabAt(0).setIcon(R.drawable.main_tab_menu);  //아이콘 추가
+        tabLayout.getTabAt(1).setIcon(R.drawable.main_tab_map);
 
         main_viewpager = findViewById(R.id.main_viewpager);
 
