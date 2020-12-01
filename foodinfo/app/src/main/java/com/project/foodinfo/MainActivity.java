@@ -53,6 +53,7 @@ import java.security.Permission;
 import java.util.ArrayList;
 
 
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int REQUEST_CODE_PERMISSION = 1000;
     Toolbar toolbar;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DatabaseReference myRef;
     Fragment_main_menu fragment_main_menu;
     FusedLocationProviderClient mFusedLocationClient;
-
+    public GoogleMap mMap;
 //    PermissionListener permissionListener = new PermissionListener() {
 //        @Override
 //        public void onPermissionGranted() {
@@ -85,6 +86,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_CODE_PERMISSION);
+            return;
+        }
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -166,6 +181,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO : 이미 선택된 tab이 다시
             }
         });
+
+
+
+
 //        checkPermission();
     }
 //    private void checkPermission(){
@@ -249,41 +268,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
     }
-    public void onLastLocationButtonClicked(View view) {
-        Fragment_main_map fragment_main_map = new Fragment_main_map();
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_CODE_PERMISSION);
-            return;
-        }
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    GoogleMap mMap;
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    LatLng myLocation = new LatLng(location.getLatitude(),location.getLongitude());
-                    markerOptions.position(myLocation);
-                    markerOptions.title("내위치");
-                    markerOptions.snippet("내자리");
-                    fragment_main_map.mMap.addMarker(markerOptions);
-                    fragment_main_map.mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
-                    fragment_main_map.mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-                }
-            }
-        });
+//    public void onLastLocationButtonClicked(View view) {
+//        Fragment_main_map fragment_main_map = new Fragment_main_map();
+//
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//
+//            ActivityCompat.requestPermissions(this,
+//                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+//                    REQUEST_CODE_PERMISSION);
+//            return;
+//        }
+//        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                if(location != null){
+//                    GoogleMap mMap;
+//                    MarkerOptions markerOptions = new MarkerOptions();
+//                    LatLng myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+//                    markerOptions.position(myLocation);
+//                    markerOptions.title("내위치");
+//                    markerOptions.snippet("내자리");
+//                    fragment_main_map.mMap.addMarker(markerOptions);
+//                    fragment_main_map.mMap.moveCamera(CameraUpdateFactory.newLatLng(myLocation));
+//                    fragment_main_map.mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+//                }
+//            }
+//        });
+//    }
+    public void getMap(GoogleMap mMap){
+        this.mMap = mMap;
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -292,8 +313,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
                 {
                     Toast.makeText(this, "권한 체크 거부 됨", Toast.LENGTH_SHORT).show();
+                    Log.d("AA", "권한체크 거부됨");
                 }
 
+                    Log.d("AA", "권한체크 거부안됨");
+
+                    mMap.setMyLocationEnabled(true);
         }
     }
 
@@ -324,6 +349,7 @@ class MainTabPagerAdapter extends FragmentStatePagerAdapter {
                 return null;
         }
     }
+
 
     @Override
     public int getCount() {

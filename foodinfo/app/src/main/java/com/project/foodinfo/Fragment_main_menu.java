@@ -57,7 +57,7 @@ public class Fragment_main_menu extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
+              //      MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
                     MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
 
                     String category = store_info.getStore_category();
