@@ -16,8 +16,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -25,6 +27,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,27 +75,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FirebaseAuth firebase;
     long backKeyPressedTime;
     GpsTracker gpsTracker;
-    double latitude,longitude;
+    double latitude, longitude;
+    String store_name;
+
+    LatLng Storeposition;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     @Override
     public void onBackPressed() {
-            //1번째 백버튼 클릭
-            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-                backKeyPressedTime = System.currentTimeMillis();
-                Toast.makeText(this, "한번 더 누르면 꺼집니당~~", Toast.LENGTH_SHORT).show();
-            }
-            //2번째 백버튼 클릭 (종료)
-            else {
-                AppFinish();
-            }
+        //1번째 백버튼 클릭
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "한번 더 누르면 꺼집니당~~", Toast.LENGTH_SHORT).show();
         }
+        //2번째 백버튼 클릭 (종료)
+        else {
+            AppFinish();
+        }
+    }
+
     //앱종료
-    public void AppFinish(){
+    public void AppFinish() {
         finish();
         System.exit(0);
         android.os.Process.killProcess(android.os.Process.myPid());
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -105,13 +112,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         try {
             uid = user.getUid();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             uid = null;
         }
 
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
 
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
@@ -140,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navi_view = findViewById(R.id.nav_view);
 
 
-        if(uid != null){
+        if (uid != null) {
             myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
             Log.d("qwer", "1");
             myRef.child("check_owner").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -148,11 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Log.d("qwer", "2");
                     Check_Owner = String.valueOf(snapshot.getValue(Integer.class));
-                    if(Check_Owner.equals(OWNER)){
+                    if (Check_Owner.equals(OWNER)) {
                         navigationView.getMenu().clear();
                         navigationView.inflateMenu(R.menu.seller_menu);
-                    }
-                    else{
+                    } else {
                         navigationView.getMenu().clear();
                         navigationView.inflateMenu(R.menu.consumer_menu);
                     }
@@ -181,13 +185,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                 } else if (id == R.id.connection) {
                     //구글연동(가능하면)
-                } else if(id == R.id.mypage){
+                } else if (id == R.id.mypage) {
                     Intent intent = new Intent(MainActivity.this, MypageActivity.class);
                     startActivity(intent);
-                } else if(id == R.id.storeinfo){
+                } else if (id == R.id.storeinfo) {
                     Intent intent = new Intent(MainActivity.this, StoreinfoActivity.class);
                     startActivity(intent);
-                } else if(id == R.id.logout){
+                } else if (id == R.id.logout) {
                     //로그아웃 + 메인 액티비티 새로고침
                     firebase.signOut();
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
@@ -279,7 +283,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
 
 
-
     }
 
     @Override
@@ -302,49 +305,72 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void onSwitch(View view) {
+
+
         Toast.makeText(this, "김영훈 똥멍청이", Toast.LENGTH_SHORT).show();
         gpsTracker = new GpsTracker(this);
-        latitude = gpsTracker.getLatitude();
-        longitude = gpsTracker.getLongitude();
-        Store_pos store_pos = new Store_pos();
-        store_pos.setX(latitude);
-        store_pos.setY(longitude);
+        DatabaseReference StoremyRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
+        StoremyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                MemInfo memInfo = snapshot.getValue(MemInfo.class);
 
-        myRef.child("store_info").child("store_pos").setValue(store_pos);
+                store_name = memInfo.getStore_info().getStore_name();
+                Log.i("AAAAAA", store_name + "asd");
 
-}
+                DatabaseReference StoreRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore").child(store_name);
+                Log.i("AAAAAA", store_name);
+                latitude = gpsTracker.getLatitude();
+                longitude = gpsTracker.getLongitude();
+                Store_pos store_pos = new Store_pos();
+                store_pos.setX(String.valueOf(latitude));
+                store_pos.setY(String.valueOf(longitude));
+                StoreRef.setValue(store_pos);
+            }
 
-class MainTabPagerAdapter extends FragmentStatePagerAdapter {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
-    private int tabCount;
 
-    public MainTabPagerAdapter(FragmentManager fm, int tabCount) {
-        super(fm);
-        this.tabCount = tabCount;
+//        StoreRef.child("x").setValue(latitude);
+//        StoreRef.child("y").setValue(longitude);
+
+
     }
 
-    @NonNull
-    @Override
-    public Fragment getItem(int position) {
+    class MainTabPagerAdapter extends FragmentStatePagerAdapter {
 
-        switch (position) {
-            case 0:
-                Fragment_main_menu main_menu = new Fragment_main_menu();
-                return main_menu;
-            case 1:
-                Fragment_main_map main_map = new Fragment_main_map();
-                return main_map;
-            default:
-                return null;
+        private int tabCount;
+
+        public MainTabPagerAdapter(FragmentManager fm, int tabCount) {
+            super(fm);
+            this.tabCount = tabCount;
         }
-    }
 
-    @Override
-    public int getCount() {
-        return tabCount;
-    }
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
 
-}
+            switch (position) {
+                case 0:
+                    Fragment_main_menu main_menu = new Fragment_main_menu();
+                    return main_menu;
+                case 1:
+                    Fragment_main_map main_map = new Fragment_main_map();
+                    return main_map;
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return tabCount;
+        }
+
+    }
 
 }
 

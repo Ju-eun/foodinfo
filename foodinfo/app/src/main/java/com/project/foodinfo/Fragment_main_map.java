@@ -185,31 +185,34 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        int i = 0;
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot datasnapshot : snapshot.getChildren()){
-                    key = datasnapshot.getKey();
-                    openstore = datasnapshot.getValue(Store_pos.class);
-                    Log.i("key123",key);
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot datasnapshot : snapshot.getChildren()){
+//                    key = datasnapshot.getKey();
+//                    openstore = datasnapshot.getValue(Store_pos.class);
+//                    Log.i("key123",key);
+//
+//                    Log.i("key123", "x값 " + openstore.getX());
+//                    Log.i("key123", "y값 " + openstore.getY());
+//
+//                    LatLng Store_position = new LatLng( Double.valueOf(openstore.getX()) ,Double.valueOf(openstore.getY()));
+//
+//                    markerOptions.title(key);
+//                    markerOptions.position(Store_position);
+//                    mMap.addMarker(markerOptions);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
-                    Log.i("key123", "x값 " + openstore.getX());
-                    Log.i("key123", "y값 " + openstore.getY());
 
-                    LatLng Store_position = new LatLng( Double.valueOf(openstore.getX()) ,Double.valueOf(openstore.getY()));
 
-                    markerOptions.title(key);
-                    markerOptions.position(Store_position);
-                    mMap.addMarker(markerOptions);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         // mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 //        markerOptions.position(seoul);

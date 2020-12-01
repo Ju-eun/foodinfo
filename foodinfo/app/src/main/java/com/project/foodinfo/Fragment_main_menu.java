@@ -28,7 +28,7 @@ public class Fragment_main_menu extends Fragment {
 
     ListView lv_main_menu;
     String clicking;
-
+    MyAdapter myAdapter;
     ImageButton imgbtn_kor;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
