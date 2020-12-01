@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String uid;
     FirebaseAuth firebase;
     long backKeyPressedTime;
-    Location lastLocation;
+    GpsTracker gpsTracker;
+    double latitude,longitude;
 
     @Override
     public void onBackPressed() {
@@ -302,6 +303,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onSwitch(View view) {
         Toast.makeText(this, "김영훈 똥멍청이", Toast.LENGTH_SHORT).show();
+        gpsTracker = new GpsTracker(this);
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+        Store_pos store_pos = new Store_pos();
+        store_pos.setX(latitude);
+        store_pos.setY(longitude);
+
+        myRef.child("store_info").child("store_pos").setValue(store_pos);
 
 }
 
