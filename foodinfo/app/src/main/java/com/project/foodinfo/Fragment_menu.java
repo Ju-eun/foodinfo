@@ -110,18 +110,12 @@ public class Fragment_menu extends Fragment {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                 menuChangeActivityDialog = new MenuChangeActivity(context, position, myAdapter);
                 menuChangeActivityDialog.menuChangeCallFunction();
                 ((StoreinfoActivity)context).getDialog(menuChangeActivityDialog);
             }
         });
-//
-//        storageRef = storage.getReferenceFromUrl(menu_01);
-
-
-//        httpsReference = storage.getReferenceFromUrl(menu_02);
 
         return view;
     }

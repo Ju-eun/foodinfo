@@ -79,7 +79,6 @@ import java.util.Map;
 public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
 
     private static final int REQUEST_CODE_PERMISSION = 1000;
-    FusedLocationProviderClient mFusedLocationClient;
     public MapView mapView;
     public GoogleMap mMap;
     double latitude;
@@ -170,7 +169,7 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
         Log.i("asd", Myposition+"");
         onAddMarker();
-        MarkerOptions[] markerOptions;
+        MarkerOptions markerOptions = new MarkerOptions();
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -186,6 +185,7 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+        int i = 0;
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -193,6 +193,15 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
                     key = datasnapshot.getKey();
                     openstore = datasnapshot.getValue(Store_pos.class);
                     Log.i("key123",key);
+
+                    Log.i("key123", "x값 " + openstore.getX());
+                    Log.i("key123", "y값 " + openstore.getY());
+
+                    LatLng Store_position = new LatLng( Double.valueOf(openstore.getX()) ,Double.valueOf(openstore.getY()));
+
+                    markerOptions.title(key);
+                    markerOptions.position(Store_position);
+                    mMap.addMarker(markerOptions);
                 }
             }
 
@@ -203,15 +212,15 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         });
         // mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-
-
-
-
-
 //        markerOptions.position(seoul);
 //        markerOptions.title("서울");
 //        markerOptions.snippet("수도");
 //        mMap.addMarker(markerOptions);
+
+
+
+
+
     }
 
     public void onAddMarker(){

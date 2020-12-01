@@ -26,10 +26,7 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Fragment_main_menu extends Fragment {
 
-
-    MyAdapter myAdapter;
     ListView lv_main_menu;
-    String menu_01, menu_02;
     String clicking;
 
     ImageButton imgbtn_kor;
