@@ -105,6 +105,14 @@ public class MemInfo {
         private String store_category = "";
         private Store_pos store_pos = new Store_pos();
 
+        public Store_pos getStore_pos() {
+            return store_pos;
+        }
+
+        public void setStore_pos(Store_pos store_pos) {
+            this.store_pos = store_pos;
+        }
+
         private ArrayList<Store_Menu> store_menus = new ArrayList<>();
 
         public String blank_Store_Check() {
@@ -195,22 +203,22 @@ public class MemInfo {
     }
 }
 class Store_pos{
-    int x = 0;
-    int y = 0;
+    double x = 0;
+    double y = 0;
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
 }

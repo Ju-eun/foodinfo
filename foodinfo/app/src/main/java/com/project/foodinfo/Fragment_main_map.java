@@ -186,21 +186,21 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot datasnapshot : snapshot.getChildren()){
-                    key = datasnapshot.getKey();
-                    openstore = datasnapshot.getValue(Store_pos.class);
-                    Log.i("key123",key);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for(DataSnapshot datasnapshot : snapshot.getChildren()){
+//                    key = datasnapshot.getKey();
+//                    openstore = datasnapshot.getValue(Store_pos.class);
+//                    Log.i("key123",key);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
         // mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 
