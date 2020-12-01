@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -48,10 +49,16 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.foodinfo.Sign.SignActivity;
 
 
@@ -75,12 +82,28 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
     FusedLocationProviderClient mFusedLocationClient;
     public MapView mapView;
     public GoogleMap mMap;
+    double latitude;
+    double longitude;
+    String key;
+    Store_pos openstore;
+    private GpsTracker gpsTracker;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
 
+    LatLng Myposition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_map, container, false);
         // Inflate the layout for this fragment
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("moble-foodtruck").child("OpenStore");
+        gpsTracker = new GpsTracker(getActivity());
+
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+        Myposition = new LatLng(latitude , longitude);
+
         mapView = (MapView) view.findViewById(R.id.main_mapview);
         mapView.getMapAsync(this);
 //        mapView.onCreate(savedInstanceState);
@@ -142,12 +165,12 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng seoul = new LatLng(37.55, 126.97);
-        ((MainActivity)getActivity()).getmap(mMap,seoul);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(seoul));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-
-//        MarkerOptions markerOptions = new MarkerOptions();
+        ((MainActivity)getActivity()).getmap(mMap,Myposition);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(Myposition));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        Log.i("asd", Myposition+"");
+        onAddMarker();
+        MarkerOptions[] markerOptions;
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -162,7 +185,27 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot datasnapshot : snapshot.getChildren()){
+                    key = datasnapshot.getKey();
+                    openstore = datasnapshot.getValue(Store_pos.class);
+                    Log.i("key123",key);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         // mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
+
+
 
 
 //        markerOptions.position(seoul);
@@ -170,5 +213,17 @@ public class Fragment_main_map extends Fragment implements OnMapReadyCallback {
 //        markerOptions.snippet("수도");
 //        mMap.addMarker(markerOptions);
     }
+
+    public void onAddMarker(){
+        // 반경 1KM원
+        CircleOptions circle1KM = new CircleOptions().center(Myposition) //원점
+                .radius(1000)      //반지름 단위 : m
+                .strokeWidth(0f)  //선너비 0f : 선없음
+                .fillColor(Color.parseColor("#66999999")); //배경색
+
+        //원추가
+        mMap.addCircle(circle1KM);
+    }
+
 
 }

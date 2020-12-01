@@ -31,7 +31,6 @@ public class MypageActivity extends AppCompatActivity {
     EditText ed_email;
     EditText ed_name;
     RadioButton owner, user;
-    MemInfo memInfo = new MemInfo();
     Button modifybtn, Exit_btn;
 
     String uid;
@@ -52,22 +51,18 @@ public class MypageActivity extends AppCompatActivity {
         user = findViewById(R.id.user);
         ed_birth = findViewById(R.id.ed_birth);
         ed_phone = findViewById(R.id.ed_phone);
-        database = FirebaseDatabase.getInstance();
+
 
         uid = firebaseUser.getUid();
 
-        Log.i("AA", uid);
 
+        database = FirebaseDatabase.getInstance();
         myRef = database.getReference("moble-foodtruck").child("MemInfo").child(uid);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.i("AA", uid);
-                Log.i("AA", myRef+"");
                 MemInfo m = snapshot.getValue(MemInfo.class);
-                Log.i("AAphone", m.getphonenumber()+"널이냐?");
-
 
                 ed_birth.setText(m.getBirth());
                 ed_id.setText(m.getId());
