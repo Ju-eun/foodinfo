@@ -2,4 +2,5 @@
     <string name="app_name">FoodInfo</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="map_key" translatable="false">AIzaSyD0fsBcXuJN0_Fq8vQXgFw234UlxWDgIqs</string>
 </resources>

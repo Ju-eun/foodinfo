@@ -1,9 +1,12 @@
 package com.project.foodinfo;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +15,27 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,22 +43,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class StoreinfoActivity extends AppCompatActivity {
 
+    private static final int GET_GALLERY_IMAGE = 200;
     TabLayout tabLayout;
     ViewPager viewPager;
     ListView lv_menu;
     MyAdapter myAdapter;
-    EditText ed_storename;
-    EditText storeinfo_et_time;
-    RecyclerView recyclerView;
+    EditText storeinfo_et_name;
+    EditText storeinfo_et_category;
+    ImageView menu_modify;
+    int pos;
 
-
+    Uri selectedImageUri;
+    MenuChangeActivity menuChangeActivityDialog;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference myRef;
+
+    MemInfo.Store_Info store_info;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,21 +75,29 @@ public class StoreinfoActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.storeinfo);
-        ed_storename = findViewById(R.id.ed_storename);
+        storeinfo_et_name = findViewById(R.id.ed_storename);
+        storeinfo_et_category = findViewById(R.id.Storeinfo_et_category);
+
+
 
 
         myAdapter = new MyAdapter();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        String Uid = user.getUid();
 
         firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child("123");
+        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(Uid).child("store_info");
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                MemInfo m = dataSnapshot.getValue(MemInfo.class);
 
-                ed_storename.setText(m.getEmail());
 
+                MemInfo.Store_Info  store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
+
+                storeinfo_et_name.setText(store_info.getStore_name());
+                storeinfo_et_category.setText(store_info.getStore_category());
             }
 
             @Override
@@ -114,6 +142,30 @@ public class StoreinfoActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    protected void get_Menu_Image(ImageView menu_modify) {
+        // 권한
+        this.menu_modify = menu_modify;
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, GET_GALLERY_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            selectedImageUri = data.getData();
+            menu_modify.setImageURI(selectedImageUri);
+            menuChangeActivityDialog.getNewPass(selectedImageUri);
+        }
+    }
+
+
+    public void getDialog(MenuChangeActivity menuChangeActivityDialog){
+        this.menuChangeActivityDialog = menuChangeActivityDialog;
     }
 
 }

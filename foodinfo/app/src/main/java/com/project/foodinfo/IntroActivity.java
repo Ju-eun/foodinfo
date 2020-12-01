@@ -26,9 +26,9 @@ public class IntroActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                animationView.setVisibility(View.GONE);
                 Intent intent=new Intent(IntroActivity.this,MainActivity.class);
                 startActivity(intent);
+                finish();
             }
 
             @Override
