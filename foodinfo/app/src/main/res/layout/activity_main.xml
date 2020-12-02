@@ -56,17 +56,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:text="사업모드"
-            android:id="@+id/tt"
+            android:id="@+id/main_owner_tv"
             android:layout_alignParentRight="true"
             android:layout_margin="5dp"/>
         <Switch
+            android:visibility="invisible"
+            android:checked="false"
             android:id="@+id/switch_open"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:onClick="onSwitch"
-            android:layout_below="@+id/tt"
+            android:layout_below="@+id/main_owner_tv"
             android:shadowColor="@color/quantum_bluegrey500"
             />
 
