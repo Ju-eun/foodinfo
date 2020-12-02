@@ -155,10 +155,11 @@ public class MenuChangeActivity{
                         store_info.getStore_menus().get(pos).setMenu_img(str_str);
                         myRef.setValue(store_info);
                         myAdapter.notifyDataSetChanged();
-                        dlg.dismiss();
+
 
                     }
                 });
+                dlg.dismiss();
                 menu_modifyOkbtn.setEnabled(true);
             }
         });

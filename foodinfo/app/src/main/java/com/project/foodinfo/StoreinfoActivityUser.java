@@ -27,6 +27,7 @@ public class StoreinfoActivityUser extends AppCompatActivity {
     EditText storeinfo_et_category;
     MemInfo Mem_info;
     String store_name;
+    Fragment_menu_user fragment_menu_user;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class StoreinfoActivityUser extends AppCompatActivity {
 
         storeinfo_et_name = findViewById(R.id.ed_storename);
         storeinfo_et_category = findViewById(R.id.Storeinfo_et_category);
+        fragment_menu_user = new Fragment_menu_user();
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
@@ -46,6 +48,11 @@ public class StoreinfoActivityUser extends AppCompatActivity {
         Intent intent = getIntent();
         store_name = intent.getStringExtra("store_name");
 
+        getSupportFragmentManager().beginTransaction().replace(R.id.ll_menulayout,fragment_menu_user).commit();
+
+        Bundle bundle = new Bundle(1);
+        bundle.putString("name",store_name);
+        fragment_menu_user.setArguments(bundle);
 
         //가게이름과 같은 놈 가져오기
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();

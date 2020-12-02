@@ -69,6 +69,7 @@ public class Fragment_main_menu extends Fragment {
                                     , memInfo.getStore_info().getStore_name()
                                     , memInfo.getStore_info().getStore_pos().getX() +", " + memInfo.getStore_info().getStore_pos().getY() );
 
+                            Log.d("AA!@#",memInfo.getStore_info().getStore_name() );
                             myAdapter.notifyDataSetChanged();
 
                         }
@@ -86,8 +87,10 @@ public class Fragment_main_menu extends Fragment {
         lv_main_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("AA",String.valueOf(position));
                 Intent intent = new Intent(getActivity(), StoreinfoActivityUser.class);
-                intent.putExtra("store_name", memInfo.getStore_info().getStore_name());
+                intent.putExtra("store_name", myAdapter.mItem.getName());
+                Log.d("AA",myAdapter.mItem.getName());
                 startActivity(intent);
             }
         });
