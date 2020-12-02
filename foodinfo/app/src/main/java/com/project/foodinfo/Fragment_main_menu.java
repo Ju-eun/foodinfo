@@ -1,5 +1,6 @@
 package com.project.foodinfo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,6 +32,8 @@ public class Fragment_main_menu extends Fragment {
     String clicking;
     MyAdapter myAdapter;
     ImageButton imgbtn_kor;
+    MemInfo memInfo;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class Fragment_main_menu extends Fragment {
         DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
 
         imgbtn_kor = ((ImageButton)view.findViewById(R.id.imgbtn_kor));
-
+        myAdapter = new MyAdapter();
         clicking = "";
 
         Bundle bundle = getArguments();
@@ -49,25 +53,25 @@ public class Fragment_main_menu extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                myAdapter = new MyAdapter();
 //                     getId_string = imgbtn_kor.getId();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
-                    MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
+                    memInfo = dataSnapshot.getValue(MemInfo.class);
 
-                    String category = store_info.getStore_category();
+                    int check = memInfo.getCheck_owner();
 
-                    if (clicking.equals(category)) {
-                        for (int i = 0; i < store_info.getStore_Size(); i++) {
-                            myAdapter.addItem(store_info.getStore_menus().get(i).getMenu_img()
-                                    , store_info.getStore_menus().get(i).getMenu_name()
-                                    , store_info.getStore_menus().get(i).getMenu_price());
+                    if (check == 1) {
+                        String category = memInfo.getStore_info().getStore_category();
+                        if (clicking.equals(category)) {
+
+                            myAdapter.addItem(memInfo.getStore_info().getStore_menus().get(0).getMenu_img()
+                                    , memInfo.getStore_info().getStore_name()
+                                    , memInfo.getStore_info().getStore_pos().getX() +", " + memInfo.getStore_info().getStore_pos().getY() );
+
+                            myAdapter.notifyDataSetChanged();
+
                         }
-                        myAdapter.notifyDataSetChanged();
-                        lv_main_menu.setAdapter(myAdapter);
-
                     }
 
                 }
@@ -77,12 +81,17 @@ public class Fragment_main_menu extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
         lv_main_menu = (ListView) view.findViewById(R.id.lv_main_menu);
+        lv_main_menu.setAdapter(myAdapter);
+        lv_main_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), StoreinfoActivityUser.class);
+                intent.putExtra("store_name", memInfo.getStore_info().getStore_name());
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
-    public void asd() {
-
-    }
 }

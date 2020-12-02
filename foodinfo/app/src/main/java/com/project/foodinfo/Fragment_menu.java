@@ -45,11 +45,13 @@ public class Fragment_menu extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        lv_menu = (ListView) view.findViewById(R.id.lv_main_menu);
+        lv_menu = (ListView) view.findViewById(R.id.lv_menu);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String Uid = user.getUid();
 
+        myAdapter = new MyAdapter();
+        lv_menu.setAdapter(myAdapter);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(Uid).child("store_info");
 
@@ -58,19 +60,16 @@ public class Fragment_menu extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                myAdapter = new MyAdapter();
 
 
                 MemInfo.Store_Info store_info = snapshot.getValue(MemInfo.Store_Info.class);
-
+                myAdapter.clear();
                 for (int i = 0; i < store_info.getStore_Size(); i++) {
                     myAdapter.addItem(store_info.getStore_menus().get(i).getMenu_img()
                             , store_info.getStore_menus().get(i).getMenu_name()
                             , store_info.getStore_menus().get(i).getMenu_price());
                 }
-
                 myAdapter.notifyDataSetChanged();
-                lv_menu.setAdapter(myAdapter);
 
             }
 
@@ -81,6 +80,8 @@ public class Fragment_menu extends Fragment {
             }
 
         });
+
+
         lv_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -90,6 +91,7 @@ public class Fragment_menu extends Fragment {
                 menuChangeActivityDialog = new MenuChangeActivity(context, position, myAdapter);
                 menuChangeActivityDialog.menuChangeCallFunction();
                 ((StoreinfoActivity)context).getDialog(menuChangeActivityDialog);
+
             }
         });
 

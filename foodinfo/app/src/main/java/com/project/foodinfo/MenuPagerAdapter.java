@@ -30,12 +30,6 @@ public class MenuPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 Fragment_info info = new Fragment_info();
                 return info;
-            case 2:
-                Fragment_map map = new Fragment_map();
-                return map;
-            case 3:
-                Fragment_review review = new Fragment_review();
-                return review;
             default:
                 return null;
         }
