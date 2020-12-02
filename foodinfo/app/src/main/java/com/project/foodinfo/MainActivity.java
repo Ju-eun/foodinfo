@@ -16,8 +16,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -25,12 +27,13 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.airbnb.lottie.L;
@@ -63,18 +66,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton imgbtn_kor, imgbtn_coffee, imgbtn_cha, imgbtn_gochi, imgbtn_jan, imgbtn_wes;
     ListView lv_main_menu;
     DatabaseReference myRef;
+    Switch switch_open;
     Fragment_main_menu fragment_main_menu;
     GoogleMap mMap;
     LatLng latLng;
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     NavigationView navi_view;
     String Check_Owner;
-    MyAdapter myAdapter;
     String uid;
     FirebaseAuth firebase;
     long backKeyPressedTime;
     GpsTracker gpsTracker;
+    MemInfo memInfo;
     double latitude, longitude;
+    Boolean checked_switch = false;
+    String store_name;
+    DatabaseReference StoreRef;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
     @Override
     public void onBackPressed() {
@@ -112,10 +120,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
-
-
+        switch_open = findViewById(R.id. switch_open);
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
         imgbtn_cha = findViewById(R.id.imgbtn_cha);
         imgbtn_jan = findViewById(R.id.imgbtn_jan);
@@ -141,12 +147,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDrawerLayout = findViewById(R.id.drawer_layout);
         navi_view = findViewById(R.id.nav_view);
 
-
-
-
-
-
         if (uid != null) {
+            DatabaseReference StoremyRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
+            StoremyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    memInfo = snapshot.getValue(MemInfo.class);
+                    store_name = memInfo.getStore_info().getStore_name();
+                    StoreRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore").child(store_name);
+                    StoreRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(DataSnapshot Datasnapshot : snapshot.getChildren()){
+                                String x = (String)Datasnapshot.child("x").getValue();
+                                String y = (String)Datasnapshot.child("y").getValue();
+
+                                if(x == "" && y == ""){
+                                    checked_switch = false;
+                                    switch_open.setChecked(false);
+                                }
+                                else{
+                                    checked_switch = true;
+                                    switch_open.setChecked(true);
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+
+
+
             myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
             Log.d("qwer", "1");
             myRef.child("check_owner").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -205,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
 
-
         tabLayout = findViewById(R.id.tabLayout);
 
 
@@ -261,7 +299,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-
     @Override
     public void onClick(View v) {
         Log.d("AA", "클릭해부럿졍");
@@ -283,8 +320,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bundle.putString("key", "꼬치");
         }
         fragment_main_menu.setArguments(bundle);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.container1, fragment_main_menu).commit();
+
+
     }
 
     @Override
@@ -301,19 +339,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("asd4", "4");
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+
         }
     }
 
-    public void onSwitch(View view) {
-        Toast.makeText(this, "김영훈 똥멍청이", Toast.LENGTH_SHORT).show();
-        gpsTracker = new GpsTracker(this);
-        latitude = gpsTracker.getLatitude();
-        longitude = gpsTracker.getLongitude();
-        Store_pos store_pos = new Store_pos();
-        store_pos.setX(String.valueOf(latitude));
-        store_pos.setY(String.valueOf(longitude));
 
-        myRef.child("store_info").child("store_pos").setValue(store_pos);
+    public void onSwitch(View view) {
+
+        if (switch_open.isChecked()) {
+            gpsTracker = new GpsTracker(this);
+            latitude = gpsTracker.getLatitude();
+            longitude = gpsTracker.getLongitude();
+            Store_pos store_pos = new Store_pos();
+            store_pos.setX(String.valueOf(latitude));
+            store_pos.setY(String.valueOf(longitude));
+            StoreRef.setValue(store_pos);
+        }
+        else{
+            StoreRef.removeValue();
+        }
+
+
+//        StoreRef.child("x").setValue(latitude);
+//        StoreRef.child("y").setValue(longitude);
+
 
     }
 

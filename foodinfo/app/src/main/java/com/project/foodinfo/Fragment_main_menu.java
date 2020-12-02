@@ -1,17 +1,14 @@
 package com.project.foodinfo;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.KeyboardShortcutGroup;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,55 +26,48 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Fragment_main_menu extends Fragment {
 
-    MyAdapter myAdapter;
     ListView lv_main_menu;
     String clicking;
-    MemInfo memInfo;
-
+    MyAdapter myAdapter;
     ImageButton imgbtn_kor;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
         // Inflate the layout for this fragment
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
 
-        lv_main_menu = (ListView) view.findViewById(R.id.lv_main_menu);
         imgbtn_kor = ((ImageButton)view.findViewById(R.id.imgbtn_kor));
 
         clicking = "";
-        myAdapter = new MyAdapter();
-
-        lv_main_menu.setAdapter(myAdapter);
 
         Bundle bundle = getArguments();
-
 
         if(bundle != null)
             clicking = bundle.getString("key");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                myAdapter = new MyAdapter();
 //                     getId_string = imgbtn_kor.getId();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                    memInfo = dataSnapshot.getValue(MemInfo.class);
+                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
+                    MemInfo.Store_Info store_info = dataSnapshot.getValue(MemInfo.Store_Info.class);
 
-                    int check = memInfo.getCheck_owner();
+                    String category = store_info.getStore_category();
 
-                    if (check == 1) {
-                        String category = memInfo.getStore_info().getStore_category();
-                        if (clicking.equals(category)) {
-
-                            myAdapter.addItem(memInfo.getStore_info().getStore_menus().get(0).getMenu_img()
-                                    , memInfo.getStore_info().getStore_name()
-                                    , memInfo.getStore_info().getStore_pos().getX() +", " + memInfo.getStore_info().getStore_pos().getY() );
-
-                            myAdapter.notifyDataSetChanged();
-
+                    if (clicking.equals(category)) {
+                        for (int i = 0; i < store_info.getStore_Size(); i++) {
+                            myAdapter.addItem(store_info.getStore_menus().get(i).getMenu_img()
+                                    , store_info.getStore_menus().get(i).getMenu_name()
+                                    , store_info.getStore_menus().get(i).getMenu_price());
                         }
+                        myAdapter.notifyDataSetChanged();
+                        lv_main_menu.setAdapter(myAdapter);
+
                     }
 
                 }
@@ -87,14 +77,12 @@ public class Fragment_main_menu extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        lv_main_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), StoreinfoActivityUser.class);
-                intent.putExtra("store_name", memInfo.getStore_info().getStore_name());
-                startActivity(intent);
-            }
-        });
+
+        lv_main_menu = (ListView) view.findViewById(R.id.lv_main_menu);
         return view;
+    }
+
+    public void asd() {
+
     }
 }
