@@ -28,12 +28,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.renderscript.Sampler;
+import android.transition.Visibility;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.L;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String store_name;
     DatabaseReference StoreRef;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-
+    TextView main_owner_tv;
     @Override
     public void onBackPressed() {
         //1번째 백버튼 클릭
@@ -104,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,13 +122,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
-        switch_open = findViewById(R.id. switch_open);
+        switch_open = findViewById(R.id.switch_open);
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
         imgbtn_cha = findViewById(R.id.imgbtn_cha);
         imgbtn_jan = findViewById(R.id.imgbtn_jan);
         imgbtn_wes = findViewById(R.id.imgbtn_wes);
         imgbtn_coffee = findViewById(R.id.imgbtn_coffee);
         imgbtn_gochi = findViewById(R.id.imgbtn_gochi);
+        main_owner_tv = findViewById(R.id.main_owner_tv);
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         ((ImageButton) findViewById(R.id.imgbtn_kor)).setOnClickListener(this);
@@ -148,57 +150,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navi_view = findViewById(R.id.nav_view);
 
         if (uid != null) {
-            DatabaseReference StoremyRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
-            StoremyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     memInfo = snapshot.getValue(MemInfo.class);
-                    store_name = memInfo.getStore_info().getStore_name();
-                    StoreRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore").child(store_name);
-                    StoreRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for(DataSnapshot Datasnapshot : snapshot.getChildren()){
-                                String x = (String)Datasnapshot.child("x").getValue();
-                                String y = (String)Datasnapshot.child("y").getValue();
-
-                                if(x == "" && y == ""){
-                                    checked_switch = false;
-                                    switch_open.setChecked(false);
-                                }
-                                else{
-                                    checked_switch = true;
-                                    switch_open.setChecked(true);
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-
-
-
-            myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child(uid);
-            Log.d("qwer", "1");
-            myRef.child("check_owner").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d("qwer", "2");
-                    Check_Owner = String.valueOf(snapshot.getValue(Integer.class));
+                    Check_Owner = String.valueOf(memInfo.getCheck_owner());
                     if (Check_Owner.equals(OWNER)) {
                         navigationView.getMenu().clear();
                         navigationView.inflateMenu(R.menu.seller_menu);
+                        switch_open.setVisibility(View.VISIBLE);
+                        main_owner_tv.setVisibility(View.VISIBLE);
+
+                        store_name = memInfo.getStore_info().getStore_name();
+                        StoreRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore");
+                        StoreRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot Datasnapshot : snapshot.getChildren()) {
+                                    String my_open_Store = Datasnapshot.getKey();
+
+                                    if (store_name.equals(my_open_Store)) {
+                                        checked_switch = true;
+                                        switch_open.setChecked(true);
+                                    } else {
+                                        checked_switch = false;
+                                        switch_open.setChecked(false);
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
                     } else {
                         navigationView.getMenu().clear();
                         navigationView.inflateMenu(R.menu.consumer_menu);
+                        switch_open.setVisibility(View.GONE);
+                        main_owner_tv.setVisibility(View.GONE);
                     }
                     navigationView = navi_view;
                 }
@@ -208,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 }
             });
-
         }
         //네이게이션 화면 설정
         navigationView = navi_view;
@@ -279,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO : 이미 선택된 tab이 다시
             }
         });
+
 
     }
 
@@ -353,10 +344,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Store_pos store_pos = new Store_pos();
             store_pos.setX(String.valueOf(latitude));
             store_pos.setY(String.valueOf(longitude));
-            StoreRef.setValue(store_pos);
-        }
-        else{
-            StoreRef.removeValue();
+            StoreRef.child(store_name).setValue(store_pos);
+        } else {
+            StoreRef.child(store_name).removeValue();
         }
 
 
