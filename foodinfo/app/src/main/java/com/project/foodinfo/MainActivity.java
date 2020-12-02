@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lv_main_menu = (ListView) findViewById(R.id.lv_main_menu);
         switch_open = findViewById(R.id. switch_open);
+
         imgbtn_kor = findViewById(R.id.imgbtn_kor);
         imgbtn_cha = findViewById(R.id.imgbtn_cha);
         imgbtn_jan = findViewById(R.id.imgbtn_jan);
