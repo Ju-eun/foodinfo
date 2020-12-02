@@ -59,6 +59,7 @@ public class Fragment_main_menu extends Fragment {
 
                     memInfo = dataSnapshot.getValue(MemInfo.class);
 
+
                     int check = memInfo.getCheck_owner();
 
                     if (check == 1) {
@@ -89,8 +90,10 @@ public class Fragment_main_menu extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d("AA",String.valueOf(position));
                 Intent intent = new Intent(getActivity(), StoreinfoActivityUser.class);
-                intent.putExtra("store_name", myAdapter.mItem.getName());
-                Log.d("AA",myAdapter.mItem.getName());
+                intent.putExtra("store_name", myAdapter.getItem(position).getName());
+
+                Log.d("AA", myAdapter.getItem(position).getName());
+
                 startActivity(intent);
             }
         });

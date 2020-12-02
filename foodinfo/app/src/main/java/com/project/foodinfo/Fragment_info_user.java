@@ -1,10 +1,12 @@
 package com.project.foodinfo;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,42 +22,41 @@ import com.google.firebase.database.ValueEventListener;
 /**
  * A simple {@link Fragment} subclass.
  * Use the  factory method to
- * create an instance of this fragment.
+ * create an instance of this fragment.    EditText fragment_et_time;
  */
 public class Fragment_info_user extends Fragment {
 
     EditText fragment_et_time;
+    Context context;
+
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference myRef;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
+
+        context = container.getContext();
 
         view = inflater.inflate(R.layout.fragment_info_user, container, false);
 
         fragment_et_time = (EditText) view.findViewById(R.id.fragment_et_time);
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo").child("123");
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                MemInfo m = dataSnapshot.getValue(MemInfo.class);
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
 
-//                fragment_et_time.setText(m.getTime());
-            }
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                fragment_et_time.setText("Test");
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-
-
-
-        // Inflate the layout for this fragment
+                }
+            });
         return view;
     }
 }

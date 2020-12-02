@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 for (DataSnapshot Datasnapshot : snapshot.getChildren()) {
+
                                     String my_open_Store = Datasnapshot.getKey();
 
                                     if (store_name.equals(my_open_Store)) {

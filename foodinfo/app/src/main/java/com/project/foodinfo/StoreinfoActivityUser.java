@@ -28,7 +28,7 @@ public class StoreinfoActivityUser extends AppCompatActivity {
     MemInfo Mem_info;
     String store_name;
     Fragment_menu_user fragment_menu_user;
-
+    Fragment_info_user fragment_info_user;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +48,14 @@ public class StoreinfoActivityUser extends AppCompatActivity {
         Intent intent = getIntent();
         store_name = intent.getStringExtra("store_name");
 
+        Log.i("AA", store_name);
+
         getSupportFragmentManager().beginTransaction().replace(R.id.ll_menulayout,fragment_menu_user).commit();
 
         Bundle bundle = new Bundle(1);
         bundle.putString("name",store_name);
         fragment_menu_user.setArguments(bundle);
+
 
         //가게이름과 같은 놈 가져오기
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -62,6 +65,7 @@ public class StoreinfoActivityUser extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
                     Mem_info = dataSnapshot.getValue(MemInfo.class);
                     if(Mem_info.getCheck_owner() == 1){
                         if(store_name.equals(Mem_info.getStore_info().getStore_name())){

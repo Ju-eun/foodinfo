@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.database.DataSnapshot;
@@ -24,73 +26,80 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Fragment_menu_user extends Fragment {
 
-    ListView lv_menu;
+    ListView lv_menu_storeinfo_user;
     MyAdapter myAdapter;
     Context context;
     String store_name;
-    MemInfo memInfo;
 
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference myRef;
+
+    String[] strasdasd = {"123", "12"};
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
 
         context = container.getContext();
 
         view = inflater.inflate(R.layout.fragment_menu_user, container, false);
 
-        lv_menu = (ListView) view.findViewById(R.id.lv_menu_storeinfo_user);
+        lv_menu_storeinfo_user = (ListView) view.findViewById(R.id.lv_menu_storeinfo_user);
+
+
+
+        myAdapter = new MyAdapter();
+
+        ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, strasdasd);
+
+        lv_menu_storeinfo_user.setAdapter(myAdapter);
 
 
         Bundle bundle = getArguments();
         if (bundle != null) {
             store_name = bundle.getString("name");
-        }
+            Log.d("abcd", store_name);
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
-        myAdapter = new MyAdapter();
-        myRef.addValueEventListener(new ValueEventListener() {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
+
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                memInfo = snapshot.getValue(MemInfo.class);
-
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                     dataSnapshot.child("store_info");
-
+                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
                     if (memInfo.getCheck_owner() == 1) {
-
-                        Log.i("abcd", store_name + "크크");
-
+                        Log.d("abcd1", memInfo.getStore_info().getStore_name());
+                       // Log.d("abcd1store", store_name);
                         if (store_name.equals(memInfo.getStore_info().getStore_name())) {
                             for (int i = 0; i < memInfo.getStore_info().getStore_Size(); i++) {
+
                                 myAdapter.addItem(memInfo.getStore_info().getStore_menus().get(i).getMenu_img()
                                         , memInfo.getStore_info().getStore_menus().get(i).getMenu_name()
                                         , memInfo.getStore_info().getStore_menus().get(i).getMenu_price());
-                                Log.d("AA12", memInfo.getStore_info().getStore_name() + " " + memInfo.getStore_info().getStore_menus().get(i).getMenu_name());
+
+                                myAdapter.notifyDataSetChanged();
+
+                                Log.d("abcd2", memInfo.getStore_info().getStore_name() + "\n " + memInfo.getStore_info().getStore_menus().get(i).getMenu_name() + "\n" + memInfo.getStore_info().getStore_menus().get(i).getMenu_img());
+
                             }
-                            lv_menu.setAdapter(myAdapter);
-                            myAdapter.notifyDataSetChanged();
+
                         }
                     }
                 }
+
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("ASDG", "Failed to read value.", error.toException());
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
-
         });
-
+        }
         return view;
     }
-
-
 }
 
 

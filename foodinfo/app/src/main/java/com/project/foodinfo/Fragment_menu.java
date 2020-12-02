@@ -29,26 +29,25 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Fragment_menu extends Fragment {
 
-    ListView lv_menu;
-    MyAdapter myAdapter;
-    MenuChangeActivity menuChangeActivityDialog;
-    Context context;
+        ListView lv_menu;
+        MyAdapter myAdapter;
+        MenuChangeActivity menuChangeActivityDialog;
+        Context context;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view;
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            // Inflate the layout for this fragment
+            View view;
 
-        context = container.getContext();
+            context = container.getContext();
 
+            view = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        view = inflater.inflate(R.layout.fragment_menu, container, false);
+            lv_menu = (ListView) view.findViewById(R.id.lv_menu);
 
-        lv_menu = (ListView) view.findViewById(R.id.lv_menu);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String Uid = user.getUid();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String Uid = user.getUid();
 
         myAdapter = new MyAdapter();
         lv_menu.setAdapter(myAdapter);
@@ -88,6 +87,7 @@ public class Fragment_menu extends Fragment {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
                 }
+
                 menuChangeActivityDialog = new MenuChangeActivity(context, position, myAdapter);
                 menuChangeActivityDialog.menuChangeCallFunction();
                 ((StoreinfoActivity)context).getDialog(menuChangeActivityDialog);
