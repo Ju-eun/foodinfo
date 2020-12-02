@@ -63,9 +63,7 @@ public class MyAdapter extends BaseAdapter {
 
     public void addItem(String imageName, String name, String price) {
         mItem = new MyItem();
-//        mItem.setIcon(img);
         mItem.setImagename(imageName);
-//        mItem.setImg(img);
         mItem.setName(name);
         mItem.setPrice(price);
 
