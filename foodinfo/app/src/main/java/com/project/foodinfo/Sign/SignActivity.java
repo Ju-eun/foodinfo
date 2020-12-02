@@ -1,5 +1,6 @@
 package com.project.foodinfo.Sign;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.foodinfo.MemInfo;
 import com.project.foodinfo.R;
+import com.project.foodinfo.Sign.MenuAdapter;
+import com.project.foodinfo.Sign.SignFragment;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -502,5 +505,4 @@ public class SignActivity extends AppCompatActivity {
     }
 
 }
-
 

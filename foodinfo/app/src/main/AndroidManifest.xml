@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_food_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodInfo">
+        <activity android:name=".StoreinfoActivityUser"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -31,9 +32,7 @@
         <activity android:name=".Sign.SignActivity" />
         <activity android:name=".IdPwActivity" />
         <activity android:name=".Sign.OperActivity" />
-        <activity android:name=".StoreinfoActivity">
-
-        </activity>
+        <activity android:name=".StoreinfoActivity"></activity>
         <activity android:name=".MypageActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />

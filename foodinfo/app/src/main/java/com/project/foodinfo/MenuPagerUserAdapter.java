@@ -10,11 +10,11 @@ import com.project.foodinfo.Fragment_map;
 import com.project.foodinfo.Fragment_menu;
 import com.project.foodinfo.Fragment_review;
 
-public class MenuPagerAdapter extends FragmentStatePagerAdapter {
+public class MenuPagerUserAdapter extends FragmentStatePagerAdapter {
 
     private int tabCount;
 
-    public MenuPagerAdapter(FragmentManager fm, int tabCount) {
+    public MenuPagerUserAdapter(FragmentManager fm, int tabCount) {
         super(fm);
         this.tabCount = tabCount;
     }
@@ -25,10 +25,10 @@ public class MenuPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                Fragment_menu menu = new Fragment_menu();
+                Fragment_menu_user menu = new Fragment_menu_user();
                 return menu;
             case 1:
-                Fragment_info info = new Fragment_info();
+                Fragment_info_user info = new Fragment_info_user();
                 return info;
             default:
                 return null;

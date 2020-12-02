@@ -32,6 +32,11 @@ public class MyAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return 0;
     }
+
+    public void clear(){
+        myItems = new ArrayList<>();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
@@ -63,9 +68,7 @@ public class MyAdapter extends BaseAdapter {
 
     public void addItem(String imageName, String name, String price) {
         mItem = new MyItem();
-//        mItem.setIcon(img);
         mItem.setImagename(imageName);
-//        mItem.setImg(img);
         mItem.setName(name);
         mItem.setPrice(price);
 

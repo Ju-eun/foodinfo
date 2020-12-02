@@ -28,9 +28,16 @@
            android:layout_alignParentLeft="true"
            android:layout_alignParentRight="true"
            android:layout_below="@+id/layout_time"
-           android:enabled="false"
            android:background="@android:drawable/edit_text"
            android:gravity="top"/>
 
+
    </RelativeLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="수정하기"
+        android:id="@+id/fragment_info_memo_btn"/>
+
 </FrameLayout>

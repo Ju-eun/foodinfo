@@ -103,6 +103,15 @@ public class MemInfo {
         private String store_time = "";
         private String store_memo = "";
         private String store_category = "";
+
+        public Store_pos getStore_pos() {
+            return store_pos;
+        }
+
+        public void setStore_pos(Store_pos store_pos) {
+            this.store_pos = store_pos;
+        }
+
         private Store_pos store_pos = new Store_pos();
 
         private ArrayList<Store_Menu> store_menus = new ArrayList<>();
