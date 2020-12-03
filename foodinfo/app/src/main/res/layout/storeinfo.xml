@@ -60,6 +60,9 @@
             android:layout_weight="4"
             android:text="카테고리"
             android:background="@android:color/transparent"/>
+
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -67,6 +70,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="30dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="추가"
+            android:id="@+id/btn_add"/>
 
 
         <com.google.android.material.tabs.TabLayout
