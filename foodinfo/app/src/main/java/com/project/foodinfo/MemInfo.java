@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MemInfo implements Parcelable {
     private String id = "";
@@ -150,15 +151,6 @@ public class MemInfo implements Parcelable {
         private String store_time = "";
         private String store_memo = "";
         private String store_category = "";
-
-        public Store_pos getStore_pos() {
-            return store_pos;
-        }
-
-        public void setStore_pos(Store_pos store_pos) {
-            this.store_pos = store_pos;
-        }
-
         private Store_pos store_pos = new Store_pos();
 
         private ArrayList<Store_Menu> store_menus = new ArrayList<>();
@@ -183,6 +175,18 @@ public class MemInfo implements Parcelable {
 
         public void setStore_menus(ArrayList<Store_Menu> store_menus) {
             this.store_menus = store_menus;
+        }
+
+        public void addStore_menus(Store_Menu store_menu){
+            this.store_menus.add(store_menu);
+        }
+
+        public void remove_null(){
+            this.store_menus.removeAll(Collections.singleton(null));
+        }
+
+        public void remove_pos(int Pos){
+            this.store_menus.remove(Pos);
         }
 
         public String getStore_name() {
@@ -270,6 +274,3 @@ class Store_pos{
         this.y = y;
     }
 }
-
-
-

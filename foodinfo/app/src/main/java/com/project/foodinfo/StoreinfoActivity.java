@@ -1,10 +1,13 @@
 package com.project.foodinfo;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -34,14 +37,14 @@ public class StoreinfoActivity extends AppCompatActivity {
     EditText storeinfo_et_name;
     EditText storeinfo_et_category;
     ImageView menu_modify;
-    int pos;
+    Button btn_add;
 
     Uri selectedImageUri;
     MenuChangeActivity menuChangeActivityDialog;
+    MenuAddActivity MenuAddActivityDialog;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference myRef;
 
-    MemInfo.Store_Info store_info;
 
 
 
@@ -53,7 +56,7 @@ public class StoreinfoActivity extends AppCompatActivity {
         setContentView(R.layout.storeinfo);
         storeinfo_et_name = findViewById(R.id.ed_storename);
         storeinfo_et_category = findViewById(R.id.Storeinfo_et_category);
-
+        btn_add = findViewById(R.id.btn_add);
 
 
 
@@ -90,7 +93,6 @@ public class StoreinfoActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
-        lv_menu = (ListView) findViewById(R.id.lv_main_menu);
 
         MenuPagerAdapter pagerAdapter = new MenuPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
@@ -117,6 +119,24 @@ public class StoreinfoActivity extends AppCompatActivity {
 
             }
         });
+        btn_add.setOnClickListener(new View.OnClickListener() {           //메뉴 추가 버튼
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+                }
+
+                MenuAddActivityDialog = new MenuAddActivity(StoreinfoActivity.this, myAdapter.getCount(), myAdapter);//pos 메뉴 최대 크기 필요
+
+                MenuAddActivityDialog.menuAddCallFunction();
+
+//                ((StoreinfoActivity)context).getDialog(menuChangeActivityDialog);
+
+            }
+
+
+        });
+
 
     }
 
@@ -135,13 +155,22 @@ public class StoreinfoActivity extends AppCompatActivity {
 
             selectedImageUri = data.getData();
             menu_modify.setImageURI(selectedImageUri);
-            menuChangeActivityDialog.getNewPass(selectedImageUri);
+            if(menu_modify.getId() == R.id.menu_modify_iv_menu){
+                menuChangeActivityDialog.getNewPass(selectedImageUri);
+            }
+            else{
+                MenuAddActivityDialog.getNewPass(selectedImageUri);
+            }
+
         }
     }
 
 
     public void getDialog(MenuChangeActivity menuChangeActivityDialog){
         this.menuChangeActivityDialog = menuChangeActivityDialog;
+    }
+    public void getMyadapter(MyAdapter myAdapter){
+        this.myAdapter = myAdapter;
     }
 
 }
