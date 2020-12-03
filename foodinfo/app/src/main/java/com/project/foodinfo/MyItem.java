@@ -4,11 +4,33 @@ import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import com.google.firebase.storage.StorageReference;
+
 public class MyItem {
     private int num;
     private Uri menuImg;
     private String name;
     private String price;
+    private String imagename;
+
+    public String getImagename() {
+
+        return imagename;
+    }
+
+    public void setImagename(String imagename) {
+        this.imagename = imagename;
+    }
+
+    public StorageReference getImg() {
+        return img;
+    }
+
+    public void setImg(StorageReference img) {
+        this.img = img;
+    }
+
+    private StorageReference img;
 
     public TextWatcher nameWatcher;
     public TextWatcher priceWatcher;
@@ -86,3 +108,4 @@ public class MyItem {
 
 
 }
+

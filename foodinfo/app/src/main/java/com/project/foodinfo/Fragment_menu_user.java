@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,15 +27,12 @@ import com.google.firebase.database.ValueEventListener;
  */
 public class Fragment_menu_user extends Fragment {
 
-    ListView lv_menu_storeinfo_user;
-    MyAdapter myAdapter;
-    Context context;
-    String store_name;
-
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference myRef;
+    private ListView lv_menu_storeinfo_user;
+    private MyAdapter myAdapter12 = new MyAdapter();
+    private Context context;
 
     String[] strasdasd = {"123", "12"};
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
@@ -45,61 +43,12 @@ public class Fragment_menu_user extends Fragment {
 
         lv_menu_storeinfo_user = (ListView) view.findViewById(R.id.lv_menu_storeinfo_user);
 
-
-
-        myAdapter = new MyAdapter();
-
         ArrayAdapter<String> aa = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, strasdasd);
+        lv_menu_storeinfo_user.setAdapter(myAdapter12);
 
-        lv_menu_storeinfo_user.setAdapter(myAdapter);
+        ((StoreinfoActivityUser)context).getFragmentAdapter(myAdapter12);
 
-
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            store_name = bundle.getString("name");
-            Log.d("abcd", store_name);
-
-
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
-
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-                    MemInfo memInfo = dataSnapshot.getValue(MemInfo.class);
-                    if (memInfo.getCheck_owner() == 1) {
-                        Log.d("abcd1", memInfo.getStore_info().getStore_name());
-                       // Log.d("abcd1store", store_name);
-                        if (store_name.equals(memInfo.getStore_info().getStore_name())) {
-                            for (int i = 0; i < memInfo.getStore_info().getStore_Size(); i++) {
-
-                                myAdapter.addItem(memInfo.getStore_info().getStore_menus().get(i).getMenu_img()
-                                        , memInfo.getStore_info().getStore_menus().get(i).getMenu_name()
-                                        , memInfo.getStore_info().getStore_menus().get(i).getMenu_price());
-
-                                myAdapter.notifyDataSetChanged();
-
-                                Log.d("abcd2", memInfo.getStore_info().getStore_name() + "\n " + memInfo.getStore_info().getStore_menus().get(i).getMenu_name() + "\n" + memInfo.getStore_info().getStore_menus().get(i).getMenu_img());
-
-                            }
-
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        }
         return view;
     }
 }
-
 

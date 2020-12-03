@@ -27,34 +27,29 @@ public class StoreinfoActivityUser extends AppCompatActivity {
     EditText storeinfo_et_category;
     MemInfo Mem_info;
     String store_name;
+    MyAdapter myAdapter;
     Fragment_menu_user fragment_menu_user;
     Fragment_info_user fragment_info_user;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.storeinfo);
+        setContentView(R.layout.storeinfo_foruser);
 
-        storeinfo_et_name = findViewById(R.id.ed_storename);
-        storeinfo_et_category = findViewById(R.id.Storeinfo_et_category);
+        storeinfo_et_name = findViewById(R.id.ed_storename_forUser);
+        storeinfo_et_category = findViewById(R.id.Storeinfo_et_category_forUser);
         fragment_menu_user = new Fragment_menu_user();
 
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout_forUser);
         tabLayout.addTab(tabLayout.newTab().setText("메 뉴"));
         tabLayout.addTab(tabLayout.newTab().setText("정 보"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager_forUser);
 
         Intent intent = getIntent();
         store_name = intent.getStringExtra("store_name");
 
         Log.i("AA", store_name);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.ll_menulayout,fragment_menu_user).commit();
-
-        Bundle bundle = new Bundle(1);
-        bundle.putString("name",store_name);
-        fragment_menu_user.setArguments(bundle);
 
 
         //가게이름과 같은 놈 가져오기
@@ -72,6 +67,36 @@ public class StoreinfoActivityUser extends AppCompatActivity {
                             Log.i("ewq", Mem_info.getStore_info().getStore_name());
                             storeinfo_et_name.setText(Mem_info.getStore_info().getStore_name());
                             storeinfo_et_category.setText(Mem_info.getStore_info().getStore_category());
+
+
+
+                            Bundle bundle = new Bundle(1);
+                            bundle.putParcelable("meminfo_1", Mem_info);
+                            fragment_menu_user.setArguments(bundle);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.ll_menulayout_foruser,fragment_menu_user).commit();
+                            MenuPagerUserAdapter pagerUserAdapter = new MenuPagerUserAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+                            viewPager.setAdapter(pagerUserAdapter);
+
+                            pagerUserAdapter.notifyDataSetChanged();
+                            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+                            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                                @Override
+                                public void onTabSelected(TabLayout.Tab tab) {
+                                    viewPager.setCurrentItem(tab.getPosition());
+                                }
+
+                                @Override
+                                public void onTabUnselected(TabLayout.Tab tab) {
+
+                                }
+
+                                @Override
+                                public void onTabReselected(TabLayout.Tab tab) {
+
+                                }
+                            });
+                            break;
                         }
                     }
                 }
@@ -82,37 +107,29 @@ public class StoreinfoActivityUser extends AppCompatActivity {
 
             }
         });
-
-        Log.i("ewq", store_name);
-
-        MenuPagerUserAdapter pagerUserAdapter = new MenuPagerUserAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerUserAdapter);
-//        getImages();
-
-//        lv_menu.setOnItemClickListener();
-        pagerUserAdapter.notifyDataSetChanged();
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
+        Bundle bundle1 = new Bundle(1);
+        bundle1.putString("str", store_name);
+        fragment_menu_user.setArguments(bundle1);
     }
 
+    public void getFragmentAdapter(MyAdapter myAdapter){
+        this.myAdapter = myAdapter;
+
+        for (int i = 0; i < Mem_info.getStore_info().getStore_Size(); i++) {
+
+            String img = Mem_info.getStore_info().getStore_menus().get(i).getMenu_img();
+            String menu_name = Mem_info.getStore_info().getStore_menus().get(i).getMenu_name();
+            String menu_price = Mem_info.getStore_info().getStore_menus().get(i).getMenu_price();
+            Log.d("my123", "2");
+            Log.d("my123123123", menu_name);
+            this.myAdapter.addItem(img, menu_name, menu_price);
+
+            Log.d("abcd1", img+ "\n " +menu_name+ "\n "+menu_price);
+            Log.d("abcd2", Mem_info.getStore_info().getStore_name() + "\n " + Mem_info.getStore_info().getStore_menus().get(i).getMenu_name() + "\n" + Mem_info.getStore_info().getStore_menus().get(i).getMenu_img());
+        }
+
+        this.myAdapter.notifyDataSetChanged();
+    }
 }
 
 

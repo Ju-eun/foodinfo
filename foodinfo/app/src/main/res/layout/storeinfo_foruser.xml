@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
     android:orientation="vertical"
-    android:id="@+id/ll_menulayout"
+    android:id="@+id/ll_menulayout_foruser"
     >
 
     <LinearLayout
@@ -25,7 +22,7 @@
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/ed_storename"
+            android:id="@+id/ed_storename_forUser"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
@@ -54,7 +51,7 @@
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/Storeinfo_et_category"
+            android:id="@+id/Storeinfo_et_category_forUser"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
@@ -70,16 +67,15 @@
 
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
+            android:id="@+id/tabLayout_forUser"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
+            android:id="@+id/pager_forUser"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
     </LinearLayout>
-
 
 </LinearLayout>

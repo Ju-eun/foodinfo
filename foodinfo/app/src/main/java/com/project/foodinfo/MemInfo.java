@@ -1,10 +1,12 @@
 package com.project.foodinfo;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class MemInfo {
+public class MemInfo implements Parcelable {
     private String id = "";
     private String name = "";
     private String email = "";
@@ -13,6 +15,51 @@ public class MemInfo {
     private String birth = "";
     private String phonenumber = "";
     private Store_Info  store_info;
+
+    public MemInfo(){
+
+    }
+
+    protected MemInfo(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        email = in.readString();
+        password = in.readString();
+        check_owner = in.readInt();
+        birth = in.readString();
+        phonenumber = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(password);
+        dest.writeInt(check_owner);
+        dest.writeString(birth);
+        dest.writeString(phonenumber);
+    }
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MemInfo> CREATOR = new Creator<MemInfo>() {
+        @Override
+        public MemInfo createFromParcel(Parcel in) {
+            MemInfo memInfo = new MemInfo();
+            return new MemInfo(in);
+        }
+
+        @Override
+        public MemInfo[] newArray(int size) {
+            return new MemInfo[size];
+        }
+    };
 
     public Store_Info getStore_info() {
         return store_info;

@@ -49,7 +49,7 @@ public class Fragment_info_user extends Fragment {
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                fragment_et_time.setText("Test");
+                                fragment_et_time.setText("Testasdasdasdsa");
                 }
 
                 @Override

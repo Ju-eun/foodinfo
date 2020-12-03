@@ -34,17 +34,17 @@ public class MyAdapter extends BaseAdapter {
     }
 
     public void clear(){
-        myItems = new ArrayList<>();
+            myItems.clear();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
-
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.row_menu, parent, false);
         }
+
 
         ImageView iv_menuImg = (ImageView) convertView.findViewById(R.id.iv_menu);
         TextView tv_menuName = (TextView) convertView.findViewById(R.id.tv_name);
@@ -54,10 +54,10 @@ public class MyAdapter extends BaseAdapter {
         mItem = myItems.get(position);
 
 
-        Log.d("12345", position +" : " +mItem.getImageName());
+        Log.d("12345", position +" : " +mItem.getName());
 
         Glide.with(context).
-                load(mItem.getImageName()).
+                load(mItem.getImagename()).
                 into(iv_menuImg);
 
         tv_menuName.setText(mItem.getName());
@@ -71,56 +71,7 @@ public class MyAdapter extends BaseAdapter {
         mItem.setImagename(imageName);
         mItem.setName(name);
         mItem.setPrice(price);
-
         myItems.add(mItem);
     }
 
-    class MyItem {
-
-        private int icon;
-        private String name;
-        private String price;
-        private String imagename;
-        private StorageReference img;
-
-        public StorageReference getImg() {
-            return img;
-        }
-
-        public void setImg(StorageReference img) {
-            this.img = img;
-        }
-
-        public String getImageName() {
-            return imagename;
-        }
-
-        public void setImagename(String imagename) {
-            this.imagename = imagename;
-        }
-
-        public int getIcon() {
-            return icon;
-        }
-
-        public void setIcon(int icon) {
-            this.icon = icon;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
-    }
 }

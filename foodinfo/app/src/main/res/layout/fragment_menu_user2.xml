@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/menulayout_user"
+    android:id="@+id/menulayout_user2"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragment_menu_user">
+    tools:context=".StoreinfoActivity"
+    android:layout_height="match_parent">
+
 
     <!-- TODO: Update blank fragment layout -->
     <!--    <androidx.recyclerview.widget.RecyclerView-->
@@ -14,12 +15,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ListView
-            android:id="@+id/lv_menu_storeinfo_user"
+            android:id="@+id/lv_menu_storeinfo_user2"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
-
-
 
 </FrameLayout>
