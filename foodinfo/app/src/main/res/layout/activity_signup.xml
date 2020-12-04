@@ -86,11 +86,13 @@
                     android:layout_height="match_parent"
                     android:gravity="left|center"
                     android:text="비밀번호 : "
+
                     android:textSize="15dp" />
 
                 <EditText
                     android:id="@+id/et_pw"
                     android:layout_width="match_parent"
+                    android:inputType="textPassword"
                     android:layout_height="50dp" />
 
             </LinearLayout>
@@ -113,6 +115,7 @@
                 <EditText
                     android:id="@+id/et_pwcheck"
                     android:layout_width="match_parent"
+                    android:inputType="textPassword"
                     android:layout_height="match_parent" />
 
             </LinearLayout>
