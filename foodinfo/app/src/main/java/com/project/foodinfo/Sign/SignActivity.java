@@ -4,6 +4,7 @@ package com.project.foodinfo.Sign;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.content.CursorLoader;
@@ -15,8 +16,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -66,14 +69,14 @@ public class SignActivity extends AppCompatActivity {
     String[] names = {"@naver.com", "@kakao.com", "@hanmail.net", "@gmail.com"};
     public static final String DATE_FORMAT_1 = "yyyy-MM-dd";
     EditText et_name;
-    EditText et_id;
+
     EditText et_pw;
     EditText et_pwcheck;
     EditText et_email;
     CheckBox cb_oper;
-    Button btn_idcheck;
+    /*    Button btn_idcheck;*/
     Button btn_signup;
-
+    Button btn_Rerurn;
     TextView b_tv;
 
     EditText f_pn;
@@ -104,25 +107,28 @@ public class SignActivity extends AppCompatActivity {
     String select_spinner = "";
     MemInfo minfo = new MemInfo();
     int pos;
+
+
     String key;
     MemInfo value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
         LayoutInflater inflater = this.getLayoutInflater();
         fragment_view = inflater.inflate(R.layout.fragment_sign, null);
 
-        et_id = (EditText) findViewById(R.id.et_sign_id);
         et_name = (EditText) findViewById(R.id.et_name);
         et_email = (EditText) findViewById(R.id.et_email);
         et_pw = (EditText) findViewById(R.id.et_pw);
         et_pwcheck = (EditText) findViewById(R.id.et_pwcheck);
         cb_oper = (CheckBox) findViewById(R.id.sign_frag_cb_oper);
 
-        btn_idcheck = (Button) findViewById(R.id.btn_idcheck);
+        /*        btn_idcheck = (Button) findViewById(R.id.btn_idcheck);*/
         btn_signup = (Button) findViewById(R.id.btn_signUp);
         datePicker = (TextView) findViewById(R.id.sign_tv_yy_mm_dd);
 
@@ -130,14 +136,58 @@ public class SignActivity extends AppCompatActivity {
         f_pn = (EditText) findViewById(R.id.et_phone1);
         m_pn = (EditText) findViewById(R.id.et_phone2);
         e_pn = (EditText) findViewById(R.id.et_phone3);
-
         btn_signup.setOnClickListener(sign_mlistener);
-        btn_idcheck.setOnClickListener(sign_mlistener);
+
+
+       /* sign_frag_btn_stcheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (v.getId() == R.id.sign_frag_et_storename) {//id 중복체크 버튼이 눌린 경우
+                    Log.d("AA", "key : " + key);
+                    Ref = FirebaseDatabase.getInstance().getReference("moble-foodtruck").child("MemInfo");
+                    Ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Log.d("AA", "key : " + key);
+
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                try {
+                                    key = snapshot.getKey();
+                                    value = snapshot.getValue(MemInfo.class);
+                                    Log.d("AA", "key : " + key);
+
+                                    if ((sign_frag_et_storename.getText().toString().equals(value.getEmail()))){
+                                        Log.d("AA", "체크한번");
+                                        Toast.makeText(context, "중복된 가게이름이 있습니다.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    } else{
+                                        Log.d("AA", "체크한번밑");
+                                        Toast.makeText(context, "사용할 수 있는 가게이름입니다.", Toast.LENGTH_SHORT).show();
+                                        validate = true; //검증 완료
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }*//*
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+*/
+        /*       btn_idcheck.setOnClickListener(sign_mlistener);*/
 
         datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar c = Calendar.getInstance();
+
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(SignActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -211,26 +261,50 @@ public class SignActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        Log.i("aa", "onSaveInstanceState");
+        final EditText textBox1 = (EditText)findViewById(R.id.et_name);
+        CharSequence userText1 = textBox1.getText();
+        outState.putCharSequence("savedText", userText1);
+
+        final EditText textBox2 = (EditText)findViewById(R.id.et_email);
+        CharSequence userText2 = textBox2.getText();
+        outState.putCharSequence("savedText", userText2);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.i("bb", "onRe");
+
+        final EditText textbox1 = (EditText)findViewById(R.id.et_name);
+        CharSequence userText1 = savedInstanceState.getCharSequence("savedText");
+        textbox1.setText(userText1);
+    }
+
     View.OnClickListener sign_mlistener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(); //파이어베이스에 접근
             String name = et_name.getText().toString().trim();
-            String id = et_id.getText().toString().trim();
             String b_day = b_tv.getText().toString().trim();
             String password = et_pw.getText().toString().trim();
             String email = et_email.getText().toString().trim();
 
+            if(cb_oper.isChecked()&&signFragment.sign==false){
+                Toast.makeText(SignActivity.this, "가게 이름의" +
+                        "중복체크 버튼을 눌러주세요", Toast.LENGTH_SHORT).show();
+            }
+
+
 
             if (v.getId() == R.id.btn_signUp) {
-                if(!validate){
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SignActivity.this); // 뭐징?
-                    Toast.makeText(SignActivity.this, "중복체크 버튼을 눌러주세요", Toast.LENGTH_SHORT).show(); // 뭔가 안뜸
-                    return;// 유무에 대해 다시 생각할 필요 있음
-                }
                 signFragment = (SignFragment) getSupportFragmentManager().findFragmentById(R.id.frame);
 
-                if (name.isEmpty() || id.isEmpty() || password.isEmpty() || email.isEmpty()) { //id ,name ,password, email 공백 체크
+                if (name.isEmpty() || password.isEmpty() || email.isEmpty()) { //id ,name ,password, email 공백 체크
                     AlertDialog.Builder builder = new AlertDialog.Builder(SignActivity.this);
 
                     builder.setTitle("값이 없어").setMessage("용용 죽겠지.");
@@ -293,7 +367,6 @@ public class SignActivity extends AppCompatActivity {
                 } else if (et_pw.getText().toString().equals(et_pwcheck.getText().toString())) { // 비밀번호 체크
 
                     minfo.setName(name);
-                    minfo.setId(id);
                     minfo.setPassword(password);
                     minfo.setEmail(email + select_spinner);// 스피너 값도 가져와야함
                     minfo.setBirth(b_day);
@@ -367,7 +440,7 @@ public class SignActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SignActivity.this, "꺼졍", Toast.LENGTH_SHORT).show();
                 }
-            } else if (v.getId() == R.id.btn_idcheck) {//id 중복체크 버튼이 눌린 경우
+            } /*else if (v.getId() == R.id.btn_idcheck) {//id 중복체크 버튼이 눌린 경우
                 Ref = FirebaseDatabase.getInstance().getReference("moble-foodtruck").child("MemInfo");
                 Ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -377,18 +450,19 @@ public class SignActivity extends AppCompatActivity {
                             try {
                                 key = snapshot.getKey();
                                 value = snapshot.getValue(MemInfo.class);
-                                Log.d("AA", "key : " + key);
+                                Log.d("AA", "key : " + key);*/
 
-                                if (et_id.getText().toString().equals(value.getId())) {
+                           /*
+                                if ((et_email+select_spinner.getB.toString().equals(value.getEmail()))){
                                     Log.d("AA", "체크한번");
-                                    Toast.makeText(SignActivity.this, "중복된 아이디가 있습니다.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignActivity.this, "중복된 이메일이 있습니다.", Toast.LENGTH_SHORT).show();
                                     break;
-                                } else {
+                                } else if((et_email.getText().toString().equals(value.getEmail())){
                                     Log.d("AA", "체크한번밑");
-                                    Toast.makeText(SignActivity.this, "사용할 수 있는 아이디입니다.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SignActivity.this, "사용할 수 있는 이메일입니다.", Toast.LENGTH_SHORT).show();
                                     validate = true; //검증 완료
-                                }
-                            } catch (ClassCastException e) {
+                                }*/
+                        /*    } catch (ClassCastException e) {
                                 e.printStackTrace();
                             }
 
@@ -400,7 +474,7 @@ public class SignActivity extends AppCompatActivity {
 
                     }
                 });
-            }
+            }*/
         }
     };
 
@@ -502,7 +576,10 @@ public class SignActivity extends AppCompatActivity {
         cursor.moveToFirst();
 
         return cursor.getString(index);
+
+
     }
 
-}
 
+
+}

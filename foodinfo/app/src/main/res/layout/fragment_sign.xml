@@ -9,6 +9,18 @@
 
 
     <TextView
+        android:id="@+id/sign_frag_menu"
+        android:layout_width="163dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginLeft="128dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="=====메뉴====="
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_memo" />
+
+    <TextView
         android:id="@+id/sign_frag_storename"
         android:layout_width="86dp"
         android:layout_height="50dp"
@@ -16,75 +28,16 @@
         android:gravity="center"
         android:text="가게이름 :"
         app:layout_constraintEnd_toStartOf="@+id/sign_frag_et_storename"
-        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintHorizontal_bias="0.702"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/sign_frag_et_storename"
-        android:layout_width="258dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/sign_frag_category"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.678" />
-
-    <EditText
-        android:id="@+id/sign_frag_et_firstopen"
-        android:layout_width="81dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:inputType="time"
-        app:layout_constraintStart_toEndOf="@+id/sign_frag_opentime"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_spinner_categori" />
-
-    <EditText
-        android:id="@+id/sign_frag_et_close"
-        android:layout_width="102dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:inputType="time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.347"
-        app:layout_constraintStart_toEndOf="@+id/sign_frag_optime_"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_spinner_categori" />
-
-    <TextView
-        android:id="@+id/sign_frag_optime_"
-        android:layout_width="37dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="36dp"
-        android:gravity="center"
-        android:text="~"
-        app:layout_constraintStart_toEndOf="@+id/sign_frag_et_firstopen"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_spinner_categori" />
-
-    <EditText
-        android:id="@+id/sign_frag_et_memo"
-        android:layout_width="258dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintStart_toEndOf="@+id/sign_frag_memo"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_optime_" />
 
     <TextView
         android:id="@+id/sign_frag_category"
         android:layout_width="87dp"
         android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="36dp"
         android:gravity="center"
         android:text="카테고리 :"
@@ -92,11 +45,22 @@
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_storename" />
 
     <EditText
+        android:id="@+id/sign_frag_et_storename"
+        android:layout_width="167dp"
+        android:layout_height="53dp"
+        app:layout_constraintBottom_toTopOf="@+id/sign_frag_category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.733" />
+
+    <EditText
         android:id="@+id/sign_frag_et_categori"
         android:layout_width="85dp"
         android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="36dp"
         android:ems="10"
         android:gravity="center"
@@ -105,60 +69,110 @@
         app:layout_constraintStart_toEndOf="@+id/sign_frag_spinner_categori"
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_storename" />
 
-    <Spinner
-        android:id="@+id/sign_frag_spinner_categori"
-        android:layout_width="152dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="36dp"
-        app:layout_constraintStart_toEndOf="@+id/sign_frag_category"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_storename" />
+    <Button
+        android:id="@+id/sign_frag_btn_stcheck"
+        android:layout_width="69dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="78dp"
+        android:onClick="onClick"
+        android:text="중복"
+        app:layout_constraintBottom_toTopOf="@+id/sign_frag_et_categori"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.904"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055" />
+
+    <EditText
+        android:id="@+id/sign_frag_et_memo"
+        android:layout_width="211dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.076"
+        app:layout_constraintStart_toEndOf="@+id/sign_frag_memo"
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_optime_" />
 
     <TextView
-        android:id="@+id/sign_frag_menu"
-        android:layout_width="163dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="120dp"
-        android:layout_marginLeft="120dp"
-        android:layout_marginTop="28dp"
+        android:id="@+id/sign_frag_opentime"
+        android:layout_width="84dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="48dp"
         android:gravity="center"
-        android:text="=====메뉴====="
+        android:text="오픈 시간 : "
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_memo" />
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_category" />
+
+    <EditText
+        android:id="@+id/sign_frag_et_close"
+        android:layout_width="102dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toEndOf="@+id/sign_frag_optime_"
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_spinner_categori" />
 
     <TextView
         android:id="@+id/sign_frag_memo"
         android:layout_width="85dp"
         android:layout_height="34dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="메모 : "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_opentime" />
 
+    <EditText
+        android:id="@+id/sign_frag_et_firstopen"
+        android:layout_width="81dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:inputType="time"
+        app:layout_constraintStart_toEndOf="@+id/sign_frag_opentime"
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_spinner_categori" />
+
     <TextView
-        android:id="@+id/sign_frag_opentime"
-        android:layout_width="84dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="44dp"
+        android:id="@+id/sign_frag_optime_"
+        android:layout_width="37dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
-        android:text="오픈 시간 : "
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_frag_category" />
+        android:text="~"
+        app:layout_constraintStart_toEndOf="@+id/sign_frag_et_firstopen"
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_spinner_categori" />
+
+    <Spinner
+        android:id="@+id/sign_frag_spinner_categori"
+        android:layout_width="125dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintStart_toEndOf="@+id/sign_frag_category"
+        app:layout_constraintTop_toBottomOf="@+id/sign_frag_storename" />
 
     <ListView
         android:id="@+id/sign_frag_lv_menulist"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_menu" />
 
@@ -166,12 +180,14 @@
         android:id="@+id/sign_frag_btn_plus"
         android:layout_width="100dp"
         android:layout_height="49dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:text="+"
         app:layout_constraintEnd_toStartOf="@+id/sign_frag_btn_minus"
-        app:layout_constraintHorizontal_bias="0.927"
+        app:layout_constraintHorizontal_bias="0.89"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_lv_menulist" />
 
@@ -179,9 +195,9 @@
         android:id="@+id/sign_frag_btn_minus"
         android:layout_width="100dp"
         android:layout_height="49dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="96dp"
-        android:layout_marginRight="96dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
         android:text="-"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_lv_menulist" />
@@ -190,11 +206,16 @@
         android:id="@+id/sign_frag_btn_picture"
         android:layout_width="375dp"
         android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:text="사업자 등록증"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
+        app:layout_constraintHorizontal_bias="0.41"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_frag_btn_minus" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

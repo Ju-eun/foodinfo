@@ -1,9 +1,11 @@
 package com.project.foodinfo.Sign;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.icu.text.IDNA;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,10 +27,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.loader.content.CursorLoader;
 
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -42,33 +51,37 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SignFragment extends Fragment {
+public class SignFragment extends Fragment implements View.OnClickListener {
     Spinner spinner;
     Button btn_sign_menu_plus;
     Button btn_sign_menu_minus;
     Button btn_oper_picture;
     ListView lv_sign_menu;
+    Button sign_frag_btn_stcheck1;
 
     MemInfo.Store_Info store_info = new MemInfo.Store_Info();
-
+    String str;
     EditText sign_frag_et_storename;
     EditText sign_frag_et_categori;
     EditText sign_frag_et_firstopen;
     EditText sign_frag_et_close;
     EditText sign_frag_et_memo;
-
+    DatabaseReference Ref;
     MenuAdapter menuAdapter;
     Context context;
-
+    String key;
+    MemInfo value;
     String selected_item;
+    boolean sign = false;
 
     String[] names = {"한식", "중식", "일식", "기타"};
 
-
+    private boolean validate = false; // 중복체크용
 
     private int menu_size = 0;
 
     public SignFragment() {
+
     }
 
     @Nullable
@@ -90,24 +103,28 @@ public class SignFragment extends Fragment {
         sign_frag_et_firstopen = view.findViewById(R.id.sign_frag_et_firstopen);
         sign_frag_et_close = view.findViewById(R.id.sign_frag_et_close);
         sign_frag_et_memo = view.findViewById(R.id.sign_frag_et_memo);
+        sign_frag_btn_stcheck1 = view.findViewById(R.id.sign_frag_btn_stcheck);
+
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_spinner_item, names
         );
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(getActivity(),"선택된 아이템 :" +names[position], Toast.LENGTH_SHORT).show();
-                    selected_item = names[position];
+                selected_item = names[position];
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        menuAdapter.addItem("","", menu_size);
+
+        sign_frag_btn_stcheck1.setOnClickListener(this);
+        menuAdapter.addItem("", "", menu_size);
         menu_size++;
 
         lv_sign_menu.setAdapter(menuAdapter);
@@ -123,15 +140,23 @@ public class SignFragment extends Fragment {
             }
         });
 
+
+
+
+
         return view;
+
+
     }
 
     View.OnClickListener mListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v.getId() == btn_sign_menu_plus.getId()){
 
-                menuAdapter.addItem("","", menu_size);
+
+            if (v.getId() == btn_sign_menu_plus.getId()) {
+
+                menuAdapter.addItem("", "", menu_size);
                 menu_size++;
 
                 int totalHeight = 0;
@@ -155,8 +180,7 @@ public class SignFragment extends Fragment {
 //                }
 //                menuAdapter.setMyItems(almy);
                 menuAdapter.notifyDataSetChanged();
-            }
-            else if(v.getId() == btn_sign_menu_minus.getId()){
+            } else if (v.getId() == btn_sign_menu_minus.getId()) {
                 menuAdapter.removeItem();
                 menu_size--;
 
@@ -177,25 +201,24 @@ public class SignFragment extends Fragment {
         }
     };
 
-    public void onTest(){
+
+    public void onTest() {
         ArrayList<Store_Menu> al_menu = new ArrayList<Store_Menu>();
 
         store_info.setStore_name(sign_frag_et_storename.getText().toString().trim());
-        store_info.setStore_time(sign_frag_et_firstopen.getText().toString().trim() +" ~ " +sign_frag_et_close.getText().toString().trim());
+        store_info.setStore_time(sign_frag_et_firstopen.getText().toString().trim() + " ~ " + sign_frag_et_close.getText().toString().trim());
         store_info.setStore_memo(sign_frag_et_memo.getText().toString().trim());
         store_info.setStore_name(sign_frag_et_storename.getText().toString().trim());
-        if(selected_item.equals(names[3])){
+        if (selected_item.equals(names[3])) {
             store_info.setStore_category(sign_frag_et_categori.getText().toString().trim());
-        }
-        else{
+        } else {
             store_info.setStore_category(selected_item);
         }
 
-
-        for(int i = 0; i < menuAdapter.getCount(); i++){
+        for (int i = 0; i < menuAdapter.getCount(); i++) {
 
             Store_Menu store_menu = new Store_Menu();
-            
+
             MyItem myItem = menuAdapter.getItem(i);
 
             store_menu.setMenu_name(myItem.getName());//myItem.getName());
@@ -206,7 +229,7 @@ public class SignFragment extends Fragment {
         //이 근처에서 이뤄줘야함
         store_info.setStore_menus(al_menu);
         menuAdapter.notifyDataSetChanged();
-        ((SignActivity)getActivity()).getValue(store_info); // **
+        ((SignActivity) getActivity()).getValue(store_info); // **
     }
 
     @Override
@@ -221,4 +244,60 @@ public class SignFragment extends Fragment {
 
         super.onResume();
     }
+
+    @Override
+    public void onClick(View v) {
+        Log.d("AA", "AASDads");
+        //id 중복체크 버튼이 눌린 경우
+        validate = true;
+
+
+
+        Log.d("AA", "key : " + key);
+        Ref = FirebaseDatabase.getInstance().getReference("moble-foodtruck").child("MemInfo");
+        Ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("AA", "key : " + key);
+                boolean a = false;
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    try {
+                        key = snapshot.getKey();
+                        value = snapshot.getValue(MemInfo.class);
+                        Log.d("AA", "key : " + key);
+
+                        if (sign_frag_et_storename.getText().toString().equals(value.getStore_info().getStore_name())) {
+                            Log.d("AA", "체크한번");
+                            Toast.makeText(context, "중복된 가게이름이 있습니다.", Toast.LENGTH_SHORT).show();
+                            a = true;
+                            sign=true;
+                            break;
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (a == false) {
+                    Log.d("AA", "체크한번밑");
+                    Toast.makeText(context, "사용할 수 있는 가게이름입니다.", Toast.LENGTH_SHORT).show();
+                    sign=true;
+
+                    Bundle bundle = new Bundle(1);
+                    if (sign ==true) {
+                        bundle.putString("key", "한식");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 }

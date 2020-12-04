@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="~~어때 멋있지~~"
+        android:text="과연..우리집 주변에도??"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="#E9EAEC" />
 
