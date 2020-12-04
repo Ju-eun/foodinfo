@@ -25,11 +25,11 @@ import static android.content.ContentValues.TAG;
 
 public class IdPwActivity extends TabActivity implements View.OnClickListener {
     String key;
-    Info value;
+    MemInfo value;
     Button btn_idpw_1, btn_idpw_2;
     EditText edt_idpw_name, edt_idpw_birth, edt_idpw_email, edt_idpw_number;
     DatabaseReference Ref;
-
+    MemInfo memInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,16 +80,16 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
                     try {
 
                         key = snapshot.getKey();
-                        value = snapshot.getValue(Info.class);
-                        Log.d("AA", "key : " + key);
-                        Log.d("AA", value.email);
-                        Log.d("AA", edt_idpw_name.getText().toString());
-                        Log.d("AA", edt_idpw_number.getText().toString());
+                        memInfo = snapshot.getValue(MemInfo.class);
+                        Log.d("AA1", "key : " + key);
+                        Log.d("AA2", memInfo.getEmail());
+                        Log.d("AA3", edt_idpw_name.getText().toString());
+                        Log.d("AA4", edt_idpw_number.getText().toString());
 
-                        if (value.name.equals(edt_idpw_name.getText().toString()) && value.number.equals(edt_idpw_number.getText().toString())) {
+                        if (memInfo.getName().equals(edt_idpw_name.getText().toString()) && memInfo.getphonenumber().equals(edt_idpw_number.getText().toString())) {
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
-                                    builder.setTitle("이메일").setMessage("이메일은" +value.email+ " 입니다.");
+                                    builder.setTitle("이메일").setMessage("이메일은" +memInfo.getEmail()+ " 입니다.");
                                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int id) {
@@ -137,16 +137,16 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
                     try {
 
                         key = snapshot.getKey();
-                        value = snapshot.getValue(Info.class);
+                        memInfo = snapshot.getValue(MemInfo.class);
                         Log.d("AA", "key : " + key);
-                        Log.d("AA", value.email);
+                        Log.d("AA", memInfo.getEmail());
                         Log.d("AA", edt_idpw_name.getText().toString());
                         Log.d("AA", edt_idpw_number.getText().toString());
 
-                        if (value.birth.equals(edt_idpw_birth.getText().toString()) && value.email.equals(edt_idpw_email.getText().toString())) {
-                            Log.d("AA", value.email);
+                        if (memInfo.getBirth().equals(edt_idpw_birth.getText().toString()) && memInfo.getEmail().equals(edt_idpw_email.getText().toString())) {
+                            Log.d("AA", memInfo.getEmail());
                             FirebaseAuth auth = FirebaseAuth.getInstance();
-                            String emailAdress = value.email;
+                            String emailAdress = memInfo.getEmail();
                             auth.sendPasswordResetEmail(emailAdress).addOnCompleteListener(task ->  {
                                 if (task.isSuccessful()) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(IdPwActivity.this);
@@ -187,71 +187,5 @@ public class IdPwActivity extends TabActivity implements View.OnClickListener {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-    }
-}
-
-class Info {
-    int check_owner;
-    String email;
-    String id;
-    String name;
-    String password;
-    String number;
-    String birth;
-
-    public int getCheck_owner() {
-        return check_owner;
-    }
-
-    public void setCheck_owner(int check_owner) {
-        this.check_owner = check_owner;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getBirth() {
-        return birth;
-    }
-
-    public void setBirth(String birth) {
-        this.birth = birth;
     }
 }

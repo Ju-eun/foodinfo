@@ -143,7 +143,7 @@ public class MemInfo implements Parcelable {
     }
 
     public void setphonenumber(String f_pn, String m_pn, String e_pn) {
-        phonenumber = f_pn + "-" + m_pn + "-" + e_pn;
+        phonenumber = f_pn  + m_pn  + e_pn;
 
     }
 
@@ -264,8 +264,11 @@ public class MemInfo implements Parcelable {
     }
 }
 class Store_pos{
+
+    private String image_url;
     private String x ;
     private String y ;
+    private String category;
 
     public String getX() {
         return x;
@@ -281,5 +284,21 @@ class Store_pos{
 
     public void setY(String y) {
         this.y = y;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

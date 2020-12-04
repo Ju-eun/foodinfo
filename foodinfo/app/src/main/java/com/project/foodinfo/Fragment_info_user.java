@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +34,7 @@ public class Fragment_info_user extends Fragment {
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference myRef;
+    MemInfo memInfo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,22 +45,8 @@ public class Fragment_info_user extends Fragment {
         view = inflater.inflate(R.layout.fragment_info_user, container, false);
 
         fragment_et_time = (EditText) view.findViewById(R.id.fragment_et_time);
+        ((StoreinfoActivityUser)context).getEtMemo(fragment_et_time);
 
-
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
-
-            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                fragment_et_time.setText("Testasdasdasdsa");
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
         return view;
     }
 }

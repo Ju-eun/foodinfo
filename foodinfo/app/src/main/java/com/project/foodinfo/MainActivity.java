@@ -338,16 +338,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onSwitch(View view) {
 
-        if (switch_open.isChecked()) {
-            gpsTracker = new GpsTracker(this);
-            latitude = gpsTracker.getLatitude();
-            longitude = gpsTracker.getLongitude();
-            Store_pos store_pos = new Store_pos();
-            store_pos.setX(String.valueOf(latitude));
-            store_pos.setY(String.valueOf(longitude));
-            StoreRef.child(store_name).setValue(store_pos);
-        } else {
-            StoreRef.child(store_name).removeValue();
+        if(memInfo != null){
+            if (switch_open.isChecked()) {
+                gpsTracker = new GpsTracker(this);
+                latitude = gpsTracker.getLatitude();
+                longitude = gpsTracker.getLongitude();
+
+                Store_pos store_pos = new Store_pos();
+                store_pos.setImage_url(memInfo.getStore_info().getStore_menus().get(0).getMenu_img());
+                store_pos.setCategory(memInfo.getStore_info().getStore_category());
+                store_pos.setX(String.valueOf(latitude));
+                store_pos.setY(String.valueOf(longitude));
+                StoreRef.child(store_name).setValue(store_pos);
+            } else {
+                StoreRef.child(store_name).removeValue();
+            }
         }
 
 

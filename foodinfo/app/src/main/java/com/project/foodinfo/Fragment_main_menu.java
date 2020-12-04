@@ -1,6 +1,10 @@
 package com.project.foodinfo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,18 +25,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the factory method to
  * create an instance of this fragment.
  */
 public class Fragment_main_menu extends Fragment {
-
+    final int GPS_ENABLE_REQUEST_CODE = 200;
     ListView lv_main_menu;
     String clicking;
     MyAdapter myAdapter;
     ImageButton imgbtn_kor;
-    MemInfo memInfo;
+    Geocoder g;
+    Store_pos store_pos = new Store_pos();
+    List<Address> address=null;
+    String nowAddress;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,15 +51,16 @@ public class Fragment_main_menu extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_menu, container, false);
         // Inflate the layout for this fragment
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("MemInfo");
+        DatabaseReference myRef = firebaseDatabase.getReference("moble-foodtruck").child("OpenStore");
 
-        imgbtn_kor = ((ImageButton)view.findViewById(R.id.imgbtn_kor));
+        imgbtn_kor = ((ImageButton) view.findViewById(R.id.imgbtn_kor));
         myAdapter = new MyAdapter();
         clicking = "";
 
+        g = new Geocoder(getActivity().getApplicationContext());
         Bundle bundle = getArguments();
 
-        if(bundle != null)
+        if (bundle != null)
             clicking = bundle.getString("key");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -56,24 +68,36 @@ public class Fragment_main_menu extends Fragment {
 //                     getId_string = imgbtn_kor.getId();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String storename = dataSnapshot.getKey();
+                    store_pos = dataSnapshot.getValue(Store_pos.class);
 
-                    memInfo = dataSnapshot.getValue(MemInfo.class);
 
-
-                    int check = memInfo.getCheck_owner();
-
-                    if (check == 1) {
-                        String category = memInfo.getStore_info().getStore_category();
-                        if (clicking.equals(category)) {
-
-                            myAdapter.addItem(memInfo.getStore_info().getStore_menus().get(0).getMenu_img()
-                                    , memInfo.getStore_info().getStore_name()
-                                    , memInfo.getStore_info().getStore_pos().getX() +", " + memInfo.getStore_info().getStore_pos().getY() );
-
-                            Log.d("AA!@#",memInfo.getStore_info().getStore_name() );
-                            myAdapter.notifyDataSetChanged();
-
+                    String category = store_pos.getCategory();
+                    if (clicking.equals(category)) {
+                        try {
+                            address = g.getFromLocation(Double.valueOf(store_pos.getX()),Double.valueOf(store_pos.getY()),1);
+                            String currentLocationAddress = address.get(0).getAddressLine(0).toString();
+                            nowAddress  = currentLocationAddress;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.d("test","입출력오류");
                         }
+                        if(address!=null){
+                            if(address.size()==0){
+                                Toast.makeText(getActivity(), "주소찾기 오류", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Log.d("찾은 주소",address.get(0).toString());
+                            }
+                        }
+                        myAdapter.addItem(store_pos.getImage_url()
+                                , storename
+                                , nowAddress);
+
+
+
+//                        Log.d("AA!@#", memInfo.getStore_info().getStore_name());
+                        myAdapter.notifyDataSetChanged();
+
                     }
 
                 }
@@ -88,7 +112,7 @@ public class Fragment_main_menu extends Fragment {
         lv_main_menu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("AA",String.valueOf(position));
+                Log.d("AA", String.valueOf(position));
                 Intent intent = new Intent(getActivity(), StoreinfoActivityUser.class);
                 intent.putExtra("store_name", myAdapter.getItem(position).getName());
 

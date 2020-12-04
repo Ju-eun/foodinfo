@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -29,7 +30,7 @@ public class StoreinfoActivityUser extends AppCompatActivity {
     String store_name;
     MyAdapter myAdapter;
     Fragment_menu_user fragment_menu_user;
-    Fragment_info_user fragment_info_user;
+    EditText fragment_info_user;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +130,12 @@ public class StoreinfoActivityUser extends AppCompatActivity {
         }
 
         this.myAdapter.notifyDataSetChanged();
+    }
+
+    public void getEtMemo(View view){
+        this.fragment_info_user = (EditText)view;
+
+        fragment_info_user.setText("가게 오픈 시간 : " +Mem_info.getStore_info().getStore_time()+ "\n" + Mem_info.getStore_info().getStore_memo());
     }
 }
 
